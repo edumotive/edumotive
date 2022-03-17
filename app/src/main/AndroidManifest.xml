@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.djinc.edumotive">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- Limits app visibility in the Google Play Store to ARCore supported devices
+     (https://developers.google.com/ar/devices). -->
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +19,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Edumotive">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
     </application>
 
 </manifest>
