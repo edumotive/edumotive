@@ -77,4 +77,8 @@ dependencies {
 
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
+
+    // ARCore
+    implementation 'com.google.ar:core:1.30.0'
+
 }
