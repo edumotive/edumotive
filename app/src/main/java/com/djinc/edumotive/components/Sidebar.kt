@@ -2,6 +2,7 @@ package com.djinc.edumotive.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -10,10 +11,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.djinc.edumotive.navigation.Screen
 
-@Preview(showBackground = true)
 @Composable
-fun Sidebar() {
+fun Sidebar(navController: NavController) {
     Box(modifier = Modifier
         .background(color = Color.Gray)
         .padding(16.dp)
@@ -30,7 +32,9 @@ fun Sidebar() {
                 Text("EduMotive")
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Row() {
+            Row(modifier = Modifier.clickable {
+                navController.navigate(Screen.Dashboard.route)
+            }) {
                 Box(
                     modifier = Modifier
                         .width(20.dp)
@@ -40,7 +44,9 @@ fun Sidebar() {
                 Spacer(modifier = Modifier.width(10.dp))
                 Text("Dashboard")
             }
-            Row() {
+            Row(modifier = Modifier.clickable {
+                navController.navigate(Screen.Parts.route)
+            }) {
                 Box(
                     modifier = Modifier
                         .width(20.dp)
@@ -50,7 +56,9 @@ fun Sidebar() {
                 Spacer(modifier = Modifier.width(10.dp))
                 Text("Onderdelen")
             }
-            Row() {
+            Row(modifier = Modifier.clickable {
+                navController.navigate(Screen.Exercises.route)
+            }) {
                 Box(
                     modifier = Modifier
                         .width(20.dp)
