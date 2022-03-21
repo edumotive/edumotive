@@ -6,18 +6,24 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.djinc.edumotive.navigation.Screen
 
 @Composable
 fun Sidebar(navController: NavController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentActivePage = navBackStackEntry?.destination
+
     Box(modifier = Modifier
-        .background(color = Color.Gray)
+        .background(color = Color.White)
         .padding(16.dp)
         .fillMaxHeight()) {
         Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
@@ -33,7 +39,9 @@ fun Sidebar(navController: NavController) {
             }
             Spacer(modifier = Modifier.height(24.dp))
             Row(modifier = Modifier.clickable {
-                navController.navigate(Screen.Dashboard.route)
+                val active = currentActivePage?.hierarchy?.any { it.route == Screen.Dashboard.route} == true
+
+                if (!active) navController.navigate(Screen.Dashboard.route)
             }) {
                 Box(
                     modifier = Modifier
@@ -45,7 +53,9 @@ fun Sidebar(navController: NavController) {
                 Text("Dashboard")
             }
             Row(modifier = Modifier.clickable {
-                navController.navigate(Screen.Parts.route)
+                val active = currentActivePage?.hierarchy?.any { it.route == Screen.Parts.route} == true
+
+                if (!active) navController.navigate(Screen.Parts.route)
             }) {
                 Box(
                     modifier = Modifier
@@ -57,7 +67,9 @@ fun Sidebar(navController: NavController) {
                 Text("Onderdelen")
             }
             Row(modifier = Modifier.clickable {
-                navController.navigate(Screen.Exercises.route)
+                val active = currentActivePage?.hierarchy?.any { it.route == Screen.Exercises.route} == true
+
+                if (!active) navController.navigate(Screen.Exercises.route)
             }) {
                 Box(
                     modifier = Modifier

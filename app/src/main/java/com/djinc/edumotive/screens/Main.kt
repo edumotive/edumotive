@@ -19,7 +19,7 @@ fun Main() {
         Box(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 16.dp)) {
-            NavGraph(navController = navController)
+                NavGraph(navController = navController)
         }
     }
 }
