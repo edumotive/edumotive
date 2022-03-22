@@ -15,7 +15,7 @@ import com.djinc.edumotive.navigation.NavGraph
 import com.djinc.edumotive.utils.WindowSize
 
 @Composable
-fun Main(windowSize: WindowSize) {
+fun App(windowSize: WindowSize) {
     val navController = rememberNavController()
     if (windowSize == WindowSize.Compact) {
         Scaffold(bottomBar = { BottomBar(navController = navController)}) {
