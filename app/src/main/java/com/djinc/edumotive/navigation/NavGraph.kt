@@ -1,5 +1,6 @@
 package com.djinc.edumotive.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,6 +9,7 @@ import com.djinc.edumotive.screens.Dashboard
 import com.djinc.edumotive.screens.Exercises
 import com.djinc.edumotive.screens.Parts
 
+@ExperimentalFoundationApi
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Dashboard.route) {

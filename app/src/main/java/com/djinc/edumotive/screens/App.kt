@@ -1,5 +1,6 @@
 package com.djinc.edumotive.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import com.djinc.edumotive.components.SideBar
 import com.djinc.edumotive.navigation.NavGraph
 import com.djinc.edumotive.utils.WindowSize
 
+@ExperimentalFoundationApi
 @Composable
 fun App(windowSize: WindowSize) {
     val navController = rememberNavController()
