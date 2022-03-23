@@ -1,5 +1,6 @@
 package com.djinc.edumotive.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.djinc.edumotive.components.LazySlider
+import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
 import com.djinc.edumotive.components.cards.PartCard
@@ -16,11 +18,11 @@ import com.djinc.edumotive.components.cards.PartCard
 data class Part(val name: String)
 data class Exercise(val name: String, val description: String)
 
+@ExperimentalFoundationApi
 @Composable
 fun Dashboard() {
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
-        Text(text = "Welkom!", style = MaterialTheme.typography.h1)
-        Spacer(modifier = Modifier.height(12.dp))
+        ScreenTitle("Welkom!")
 
         val parts = listOf(
             Part(name = "Onderdeel 1"),

@@ -13,13 +13,13 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 
 @Composable
-fun ExerciseCard(exerciseName: String = "", description: String = "") {
+fun ExerciseCard(exerciseName: String = "", description: String = "", fullWidth: Boolean) {
     Card(
         backgroundColor = Background,
         elevation = 3.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .width(260.dp)
+            .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(260.dp))
     ) {
         Column() {
             Box(
@@ -31,7 +31,7 @@ fun ExerciseCard(exerciseName: String = "", description: String = "") {
             Text(
                 text = description,
                 style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(start = 12.dp, top = 12.dp)
+                modifier = Modifier.padding(start = 12.dp, top = 12.dp, end = 12.dp)
             )
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
