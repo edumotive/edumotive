@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".screens.AR">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/arView"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
+    <io.github.sceneview.ar.ArSceneView
+        android:id="@+id/sceneView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
