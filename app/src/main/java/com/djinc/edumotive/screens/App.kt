@@ -12,7 +12,6 @@ import com.djinc.edumotive.components.SideBar
 import com.djinc.edumotive.navigation.NavGraph
 import com.djinc.edumotive.utils.WindowSize
 
-@ExperimentalFoundationApi
 @Composable
 fun App(windowSize: WindowSize) {
     val navController = rememberNavController()

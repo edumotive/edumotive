@@ -9,7 +9,7 @@ import com.djinc.edumotive.screens.Dashboard
 import com.djinc.edumotive.screens.Exercises
 import com.djinc.edumotive.screens.Parts
 
-@ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
