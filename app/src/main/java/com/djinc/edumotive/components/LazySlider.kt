@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
-import com.djinc.edumotive.screens.Exercise
-import com.djinc.edumotive.screens.Part
+import com.djinc.edumotive.models.Exercise
+import com.djinc.edumotive.models.Part
 
 enum class SliderDirection { Horizontal, Vertical }
 enum class SliderComponent { PartCard, ExerciseCard }

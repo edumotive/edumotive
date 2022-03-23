@@ -11,9 +11,8 @@ import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
-
-data class Part(val name: String)
-data class Exercise(val name: String, val description: String)
+import com.djinc.edumotive.models.Exercise
+import com.djinc.edumotive.models.Part
 
 @ExperimentalFoundationApi
 @Composable
