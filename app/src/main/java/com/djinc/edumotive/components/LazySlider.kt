@@ -22,12 +22,17 @@ enum class SliderComponent { PartCard, ExerciseCard }
 @Composable
 fun <T> LazySlider(
     title: String = "",
+    titleManualPadding: Boolean = false,
     direction: SliderDirection,
     list: List<T>,
     component: SliderComponent
 ) {
     if (title != "") {
-        Text(text = title, style = MaterialTheme.typography.h2)
+        Text(
+            text = title,
+            style = MaterialTheme.typography.h2,
+            modifier = Modifier.then(if (titleManualPadding) Modifier.padding(horizontal = 20.dp) else Modifier)
+        )
         Spacer(modifier = Modifier.height(8.dp))
     }
     when (direction) {
@@ -35,7 +40,8 @@ fun <T> LazySlider(
             when (component) {
                 SliderComponent.PartCard -> {
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
                             PartCard(partName = item.name)
@@ -44,7 +50,8 @@ fun <T> LazySlider(
                 }
                 SliderComponent.ExerciseCard -> {
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(

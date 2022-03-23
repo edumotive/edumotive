@@ -21,8 +21,8 @@ data class Exercise(val name: String, val description: String)
 @ExperimentalFoundationApi
 @Composable
 fun Dashboard() {
-    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
-        ScreenTitle("Welkom!")
+    Column(modifier = Modifier.padding(vertical = 32.dp)) {
+        ScreenTitle("Welkom!", manualPadding = true)
 
         val parts = listOf(
             Part(name = "Onderdeel 1"),
@@ -32,6 +32,7 @@ fun Dashboard() {
         )
         LazySlider(
             title = "Recent bekeken onderdelen",
+            titleManualPadding = true,
             direction = SliderDirection.Horizontal,
             list = parts,
             component = SliderComponent.PartCard
@@ -59,6 +60,7 @@ fun Dashboard() {
         )
         LazySlider(
             title = "Oefeningen voor dit hoofdstuk",
+            titleManualPadding = true,
             direction = SliderDirection.Horizontal,
             list = exercises,
             component = SliderComponent.ExerciseCard
