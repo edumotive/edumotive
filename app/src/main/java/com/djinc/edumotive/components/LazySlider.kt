@@ -1,7 +1,6 @@
 package com.djinc.edumotive.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.MaterialTheme
@@ -13,7 +12,6 @@ import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.screens.Exercise
 import com.djinc.edumotive.screens.Part
-import com.djinc.edumotive.ui.theme.PinkSecondary
 
 enum class SliderDirection { Horizontal, Vertical }
 enum class SliderComponent { PartCard, ExerciseCard }

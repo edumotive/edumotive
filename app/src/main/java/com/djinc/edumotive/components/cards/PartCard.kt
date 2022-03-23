@@ -35,7 +35,6 @@ fun PartCard(partName: String = "") {
                     .background(PinkPrimary)
             )
             Text(text = partName, style = MaterialTheme.typography.h3)
-
         }
     }
 }
