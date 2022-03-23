@@ -4,6 +4,7 @@
     <option name="branchProtectionPatterns">
       <list>
         <option value="ILT-.*" />
+        <option value="dev" />
       </list>
     </option>
   </component>
