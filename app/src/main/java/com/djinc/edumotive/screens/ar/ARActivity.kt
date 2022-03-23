@@ -20,12 +20,12 @@ class ARActivity : AppCompatActivity(R.layout.activity_ar) {
             rootView = findViewById(R.id.rootView)
         )
 
-//        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar)?.apply {
-//            doOnApplyWindowInsets { systemBarsInsets ->
-//                (layoutParams as ViewGroup.MarginLayoutParams).topMargin = systemBarsInsets.top
-//            }
-//            title = ""
-//        })
+        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar)?.apply {
+            doOnApplyWindowInsets { systemBarsInsets ->
+                (layoutParams as ViewGroup.MarginLayoutParams).topMargin = systemBarsInsets.top
+            }
+            title = ""
+        })
 
         supportFragmentManager.commit {
             add(R.id.containerFragment, ARFragment::class.java, Bundle())

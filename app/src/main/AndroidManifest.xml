@@ -25,7 +25,7 @@
         <activity
             android:name=".screens.ar.ARActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
             android:name=".MainActivity"

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Edumotive</string>
     <string name="place_object">Place at target</string>
+    <string name="move_object">Move to target</string>
 </resources>
