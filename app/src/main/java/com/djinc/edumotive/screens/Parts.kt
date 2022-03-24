@@ -19,7 +19,8 @@ import com.djinc.edumotive.models.Part
 @ExperimentalFoundationApi
 @Composable
 fun Parts(nav: NavController) {
-    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle("Onderdelen")
 
         val parts = listOf(
@@ -34,6 +35,7 @@ fun Parts(nav: NavController) {
         )
         LazySlider(
             direction = SliderDirection.Vertical,
+            lastElementOnPage = true,
             list = parts,
             component = SliderComponent.PartCard,
             nav = nav

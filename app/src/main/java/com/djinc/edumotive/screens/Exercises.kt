@@ -2,6 +2,8 @@ package com.djinc.edumotive.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +19,8 @@ import com.djinc.edumotive.models.Exercise
 @ExperimentalFoundationApi
 @Composable
 fun Exercises(nav: NavController) {
-    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
+    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+        Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle("Oefeningen")
 
         val exercises = listOf(

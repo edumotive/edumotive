@@ -63,6 +63,7 @@ fun Dashboard(nav: NavController) {
         LazySlider(
             title = "Oefeningen voor dit hoofdstuk",
             titleManualPadding = true,
+            lastElementOnPage = true,
             direction = SliderDirection.Horizontal,
             list = exercises,
             component = SliderComponent.ExerciseCard,
