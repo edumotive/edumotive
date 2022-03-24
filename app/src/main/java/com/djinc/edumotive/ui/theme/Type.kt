@@ -64,14 +64,14 @@ val Typography = Typography(
     h4 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         color = TextPrimary
     ),
     // DETAIL INFO
     body2 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         color = TextSecondary
     ),
     // EXERCISE STEPS

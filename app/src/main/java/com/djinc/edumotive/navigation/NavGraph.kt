@@ -25,7 +25,8 @@ fun NavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("partId")?.let {
                 PartDetails(
-                    partId = it
+                    partId = it,
+                    nav = navController
                 )
             }
         }
@@ -38,7 +39,8 @@ fun NavGraph(navController: NavHostController) {
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("exerciseId")?.let {
                 ExerciseDetails(
-                    exerciseId = it
+                    exerciseId = it,
+                    nav = navController
                 )
             }
         }

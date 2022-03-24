@@ -55,7 +55,7 @@ fun ExerciseCard(
                     modifier = Modifier.padding(start = 12.dp)
                 )
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { },
                     colors = ButtonDefaults.buttonColors(backgroundColor = PinkPrimary),
                     shape = RoundedCornerShape(topStart = 8.dp),
                     contentPadding = PaddingValues(horizontal = 24.dp),
