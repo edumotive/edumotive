@@ -51,7 +51,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[Product Name Screen Shot][product-screenshot]
+
+[![Product Name Screen Shot][product-screenshot]](https://github.com/DannyPX/edumotive)
 
 The idea of this project is to create an application that helps automotive students learn their profession in an innovative way that could help them learn from home as well instead of only at the workshop(s) on campus.The way we want to innovate the learning experience is by using tools like augmented reality so we can visualise what should be learnt and broaden the view a student would get from just a textbook.
 
