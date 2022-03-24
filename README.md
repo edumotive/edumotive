@@ -118,7 +118,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/DannyPX/edumotive)
+Project Link: [edumotive/edumotive](https://github.com/DannyPX/edumotive)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
