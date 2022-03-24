@@ -7,14 +7,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
+import com.djinc.edumotive.models.Exercise
 
 @ExperimentalFoundationApi
 @Composable
-fun Exercises() {
+fun Exercises(nav: NavController) {
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
         ScreenTitle("Oefeningen")
 
@@ -39,7 +41,8 @@ fun Exercises() {
         LazySlider(
             direction = SliderDirection.Vertical,
             list = exercises,
-            component = SliderComponent.ExerciseCard
+            component = SliderComponent.ExerciseCard,
+            nav = nav
         )
     }
 }

@@ -9,21 +9,35 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class Screen(
     val route: String,
     val title: String,
-    val icon: ImageVector
+    val icon: ImageVector?
 ) {
     object Dashboard : Screen(
         route = "dashboard",
         title = "Dashboard",
         icon = Icons.Default.Home
     )
+
     object Parts : Screen(
         route = "onderdelen",
         title = "Onderdelen",
         icon = Icons.Default.Phone
     )
+
+    object PartDetails : Screen(
+        route = "onderdeel",
+        title = "Onderdeel",
+        icon = null
+    )
+
     object Exercises : Screen(
         route = "oefeningen",
         title = "Oefeningen",
         icon = Icons.Default.Favorite
+    )
+
+    object ExerciseDetails : Screen(
+        route = "oefening",
+        title = "Oefening",
+        icon = null
     )
 }

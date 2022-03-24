@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
@@ -16,7 +17,7 @@ import com.djinc.edumotive.models.Part
 
 @ExperimentalFoundationApi
 @Composable
-fun Dashboard() {
+fun Dashboard(nav: NavController) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -35,7 +36,8 @@ fun Dashboard() {
             titleManualPadding = true,
             direction = SliderDirection.Horizontal,
             list = parts,
-            component = SliderComponent.PartCard
+            component = SliderComponent.PartCard,
+            nav = nav
         )
 
         Spacer(modifier = Modifier.height(36.dp))
@@ -63,7 +65,8 @@ fun Dashboard() {
             titleManualPadding = true,
             direction = SliderDirection.Horizontal,
             list = exercises,
-            component = SliderComponent.ExerciseCard
+            component = SliderComponent.ExerciseCard,
+            nav = nav
         )
     }
 }

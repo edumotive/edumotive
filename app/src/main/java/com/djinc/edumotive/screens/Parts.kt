@@ -9,14 +9,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
+import com.djinc.edumotive.models.Part
 
 @ExperimentalFoundationApi
 @Composable
-fun Parts() {
+fun Parts(nav: NavController) {
     Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp)) {
         ScreenTitle("Onderdelen")
 
@@ -33,7 +35,8 @@ fun Parts() {
         LazySlider(
             direction = SliderDirection.Vertical,
             list = parts,
-            component = SliderComponent.PartCard
+            component = SliderComponent.PartCard,
+            nav = nav
         )
     }
 }

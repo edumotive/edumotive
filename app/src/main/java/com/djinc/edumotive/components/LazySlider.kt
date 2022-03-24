@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.models.Exercise
@@ -23,7 +24,8 @@ fun <T> LazySlider(
     titleManualPadding: Boolean = false,
     direction: SliderDirection,
     list: List<T>,
-    component: SliderComponent
+    component: SliderComponent,
+    nav: NavController
 ) {
     if (title != "") {
         Text(
@@ -42,7 +44,7 @@ fun <T> LazySlider(
                         contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
-                            PartCard(partName = item.name)
+                            PartCard(partName = item.name, nav = nav)
                         }
                     }
                 }
@@ -55,7 +57,8 @@ fun <T> LazySlider(
                             ExerciseCard(
                                 exerciseName = item.name,
                                 description = item.description,
-                                fullWidth = false
+                                fullWidth = false,
+                                nav = nav
                             )
                         }
                     }
@@ -73,7 +76,7 @@ fun <T> LazySlider(
                         modifier = Modifier.fillMaxWidth(1f)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
-                            PartCard(partName = item.name)
+                            PartCard(partName = item.name, nav = nav)
                         }
                     }
                 }
@@ -87,7 +90,8 @@ fun <T> LazySlider(
                             ExerciseCard(
                                 exerciseName = item.name,
                                 description = item.description,
-                                fullWidth = true
+                                fullWidth = true,
+                                nav = nav
                             )
                         }
                     }
