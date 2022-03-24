@@ -26,10 +26,10 @@ fun Dashboard(nav: NavController) {
         ScreenTitle("Welkom!", manualPadding = true)
 
         val parts = listOf(
-            Part(name = "Onderdeel 1"),
-            Part(name = "Onderdeel 2"),
-            Part(name = "Onderdeel 3"),
-            Part(name = "Onderdeel 4"),
+            Part(id = "abcdef", name = "Onderdeel 1"),
+            Part(id = "abcdefg", name = "Onderdeel 2"),
+            Part(id = "abcdefgh", name = "Onderdeel 3"),
+            Part(id = "abcdefghi", name = "Onderdeel 4"),
         )
         LazySlider(
             title = "Recent bekeken onderdelen",
@@ -44,18 +44,22 @@ fun Dashboard(nav: NavController) {
 
         val exercises = listOf(
             Exercise(
+                id = "abcdef",
                 name = "Oefening 1",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefg",
                 name = "Oefening 2",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefgh",
                 name = "Oefening 3",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefghi",
                 name = "Oefening 4",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),

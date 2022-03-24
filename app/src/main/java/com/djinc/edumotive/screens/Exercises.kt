@@ -25,18 +25,22 @@ fun Exercises(nav: NavController) {
 
         val exercises = listOf(
             Exercise(
+                id = "abcdef",
                 name = "Oefening 1",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefg",
                 name = "Oefening 2",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefgh",
                 name = "Oefening 3",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),
             Exercise(
+                id = "abcdefghi",
                 name = "Oefening 4",
                 description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
             ),

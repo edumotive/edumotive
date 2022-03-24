@@ -16,6 +16,7 @@ import com.djinc.edumotive.ui.theme.PinkPrimary
 
 @Composable
 fun ExerciseCard(
+    exerciseId: String,
     exerciseName: String = "",
     description: String = "",
     fullWidth: Boolean,
@@ -28,7 +29,7 @@ fun ExerciseCard(
         modifier = Modifier
             .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(260.dp))
             .clickable {
-                nav.navigate(Screen.ExerciseDetails.route)
+                nav.navigate("part/$exerciseId")
             }
     ) {
         Column() {

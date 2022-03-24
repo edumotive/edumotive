@@ -19,7 +19,7 @@ import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
 
 @Composable
-fun PartCard(partName: String = "", nav: NavController) {
+fun PartCard(partId: String, partName: String = "", nav: NavController) {
     Card(
         backgroundColor = Background,
         elevation = 3.dp,
@@ -27,7 +27,7 @@ fun PartCard(partName: String = "", nav: NavController) {
         modifier = Modifier
             .width(200.dp)
             .clickable {
-                nav.navigate(Screen.PartDetails.route)
+                nav.navigate("part/$partId")
             }
     ) {
         Column(

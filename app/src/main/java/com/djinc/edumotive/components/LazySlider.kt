@@ -48,7 +48,7 @@ fun <T> LazySlider(
                         modifier = Modifier.then(if (lastElementOnPage) Modifier.padding(bottom = 60.dp) else Modifier)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
-                            PartCard(partName = item.name, nav = nav)
+                            PartCard(partId = item.id, partName = item.name, nav = nav)
                         }
                     }
                 }
@@ -60,6 +60,7 @@ fun <T> LazySlider(
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
+                                exerciseId = item.id,
                                 exerciseName = item.name,
                                 description = item.description,
                                 fullWidth = false,
@@ -83,7 +84,7 @@ fun <T> LazySlider(
                             .fillMaxHeight(1f)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
-                            PartCard(partName = item.name, nav = nav)
+                            PartCard(partId = item.id, partName = item.name, nav = nav)
                         }
                     }
                 }
@@ -97,6 +98,7 @@ fun <T> LazySlider(
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
+                                exerciseId = item.id,
                                 exerciseName = item.name,
                                 description = item.description,
                                 fullWidth = true,
