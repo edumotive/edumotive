@@ -9,8 +9,8 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-![build](https://img.shields.io/github/workflow/status/DannyPX/edumotive/Java%20CI%20with%20Gradle)
-![commit activity (dev)](https://img.shields.io/github/commit-activity/w/DannyPX/edumotive/dev)
+![build](https://img.shields.io/github/workflow/status/edumotive/edumotive/Java%20CI%20with%20Gradle)
+![commit activity (dev)](https://img.shields.io/github/commit-activity/w/edumotive/edumotive/dev)
 
 <!-- PROJECT LOGO -->
 <br />
