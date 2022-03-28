@@ -29,7 +29,7 @@ fun ExerciseCard(
         modifier = Modifier
             .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(260.dp))
             .clickable {
-                nav.navigate("part/$exerciseId")
+                nav.navigate("exercise/$exerciseId")
             }
     ) {
         Column() {

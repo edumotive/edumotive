@@ -47,6 +47,7 @@ fun Exercises(nav: NavController) {
         )
         LazySlider(
             direction = SliderDirection.Vertical,
+            lastElementOnPage = true,
             list = exercises,
             component = SliderComponent.ExerciseCard,
             nav = nav
