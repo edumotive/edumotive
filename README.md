@@ -65,6 +65,7 @@ The idea of this project is to create an application that helps automotive stude
 * [Kotlin](https://kotlinlang.org/)
 * [Android Jetpack](https://developer.android.com/jetpack)
 * [SceneView](https://github.com/SceneView/sceneview-android)
+* [Contentful Java](https://github.com/contentful/contentful.java)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
