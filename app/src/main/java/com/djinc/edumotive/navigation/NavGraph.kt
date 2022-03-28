@@ -20,13 +20,13 @@ fun NavGraph(navController: NavHostController) {
             Parts(nav = navController)
         }
         composable(
-            route = Screen.Part.route,
-            arguments = listOf(navArgument("partId") { type = NavType.StringType })
+                route = Screen.Part.route,
+                arguments = listOf(navArgument("partId") { type = NavType.StringType })
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("partId")?.let {
                 PartDetails(
-                    partId = it,
-                    nav = navController
+                        partId = it,
+                        nav = navController
                 )
             }
         }
@@ -34,13 +34,13 @@ fun NavGraph(navController: NavHostController) {
             Exercises(nav = navController)
         }
         composable(
-            route = Screen.Exercise.route,
-            arguments = listOf(navArgument("exerciseId") { type = NavType.StringType })
+                route = Screen.Exercise.route,
+                arguments = listOf(navArgument("exerciseId") { type = NavType.StringType })
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("exerciseId")?.let {
                 ExerciseDetails(
-                    exerciseId = it,
-                    nav = navController
+                        exerciseId = it,
+                        nav = navController
                 )
             }
         }

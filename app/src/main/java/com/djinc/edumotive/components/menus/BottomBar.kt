@@ -20,23 +20,23 @@ import com.djinc.edumotive.ui.theme.Background
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        Screen.Dashboard,
-        Screen.Parts,
-        Screen.Exercises
+            Screen.Dashboard,
+            Screen.Parts,
+            Screen.Exercises
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        elevation = 8.dp,
-        backgroundColor = Background,
-        modifier = Modifier.height(60.dp),
+            elevation = 8.dp,
+            backgroundColor = Background,
+            modifier = Modifier.height(60.dp),
     ) {
         screens.forEach { screen ->
             AddItem(
-                screen = screen,
-                currentDestination = currentDestination,
-                navController = navController
+                    screen = screen,
+                    currentDestination = currentDestination,
+                    navController = navController
             )
         }
     }
@@ -44,22 +44,22 @@ fun BottomBar(navController: NavHostController) {
 
 @Composable
 fun RowScope.AddItem(
-    screen: Screen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
+        screen: Screen,
+        currentDestination: NavDestination?,
+        navController: NavHostController
 ) {
     BottomNavigationItem(
-        label = {
-            Text(text = screen.title)
-        },
-        icon = {
-            screen.icon?.let { Icon(imageVector = it, contentDescription = "Navigation Icon") }
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        onClick = {
-            navController.navigate(screen.route)
-        }
+            label = {
+                Text(text = screen.title)
+            },
+            icon = {
+                screen.icon?.let { Icon(imageVector = it, contentDescription = "Navigation Icon") }
+            },
+            selected = currentDestination?.hierarchy?.any {
+                it.route == screen.route
+            } == true,
+            onClick = {
+                navController.navigate(screen.route)
+            }
     )
 }

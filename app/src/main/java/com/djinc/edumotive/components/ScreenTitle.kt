@@ -10,9 +10,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ScreenTitle(title: String = "", spacerHeight: Int = 12, manualPadding: Boolean = false) {
     Text(
-        text = title,
-        style = MaterialTheme.typography.h1,
-        modifier = Modifier.then(if (manualPadding) Modifier.padding(horizontal = 20.dp) else Modifier)
+            text = title,
+            style = MaterialTheme.typography.h1,
+            modifier = Modifier.then(if (manualPadding) Modifier.padding(horizontal = 20.dp) else Modifier)
     )
     Spacer(modifier = Modifier.height(spacerHeight.dp))
 }

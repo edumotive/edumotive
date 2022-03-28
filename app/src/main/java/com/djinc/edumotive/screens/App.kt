@@ -16,9 +16,9 @@ fun App(windowSize: WindowSize) {
     val navController = rememberNavController()
     if (windowSize == WindowSize.Compact) {
         Scaffold(
-            bottomBar = {
-                BottomBar(navController = navController)
-            },
+                bottomBar = {
+                    BottomBar(navController = navController)
+                },
         ) {
             NavGraph(navController = navController)
         }
@@ -26,9 +26,9 @@ fun App(windowSize: WindowSize) {
         Row() {
             SideBar(navController = navController)
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
                 NavGraph(navController = navController)
             }

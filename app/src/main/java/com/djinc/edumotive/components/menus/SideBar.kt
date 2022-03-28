@@ -18,27 +18,27 @@ import com.djinc.edumotive.navigation.Screen
 @Composable
 fun SideBar(navController: NavHostController) {
     val screens = listOf(
-        Screen.Dashboard,
-        Screen.Parts,
-        Screen.Exercises
+            Screen.Dashboard,
+            Screen.Parts,
+            Screen.Exercises
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     Box(
-        modifier = Modifier
-            .background(color = Color.White)
-            .padding(16.dp)
-            .fillMaxHeight()
+            modifier = Modifier
+                    .background(color = Color.White)
+                    .padding(16.dp)
+                    .fillMaxHeight()
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
             // LOGO
             Row() {
                 Box(
-                    modifier = Modifier
-                        .width(20.dp)
-                        .height(20.dp)
-                        .background(Color.Black)
+                        modifier = Modifier
+                                .width(20.dp)
+                                .height(20.dp)
+                                .background(Color.Black)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text("EduMotive")
@@ -47,9 +47,9 @@ fun SideBar(navController: NavHostController) {
             // LINKS TO DIFFERENT SCREENS
             screens.forEach { screen ->
                 AddItem(
-                    screen = screen,
-                    currentDestination = currentDestination,
-                    navController = navController
+                        screen = screen,
+                        currentDestination = currentDestination,
+                        navController = navController
                 )
             }
         }
@@ -58,21 +58,21 @@ fun SideBar(navController: NavHostController) {
 
 @Composable
 fun ColumnScope.AddItem(
-    screen: Screen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
+        screen: Screen,
+        currentDestination: NavDestination?,
+        navController: NavHostController
 ) {
     Row(modifier = Modifier.clickable {
         val active =
-            currentDestination?.hierarchy?.any { it.route == screen.route } == true
+                currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
         if (!active) navController.navigate(screen.route)
     }) {
         Box(
-            modifier = Modifier
-                .width(20.dp)
-                .height(20.dp)
-                .background(Color.Black)
+                modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
+                        .background(Color.Black)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(screen.title)

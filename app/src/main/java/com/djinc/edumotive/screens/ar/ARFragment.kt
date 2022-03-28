@@ -38,7 +38,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
             doOnApplyWindowInsets { systemBarsInsets ->
                 (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                    systemBarsInsets.bottom + bottomMargin
+                        systemBarsInsets.bottom + bottomMargin
             }
             setOnClickListener { cursorNode.createAnchor()?.let { anchorOrMove(it) } }
         }
@@ -71,13 +71,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
         modelNode = ArModelNode()
         modelNode.loadModelAsync(context = requireContext(),
-            coroutineScope = lifecycleScope,
-            glbFileLocation = "models/V8_motor.glb",
-            onLoaded = {
-                actionButton.text = getString(R.string.move_object)
-                actionButton.setIconResource(R.drawable.ic_target)
-                isLoading = false
-            })
+                coroutineScope = lifecycleScope,
+                glbFileLocation = "models/V8_motor.glb",
+                onLoaded = {
+                    actionButton.text = getString(R.string.move_object)
+                    actionButton.setIconResource(R.drawable.ic_target)
+                    isLoading = false
+                })
     }
 
     private fun anchorOrMove(anchor: Anchor) {

@@ -14,10 +14,10 @@ class ARActivity : AppCompatActivity(R.layout.activity_ar) {
         super.onCreate(savedInstanceState)
 
         setFullScreen(
-            fullScreen = true,
-            hideSystemBars = false,
-            fitsSystemWindows = false,
-            rootView = findViewById(R.id.rootView)
+                fullScreen = true,
+                hideSystemBars = false,
+                fitsSystemWindows = false,
+                rootView = findViewById(R.id.rootView)
         )
 
         setSupportActionBar(findViewById<Toolbar>(R.id.toolbar)?.apply {

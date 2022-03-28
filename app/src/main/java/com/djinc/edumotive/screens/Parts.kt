@@ -24,21 +24,21 @@ fun Parts(nav: NavController) {
         ScreenTitle("Onderdelen")
 
         val parts = listOf(
-            Part(id = "abcdef", name = "Onderdeel 1"),
-            Part(id = "abcdefg", name = "Onderdeel 2"),
-            Part(id = "abcdefgh", name = "Onderdeel 3"),
-            Part(id = "abcdefghi", name = "Onderdeel 4"),
-            Part(id = "abcdefghij", name = "Onderdeel 5"),
-            Part(id = "abcdefghijk", name = "Onderdeel 6"),
-            Part(id = "abcdefghijkl", name = "Onderdeel 7"),
-            Part(id = "abcdefghijklm", name = "Onderdeel 8"),
+                Part(id = "abcdef", name = "Onderdeel 1"),
+                Part(id = "abcdefg", name = "Onderdeel 2"),
+                Part(id = "abcdefgh", name = "Onderdeel 3"),
+                Part(id = "abcdefghi", name = "Onderdeel 4"),
+                Part(id = "abcdefghij", name = "Onderdeel 5"),
+                Part(id = "abcdefghijk", name = "Onderdeel 6"),
+                Part(id = "abcdefghijkl", name = "Onderdeel 7"),
+                Part(id = "abcdefghijklm", name = "Onderdeel 8"),
         )
         LazySlider(
-            direction = SliderDirection.Vertical,
-            lastElementOnPage = true,
-            list = parts,
-            component = SliderComponent.PartCard,
-            nav = nav
+                direction = SliderDirection.Vertical,
+                lastElementOnPage = true,
+                list = parts,
+                component = SliderComponent.PartCard,
+                nav = nav
         )
     }
 }
