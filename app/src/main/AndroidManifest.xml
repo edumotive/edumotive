@@ -3,6 +3,7 @@
     package="com.djinc.edumotive">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!--
  Limits app visibility in the Google Play Store to ARCore supported devices
      (https://developers.google.com/ar/devices).
