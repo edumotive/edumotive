@@ -25,6 +25,8 @@
         <activity
             android:name=".screens.ar.ARActivity"
             android:exported="true"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
