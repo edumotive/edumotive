@@ -1,11 +1,10 @@
 package com.djinc.edumotive.screens
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -13,7 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -22,16 +21,17 @@ import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
 import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.screens.ar.ARActivity
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
 
 @ExperimentalFoundationApi
 @Composable
 fun PartDetails(partId: String = "", nav: NavController) {
+    val context = LocalContext.current
     // GET DATA FROM PART BASED ON GIVEN ID
-    Column(
-            modifier = Modifier
-                    .padding(horizontal = 20.dp)
+
+    Column(modifier = Modifier.padding(horizontal = 20.dp)
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Row(
@@ -41,7 +41,9 @@ fun PartDetails(partId: String = "", nav: NavController) {
         ) {
             ScreenTitle(title = "Onderdeel")
             Button(
-                    onClick = {},
+                    onClick = {
+                        context.startActivity(Intent(context, ARActivity::class.java))
+                    },
                     colors = ButtonDefaults.buttonColors(backgroundColor = PinkSecondary),
                     shape = RoundedCornerShape(8.dp)
             ) {
