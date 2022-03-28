@@ -31,21 +31,22 @@ fun PartDetails(partId: String = "", nav: NavController) {
     val context = LocalContext.current
     // GET DATA FROM PART BASED ON GIVEN ID
 
-    Column(modifier = Modifier.padding(horizontal = 20.dp)
+    Column(
+        modifier = Modifier.padding(horizontal = 20.dp)
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth(1f)
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(1f)
         ) {
             ScreenTitle(title = "Onderdeel")
             Button(
-                    onClick = {
-                        context.startActivity(Intent(context, ARActivity::class.java))
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = PinkSecondary),
-                    shape = RoundedCornerShape(8.dp)
+                onClick = {
+                    context.startActivity(Intent(context, ARActivity::class.java))
+                },
+                colors = ButtonDefaults.buttonColors(backgroundColor = PinkSecondary),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text(text = "Open in AR", color = PinkPrimary, fontSize = 16.sp)
             }
@@ -54,10 +55,10 @@ fun PartDetails(partId: String = "", nav: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Box(
-                modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .aspectRatio(1F)
-                        .background(PinkSecondary, RoundedCornerShape(8.dp))
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .aspectRatio(1F)
+                .background(PinkSecondary, RoundedCornerShape(8.dp))
         ) {
 
         }
@@ -66,8 +67,8 @@ fun PartDetails(partId: String = "", nav: NavController) {
 
         Text(text = "Informatie", style = MaterialTheme.typography.h4)
         Text(
-                text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
-                style = MaterialTheme.typography.body2,
+            text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
+            style = MaterialTheme.typography.body2,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -75,21 +76,53 @@ fun PartDetails(partId: String = "", nav: NavController) {
         ScreenTitle(title = "Bijbehorende onderdelen")
 
         val parts = listOf(
-                Part(id = "abcdef", name = "Onderdeel 1"),
-                Part(id = "abcdefg", name = "Onderdeel 2"),
-                Part(id = "abcdefgh", name = "Onderdeel 3"),
-                Part(id = "abcdefghi", name = "Onderdeel 4"),
-                Part(id = "abcdefghij", name = "Onderdeel 5"),
-                Part(id = "abcdefghijk", name = "Onderdeel 6"),
-                Part(id = "abcdefghijkl", name = "Onderdeel 7"),
-                Part(id = "abcdefghijklm", name = "Onderdeel 8"),
+            Part(
+                id = "abcdef",
+                name = "Onderdeel 1",
+                imageUrl = "https://picsum.photos/seed/edumotive-1/400"
+            ),
+            Part(
+                id = "abcdefg",
+                name = "Onderdeel 2",
+                imageUrl = "https://picsum.photos/seed/edumotive-2/400"
+            ),
+            Part(
+                id = "abcdefgh",
+                name = "Onderdeel 3",
+                imageUrl = "https://picsum.photos/seed/edumotive-3/400"
+            ),
+            Part(
+                id = "abcdefghi",
+                name = "Onderdeel 4",
+                imageUrl = "https://picsum.photos/seed/edumotive-4/400"
+            ),
+            Part(
+                id = "abcdefghij",
+                name = "Onderdeel 5",
+                imageUrl = "https://picsum.photos/seed/edumotive-5/400"
+            ),
+            Part(
+                id = "abcdefghijk",
+                name = "Onderdeel 6",
+                imageUrl = "https://picsum.photos/seed/edumotive-6/400"
+            ),
+            Part(
+                id = "abcdefghijkl",
+                name = "Onderdeel 7",
+                imageUrl = "https://picsum.photos/seed/edumotive-7/400"
+            ),
+            Part(
+                id = "abcdefghijklm",
+                name = "Onderdeel 8",
+                imageUrl = "https://picsum.photos/seed/edumotive-8/400"
+            ),
         )
         LazySlider(
-                direction = SliderDirection.Vertical,
-                lastElementOnPage = true,
-                list = parts,
-                component = SliderComponent.PartCard,
-                nav = nav
+            direction = SliderDirection.Vertical,
+            lastElementOnPage = true,
+            list = parts,
+            component = SliderComponent.PartCard,
+            nav = nav
         )
     }
 }

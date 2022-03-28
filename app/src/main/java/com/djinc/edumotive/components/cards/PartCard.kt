@@ -16,10 +16,9 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
-import com.djinc.edumotive.ui.theme.PinkSecondary
 
 @Composable
-fun PartCard(partId: String, partName: String = "", nav: NavController) {
+fun PartCard(partId: String, partName: String = "", imageUrl: String, nav: NavController) {
     Card(
             backgroundColor = Background,
             elevation = 3.dp,
@@ -41,7 +40,7 @@ fun PartCard(partId: String, partName: String = "", nav: NavController) {
                             .padding(start = 12.dp, top = 12.dp, end = 12.dp)
                             .clip(RoundedCornerShape(8.dp))
             ) {
-                AsyncImage(imageUrl = "https://picsum.photos/400", imageName = partName)
+                AsyncImage(imageUrl = imageUrl, imageName = partName)
             }
             Text(text = partName, style = MaterialTheme.typography.h3, modifier = Modifier.padding(horizontal = 12.dp))
             Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier
