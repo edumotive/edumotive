@@ -23,6 +23,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationIdSuffix '.release'
+            versionNameSuffix '-release'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+        all {
+            buildConfigField("String", "CONTENTFUL_HOST", "\"contentful.com\"")
+            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", "\"WSH6C_fqQpeKG8ilvbAawTSVMgYBgUnSh3cIeK9y3U0\"")
+            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", "\"B18Rzbce7dOlNPTJsfsHVyOUX2QmGWF7OmrYfa_OfpM\"")
+            buildConfigField("String", "CONTENTFUL_SPACE_ID", "\"ptuefbkmcynu\"")
         }
     }
     compileOptions {
@@ -46,12 +58,18 @@ android {
 }
 
 dependencies {
-
+    implementation "androidx.navigation:navigation-compose:2.4.1"
     implementation 'androidx.core:core-ktx:1.7.0'
 //    implementation "androidx.compose.ui:ui:$compose_version"
 //    implementation "androidx.compose.material:material:$compose_version"
 //    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.3.5'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 //    implementation 'androidx.activity:activity-compose:1.3.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -76,4 +94,12 @@ dependencies {
 
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
+
+    // ARCore
+    implementation 'com.google.ar:core:1.30.0'
+    implementation 'io.github.sceneview:arsceneview:0.2.0'
+
+    // Contentful
+    implementation 'com.contentful.java:java-sdk:10.5.2'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
 }

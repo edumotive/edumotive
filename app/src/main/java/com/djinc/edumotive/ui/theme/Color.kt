@@ -2,7 +2,10 @@ package com.djinc.edumotive.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val TextPrimary = Color(0xFF000000)
+val TextSecondary = Color(0xFFAFAFAF)
+val Background = Color(0xFFFFFFFF)
+val PinkPrimary = Color(0xFFEB0E61)
+val PinkSecondary = Color(0xFFFCDBE7)
+val BluePrimary = Color(0xFF2B2362)
+val BlueSecondary = Color(0xFF9591B0)

@@ -2,6 +2,15 @@
 <resources>
 
     <style name="Theme.Edumotive" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:statusBarColor">@color/pink_primary</item>
+    </style>
+
+    <style name="Theme.EdumotiveAR" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:statusBarColor">@color/pink_primary</item>
+    </style>
+
+    <style name="Theme.Edumotive.Toolbar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 </resources>
