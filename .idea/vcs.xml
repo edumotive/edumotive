@@ -5,6 +5,7 @@
       <list>
         <option value="ILT-.*" />
         <option value="dev" />
+        <option value="main" />
       </list>
     </option>
   </component>

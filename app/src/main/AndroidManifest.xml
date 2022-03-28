@@ -18,14 +18,14 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Edumotive"
-        android:largeHeap="true">
+        android:theme="@style/Theme.Edumotive">
         <activity
-            android:name=".screens.AR"
+            android:name=".screens.ar.ARActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
             android:name=".MainActivity"
