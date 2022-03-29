@@ -48,6 +48,9 @@ fun RowScope.AddItem(
         currentDestination: NavDestination?,
         navController: NavHostController
 ) {
+    val active = currentDestination?.hierarchy?.any {
+        it.route == screen.route
+    } == true
     BottomNavigationItem(
             label = {
                 Text(text = screen.title)
@@ -55,11 +58,9 @@ fun RowScope.AddItem(
             icon = {
                 screen.icon?.let { Icon(imageVector = it, contentDescription = "Navigation Icon") }
             },
-            selected = currentDestination?.hierarchy?.any {
-                it.route == screen.route
-            } == true,
+            selected = active,
             onClick = {
-                navController.navigate(screen.route)
+                if (!active) navController.navigate(screen.route)
             }
     )
 }
