@@ -20,7 +20,7 @@ fun App(windowSize: WindowSize) {
                     BottomBar(navController = navController)
                 },
         ) {
-            NavGraph(navController = navController)
+            NavGraph(navController = navController, windowSize = windowSize)
         }
     } else {
         Row() {
@@ -30,7 +30,7 @@ fun App(windowSize: WindowSize) {
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
-                NavGraph(navController = navController)
+                NavGraph(navController = navController, windowSize = windowSize)
             }
         }
     }
