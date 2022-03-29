@@ -2,6 +2,8 @@ package com.djinc.edumotive.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -9,38 +11,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.djinc.edumotive.components.LazySlider
-import com.djinc.edumotive.components.ScreenTitle
-import com.djinc.edumotive.components.SliderComponent
-import com.djinc.edumotive.components.SliderDirection
+import com.djinc.edumotive.components.*
 import com.djinc.edumotive.models.ExerciseStep
 import com.djinc.edumotive.ui.theme.TextSecondary
+import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun ExerciseDetails(exerciseId: String = "", nav: NavController) {
-    Column(
+fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: WindowSize) {
+    LazyColumn(
+        contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 85.dp) else PaddingValues(
+            bottom = 24.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .padding(horizontal = 20.dp)
+            .fillMaxSize()
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
-        ScreenTitle(title = "Oefening - Naam", spacerHeight = 0)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(text = "Hoofdstuk X", color = TextSecondary, fontSize = 16.sp)
-            Text(text = "O 10 - 15 min", color = TextSecondary, fontSize = 16.sp)
+        item {
+            Spacer(modifier = Modifier.height(12.dp))
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text(text = "Wat je leert in deze oefening", style = MaterialTheme.typography.h4)
-        Text(
-            text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
-            style = MaterialTheme.typography.body2,
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
+        item {
+            ScreenTitle(title = "Oefening - Naam", spacerHeight = 0)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = "Hoofdstuk X", color = TextSecondary, fontSize = 16.sp)
+                Text(text = "O 10 - 15 min", color = TextSecondary, fontSize = 16.sp)
+            }
+        }
+        item {
+            Text(text = "Wat je leert in deze oefening", style = MaterialTheme.typography.h4)
+            Text(
+                text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
+                style = MaterialTheme.typography.body2,
+            )
+        }
         val exerciseSteps = listOf(
             ExerciseStep(
                 name = "Stap 1",
@@ -58,12 +62,8 @@ fun ExerciseDetails(exerciseId: String = "", nav: NavController) {
                 name = "Stap 5",
             ),
         )
-        LazySlider(
-            direction = SliderDirection.Vertical,
-            lastElementOnPage = true,
-            list = exerciseSteps,
-            component = SliderComponent.ExerciseStep,
-            nav = nav
-        )
+        itemsIndexed(exerciseSteps) { index, item ->
+            ExerciseStep(exerciseStepName = item.name, stepIndex = index)
+        }
     }
 }

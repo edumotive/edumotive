@@ -12,22 +12,22 @@ import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.models.Exercise
-import com.djinc.edumotive.models.ExerciseStep
 import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.utils.WindowSize
 
 enum class SliderDirection { Horizontal, Vertical }
-enum class SliderComponent { PartCard, ExerciseCard, ExerciseStep }
+enum class SliderComponent { PartCard, ExerciseCard }
 
 @ExperimentalFoundationApi
 @Composable
 fun <T> LazySlider(
     title: String = "",
     titleManualPadding: Boolean = false,
-    lastElementOnPage: Boolean = false,
     direction: SliderDirection,
     list: List<T>,
     component: SliderComponent,
-    nav: NavController
+    nav: NavController,
+    windowSize: WindowSize
 ) {
     if (title.isNotEmpty()) {
         Text(
@@ -44,7 +44,6 @@ fun <T> LazySlider(
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp),
-                        modifier = Modifier.then(if (lastElementOnPage) Modifier.padding(bottom = 60.dp) else Modifier)
                     ) {
                         itemsIndexed(list as List<Part>) { index, item ->
                             PartCard(
@@ -60,7 +59,6 @@ fun <T> LazySlider(
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp),
-                        modifier = Modifier.then(if (lastElementOnPage) Modifier.padding(bottom = 60.dp) else Modifier)
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
@@ -83,7 +81,9 @@ fun <T> LazySlider(
                         cells = GridCells.Adaptive(128.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 80.dp),
+                        contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
+                            bottom = 24.dp
+                        ),
                         modifier = Modifier
                             .fillMaxWidth(1f)
                     ) {
@@ -100,7 +100,9 @@ fun <T> LazySlider(
                 SliderComponent.ExerciseCard -> {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 80.dp),
+                        contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
+                            bottom = 24.dp
+                        ),
                         modifier = Modifier
                             .fillMaxWidth(1f)
                             .fillMaxHeight(1f)
@@ -114,17 +116,6 @@ fun <T> LazySlider(
                                 fullWidth = true,
                                 nav = nav
                             )
-                        }
-                    }
-                }
-                SliderComponent.ExerciseStep -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 80.dp),
-                        modifier = Modifier.fillMaxWidth(1f)
-                    ) {
-                        itemsIndexed(list as List<ExerciseStep>) { index, item ->
-                            ExerciseStep(exerciseStepName = item.name, stepIndex = index)
                         }
                     }
                 }
