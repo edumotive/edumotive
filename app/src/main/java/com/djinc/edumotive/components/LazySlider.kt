@@ -66,6 +66,7 @@ fun <T> LazySlider(
                             ExerciseCard(
                                 exerciseId = item.id,
                                 exerciseName = item.name,
+                                imageUrl = item.imageUrl,
                                 description = item.description,
                                 fullWidth = false,
                                 nav = nav
@@ -108,6 +109,7 @@ fun <T> LazySlider(
                             ExerciseCard(
                                 exerciseId = item.id,
                                 exerciseName = item.name,
+                                imageUrl = item.imageUrl,
                                 description = item.description,
                                 fullWidth = true,
                                 nav = nav
