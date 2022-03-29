@@ -33,8 +33,8 @@ fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
     textView.apply {
         setPadding(6)
         setText(text)
-        setTextColor(ContextCompat.getColor(context, android.R.color.white))
         setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Large)
+        setTextColor(ContextCompat.getColor(context, android.R.color.white))
     }
 
     ViewRenderable.builder()
