@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
+import com.djinc.edumotive.models.ARModel
+import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.utils.ar.createModel
+import com.djinc.edumotive.utils.ar.createTextNode
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -21,7 +25,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var actionButton: ExtendedFloatingActionButton
 
     private lateinit var cursorNode: CursorNode
-    private lateinit var modelNode: ArModelNode
+
+    private val arModels = mutableListOf<ArModelNode>()
+
+    private var models : List<ContentfulModel> = listOf(
+        ContentfulModel("models/V8_motor.glb", "Engine")
+    )
 
     private var isLoading = false
         set(value) {
@@ -32,6 +41,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
@@ -50,40 +60,39 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             onArSessionFailed = { _: Exception ->
                 // If AR is not available or the camara permission has been denied, we add the model
                 // directly to the scene for a fallback 3D only usage
-                modelNode.centerModel(origin = Position(x = 0.0f, y = 0.0f, z = 0.0f))
-                modelNode.scaleModel(units = 1.0f)
-                sceneView.addChild(modelNode)
-            }
-            onTouchAr = { hitResult, _ ->
-                anchorOrMove(hitResult.createAnchor())
+                arModels.forEach { arModel ->
+                    arModel.centerModel(origin = Position(x = 0.0f, y = 0.0f, z = 0.0f))
+                    arModel.scaleModel(units = 1.0f)
+                    sceneView.addChild(arModel)
+                }
             }
         }
 
         cursorNode = CursorNode(context = requireContext(), coroutineScope = lifecycleScope).apply {
             onTrackingChanged = { _, isTracking, _ ->
+                isLoading = false
                 if (!isLoading) {
                     actionButton.isGone = !isTracking
+                    actionButton.text = getString(R.string.move_object)
+                    actionButton.setIconResource(R.drawable.ic_target)
                 }
             }
         }
         sceneView.addChild(cursorNode)
 
         isLoading = true
-        modelNode = ArModelNode()
-        modelNode.loadModelAsync(context = requireContext(),
-                coroutineScope = lifecycleScope,
-                glbFileLocation = "models/V8_motor.glb",
-                onLoaded = {
-                    actionButton.text = getString(R.string.move_object)
-                    actionButton.setIconResource(R.drawable.ic_target)
-                    isLoading = false
-                })
+
+        models.forEach {
+                model -> arModels.add(createModel(requireContext(), lifecycleScope, model.modelName, model.modelURL))
+        }
     }
 
     private fun anchorOrMove(anchor: Anchor) {
-        if (!sceneView.children.contains(modelNode)) {
-            sceneView.addChild(modelNode)
+        arModels.forEach {
+            arModel -> if (!sceneView.children.contains(arModel)) {
+                sceneView.addChild(arModel)
+            }
+            arModel.anchor = anchor
         }
-        modelNode.anchor = anchor
     }
 }
