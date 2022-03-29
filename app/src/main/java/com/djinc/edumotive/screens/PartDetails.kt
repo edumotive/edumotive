@@ -58,7 +58,7 @@ fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize)
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
                         Icon(painter = painterResource(id = R.drawable.ic_augmented_reality), contentDescription = "See $partId in Augmented Reality", tint = PinkPrimary)
-                        Text(text = "Open in AR", color = PinkPrimary, fontSize = 15.sp)
+                        Text(text = "Open in AR", color = PinkPrimary, fontSize = 15.sp, modifier = Modifier.padding(top = 2.dp))
                     }
                 }
             }

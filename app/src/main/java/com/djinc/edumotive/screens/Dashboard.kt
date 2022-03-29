@@ -18,11 +18,14 @@ import com.djinc.edumotive.utils.WindowSize
 @ExperimentalFoundationApi
 @Composable
 fun Dashboard(nav: NavController, windowSize: WindowSize) {
-    LazyColumn(contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 65.dp) else PaddingValues(bottom = 24.dp)) {
+    LazyColumn(contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 65.dp) else PaddingValues(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(20.dp), modifier = Modifier.fillMaxSize()) {
         item {
-            Spacer(modifier = Modifier.height(32.dp))
-            ScreenTitle("Welkom!", manualPadding = true)
-
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+        item {
+            ScreenTitle("Welkom!", manualPadding = true, spacerHeight = 0)
+        }
+        item {
             val parts = listOf(
                     Part(
                             id = "abcdef",
@@ -54,8 +57,9 @@ fun Dashboard(nav: NavController, windowSize: WindowSize) {
                     nav = nav,
                     windowSize = windowSize
             )
-
-            Spacer(modifier = Modifier.height(36.dp))
+        }
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
 
             val exercises = listOf(
                     Exercise(
