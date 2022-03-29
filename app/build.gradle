@@ -11,7 +11,7 @@ android {
         minSdk 30
         targetSdk 31
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -20,11 +20,11 @@ android {
     }
 
     buildTypes {
-        release {
+        alpha {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            applicationIdSuffix '.release'
-            versionNameSuffix '-release'
+            applicationIdSuffix '.alpha'
+            versionNameSuffix '-alpha'
         }
         debug {
             applicationIdSuffix '.debug'
