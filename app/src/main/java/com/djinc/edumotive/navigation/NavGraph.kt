@@ -2,22 +2,24 @@ package com.djinc.edumotive.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.djinc.edumotive.screens.*
+import com.djinc.edumotive.utils.WindowSize
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
     NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
         composable(route = Screen.Dashboard.route) {
-            Dashboard(nav = navController)
+            Dashboard(nav = navController, windowSize = windowSize)
         }
         composable(route = Screen.Parts.route) {
-            Parts(nav = navController)
+            Parts(nav = navController, windowSize = windowSize)
         }
         composable(
                 route = Screen.Part.route,
@@ -26,12 +28,13 @@ fun NavGraph(navController: NavHostController) {
             backStackEntry.arguments?.getString("partId")?.let {
                 PartDetails(
                         partId = it,
-                        nav = navController
+                        nav = navController,
+                        windowSize = windowSize
                 )
             }
         }
         composable(route = Screen.Exercises.route) {
-            Exercises(nav = navController)
+            Exercises(nav = navController, windowSize = windowSize)
         }
         composable(
                 route = Screen.Exercise.route,
@@ -40,7 +43,8 @@ fun NavGraph(navController: NavHostController) {
             backStackEntry.arguments?.getString("exerciseId")?.let {
                 ExerciseDetails(
                         exerciseId = it,
-                        nav = navController
+                        nav = navController,
+                        windowSize = windowSize
                 )
             }
         }
