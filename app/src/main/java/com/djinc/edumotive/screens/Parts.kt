@@ -24,53 +24,53 @@ fun Parts(nav: NavController) {
         ScreenTitle("Onderdelen")
 
         val parts = listOf(
-            Part(
-                id = "abcdef",
-                name = "Onderdeel 1",
-                imageUrl = "https://picsum.photos/seed/edumotive-1/400"
-            ),
-            Part(
-                id = "abcdefg",
-                name = "Onderdeel 2",
-                imageUrl = "https://picsum.photos/seed/edumotive-2/400"
-            ),
-            Part(
-                id = "abcdefgh",
-                name = "Onderdeel 3",
-                imageUrl = "https://picsum.photos/seed/edumotive-3/400"
-            ),
-            Part(
-                id = "abcdefghi",
-                name = "Onderdeel 4",
-                imageUrl = "https://picsum.photos/seed/edumotive-4/400"
-            ),
-            Part(
-                id = "abcdefghij",
-                name = "Onderdeel 5",
-                imageUrl = "https://picsum.photos/seed/edumotive-5/400"
-            ),
-            Part(
-                id = "abcdefghijk",
-                name = "Onderdeel 6",
-                imageUrl = "https://picsum.photos/seed/edumotive-6/400"
-            ),
-            Part(
-                id = "abcdefghijkl",
-                name = "Onderdeel 7",
-                imageUrl = "https://picsum.photos/seed/edumotive-7/400"
-            ),
-            Part(
-                id = "abcdefghijklm",
-                name = "Onderdeel 8",
-                imageUrl = "https://picsum.photos/seed/edumotive-8/400"
-            ),
+                Part(
+                        id = "abcdef",
+                        name = "Onderdeel 1",
+                        imageUrl = "https://picsum.photos/seed/edumotive-1/400"
+                ),
+                Part(
+                        id = "abcdefg",
+                        name = "Onderdeel 2",
+                        imageUrl = "https://picsum.photos/seed/edumotive-2/400"
+                ),
+                Part(
+                        id = "abcdefgh",
+                        name = "Onderdeel 3",
+                        imageUrl = "https://picsum.photos/seed/edumotive-3/400"
+                ),
+                Part(
+                        id = "abcdefghi",
+                        name = "Onderdeel 4",
+                        imageUrl = "https://picsum.photos/seed/edumotive-4/400"
+                ),
+                Part(
+                        id = "abcdefghij",
+                        name = "Onderdeel 5",
+                        imageUrl = "https://picsum.photos/seed/edumotive-5/400"
+                ),
+                Part(
+                        id = "abcdefghijk",
+                        name = "Onderdeel 6",
+                        imageUrl = "https://picsum.photos/seed/edumotive-6/400"
+                ),
+                Part(
+                        id = "abcdefghijkl",
+                        name = "Onderdeel 7",
+                        imageUrl = "https://picsum.photos/seed/edumotive-7/400"
+                ),
+                Part(
+                        id = "abcdefghijklm",
+                        name = "Onderdeel 8",
+                        imageUrl = "https://picsum.photos/seed/edumotive-8/400"
+                ),
         )
         LazySlider(
-            direction = SliderDirection.Vertical,
-            lastElementOnPage = true,
-            list = parts,
-            component = SliderComponent.PartCard,
-            nav = nav
+                direction = SliderDirection.Vertical,
+                lastElementOnPage = true,
+                list = parts,
+                component = SliderComponent.PartCard,
+                nav = nav
         )
     }
 }
