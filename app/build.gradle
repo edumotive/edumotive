@@ -30,6 +30,12 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
+        all {
+            buildConfigField("String", "CONTENTFUL_HOST", "\"contentful.com\"")
+            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", "\"WSH6C_fqQpeKG8ilvbAawTSVMgYBgUnSh3cIeK9y3U0\"")
+            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", "\"B18Rzbce7dOlNPTJsfsHVyOUX2QmGWF7OmrYfa_OfpM\"")
+            buildConfigField("String", "CONTENTFUL_SPACE_ID", "\"ptuefbkmcynu\"")
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -95,4 +101,8 @@ dependencies {
 
     // Coil - image loading library
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
+    
+    // Contentful
+    implementation 'com.contentful.java:java-sdk:10.5.2'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
 }
