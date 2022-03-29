@@ -1,12 +1,9 @@
 package com.djinc.edumotive.components
 
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,24 +52,10 @@ fun BottomBar(navController: NavHostController) {
             }
         }
     }
-//    BottomNavigation(
-//            elevation = 8.dp,
-//            backgroundColor = Background,
-//            modifier = Modifier.height(65.dp),
-//    ) {
-//        screens.forEach { screen ->
-//            AddItem(
-//                    screen = screen,
-//                    currentDestination = currentDestination,
-//                    navController = navController,
-//                    screenWidth = screenWidth
-//            )
-//        }
-//    }
 }
 
 @Composable
-fun RowScope.AddItem(
+fun AddItem(
         screen: Screen,
         currentDestination: NavDestination?,
         navController: NavHostController,
@@ -119,17 +101,4 @@ fun RowScope.AddItem(
             }
         }
     }
-//    BottomNavigationItem(
-//            alwaysShowLabel = false,
-//            label = {
-//                Text(text = title)
-//            },
-//            icon = {
-//                screen.icon?.let { Icon(painter = painterResource(id = it), contentDescription = "$title navigation icon") }
-//            },
-//            selected = active,
-//            onClick = {
-//                if (!active) navController.navigate(screen.route)
-//            }
-//    )
 }
