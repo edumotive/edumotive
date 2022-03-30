@@ -10,6 +10,7 @@ import com.djinc.edumotive.models.ContentfulModelGroup
 fun ContentfulModel.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulModel = ContentfulModel(
+    entry.id(),
     entry.getField<String?>("title").orEmpty(),
     try {
         entry.getField<CDAAsset?>("image")
@@ -31,6 +32,7 @@ fun ContentfulModel.Companion.fromRestEntry(
 fun ContentfulModelGroup.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulModelGroup = ContentfulModelGroup(
+    entry.id(),
     entry.getField<String?>("title").orEmpty(),
     try {
         entry.getField<CDAAsset?>("image")
@@ -48,6 +50,7 @@ fun ContentfulModelGroup.Companion.fromRestEntry(
 fun ContentfulExercise.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulExercise = ContentfulExercise(
+    entry.id(),
     entry.getField<String?>("title").orEmpty(),
     try {
         entry.getField<CDAAsset?>("image")

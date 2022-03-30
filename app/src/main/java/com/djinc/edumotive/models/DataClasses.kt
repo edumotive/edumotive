@@ -7,6 +7,7 @@ data class Exercise(val id: String, val name: String, val imageUrl: String, val 
 data class ExerciseStep(val name: String)
 
 data class ContentfulModel (
+    val id : String,
     val title : String,
     val image : String,
     val description : String,
@@ -16,6 +17,7 @@ data class ContentfulModel (
 }
 
 data class ContentfulModelGroup (
+    val id : String,
     val title : String,
     val image : String,
     val description : String,
@@ -25,6 +27,7 @@ data class ContentfulModelGroup (
 }
 
 data class ContentfulExercise (
+    val id : String,
     val title : String,
     val image : String,
     val description : String,

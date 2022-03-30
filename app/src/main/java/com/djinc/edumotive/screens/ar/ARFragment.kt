@@ -27,7 +27,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private val arModels = mutableListOf<ArModelNode>()
 
     private var models : List<ContentfulModel> = listOf(
-        ContentfulModel("Engine", "models/V8_motor.png", "THis is an engine", "models/V8_motor.glb")
+        ContentfulModel("1","Engine", "models/V8_motor.png", "THis is an engine", "models/V8_motor.glb")
     )
 
     private var isLoading = false

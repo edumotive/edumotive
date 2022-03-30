@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models: List<ContentfulModel> ->
                 models.forEach { model ->
+                    Log.i("modelAPI", "id" + model.id)
                     Log.i("modelAPI", "1" + model.modelURL)
                     Log.i("modelAPI", "2" + model.title)
                     Log.i("modelAPI", "3" + model.image)
