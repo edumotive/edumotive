@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.screens.App
 import com.djinc.edumotive.ui.theme.EdumotiveTheme
 import com.djinc.edumotive.utils.contentful.Contentful
@@ -30,9 +31,23 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        Contentful().fetchAll(errorCallBack = ::errorCatch) {
-            array: String ->
-                Log.i("Entry", array)
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+            models: List<ContentfulModel> ->
+                models.forEach { model ->
+                    Log.i("modelAPI", "id" + model.id)
+                    Log.i("modelAPI", "1" + model.modelURL)
+                    Log.i("modelAPI", "2" + model.title)
+                    Log.i("modelAPI", "3" + model.image)
+                    Log.i("modelAPI", "4" + model.description)
+                }
+        }
+
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+            modelGroups: List<ContentfulModelGroup> ->
+                modelGroups.forEach { modelGroup ->
+                    Log.i("modelAPI", "5" + modelGroup.title)
+                    Log.i("modelAPI", "6" + modelGroup.models.get(0).title)
+                }
         }
     }
 }

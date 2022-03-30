@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
-import com.djinc.edumotive.models.ARModel
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.utils.ar.createModel
-import com.djinc.edumotive.utils.ar.createTextNode
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -29,7 +27,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private val arModels = mutableListOf<ArModelNode>()
 
     private var models : List<ContentfulModel> = listOf(
-        ContentfulModel("models/V8_motor.glb", "Engine")
+        ContentfulModel("1","Engine", "models/V8_motor.png", "THis is an engine", "models/V8_motor.glb")
     )
 
     private var isLoading = false
@@ -83,7 +81,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
 
         models.forEach {
-                model -> arModels.add(createModel(requireContext(), lifecycleScope, model.modelName, model.modelURL))
+                model -> arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelURL))
         }
     }
 
