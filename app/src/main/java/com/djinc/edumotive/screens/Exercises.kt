@@ -14,11 +14,12 @@ import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
 import com.djinc.edumotive.models.Exercise
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun Exercises(nav: NavController, windowSize: WindowSize) {
+fun Exercises(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle("Oefeningen")
@@ -54,7 +55,8 @@ fun Exercises(nav: NavController, windowSize: WindowSize) {
                 list = exercises,
                 component = SliderComponent.ExerciseCard,
                 nav = nav,
-                windowSize = windowSize
+                windowSize = windowSize,
+                viewModels = viewModels
         )
     }
 }

@@ -29,7 +29,8 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
                 list2 = viewModels.models,
                 component = SliderComponent.PartCard,
                 nav = nav,
-                windowSize = windowSize
+                windowSize = windowSize,
+                viewModels = viewModels
         )
     }
 }

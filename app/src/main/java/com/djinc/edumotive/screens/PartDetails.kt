@@ -22,6 +22,7 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.components.*
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.ar.ARActivity
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
@@ -29,7 +30,12 @@ import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize) {
+fun PartDetails(
+        partId: String = "",
+        nav: NavController,
+        windowSize: WindowSize,
+        viewModels: ViewModels
+) {
     val context = LocalContext.current
     // GET DATA FROM PART BASED ON GIVEN ID
     val imageUrl = "https://picsum.photos/seed/edumotive-16/400"
@@ -56,8 +62,16 @@ fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize)
                             context.startActivity(Intent(context, ARActivity::class.java))
                         }
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-                        Icon(painter = painterResource(id = R.drawable.ic_augmented_reality), contentDescription = "See $partId in Augmented Reality", tint = PinkPrimary)
+                    Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Icon(
+                                painter = painterResource(id = R.drawable.ic_augmented_reality),
+                                contentDescription = "See $partId in Augmented Reality",
+                                tint = PinkPrimary
+                        )
                         Text(text = "Open in AR", color = PinkPrimary, fontSize = 15.sp, modifier = Modifier.padding(top = 2.dp))
                     }
                 }
@@ -130,7 +144,7 @@ fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize)
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
         ) { item ->
-            PartCard(partId = item.id, partName = item.name, imageUrl = item.imageUrl, nav = nav)
+            PartCard(partId = item.id, partName = item.name, imageUrl = item.imageUrl, nav = nav, viewModels = viewModels)
         }
         if (windowSize == WindowSize.Compact) {
             item { Spacer(modifier = Modifier.height(65.dp)) }
