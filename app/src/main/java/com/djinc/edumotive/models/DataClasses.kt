@@ -35,11 +35,7 @@ data class ContentfulExercise (
     val minTime : Int,
     val maxTime : Int,
     val steps: List<String>,
-    val models : ContentfulModelGroup
+    val models : List<ContentfulModel>
 ) {
     companion object
 }
-
-data class ARModel (
-    val modelNode : ArModelNode
-)
