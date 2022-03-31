@@ -12,11 +12,16 @@ import kotlinx.coroutines.launch
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
         private set
+    var models by mutableStateOf(listOf<ContentfulModel>())
+        private set
 
     init {
         viewModelScope.launch {
             Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                 modelGroups = it
+            }
+            Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+                models = it
             }
         }
     }
@@ -25,6 +30,14 @@ class ViewModels : ViewModel() {
         viewModelScope.launch {
             Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                 modelGroups = it
+            }
+        }
+    }
+
+    fun refreshModels() {
+        viewModelScope.launch {
+            Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+                models = it
             }
         }
     }

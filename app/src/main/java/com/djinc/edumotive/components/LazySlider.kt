@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.models.Exercise
 import com.djinc.edumotive.models.Part
@@ -26,6 +27,7 @@ fun <T> LazySlider(
     titleManualPadding: Boolean = false,
     direction: SliderDirection,
     list: List<T>,
+    list2: List<T> = emptyList<T>(),
     component: SliderComponent,
     nav: NavController,
     windowSize: WindowSize
@@ -88,12 +90,19 @@ fun <T> LazySlider(
                         modifier = Modifier
                             .fillMaxWidth(1f)
                     ) {
-                        itemsIndexed(list as List<Part>) { index, item ->
-                            Text(text = item.id)
+                        itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
                             PartCard(
                                 partId = item.id,
-                                partName = item.name,
-                                imageUrl = item.imageUrl,
+                                partName = item.title,
+                                imageUrl = item.image,
+                                nav = nav
+                            )
+                        }
+                        itemsIndexed(list2 as List<ContentfulModel>) { index, item ->
+                            PartCard(
+                                partId = item.id,
+                                partName = item.title,
+                                imageUrl = item.image,
                                 nav = nav
                             )
                         }

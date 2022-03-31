@@ -19,7 +19,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             Dashboard(nav = navController, windowSize = windowSize, viewModels = viewModels)
         }
         composable(route = Screen.Parts.route) {
-            Parts(nav = navController, windowSize = windowSize)
+            Parts(nav = navController, windowSize = windowSize, viewModels = viewModels)
         }
         composable(
                 route = Screen.Part.route,
