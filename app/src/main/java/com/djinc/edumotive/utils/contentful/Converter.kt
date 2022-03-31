@@ -7,6 +7,8 @@ import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 
+
+/// Model
 fun ContentfulModel.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulModel = ContentfulModel(
@@ -29,6 +31,7 @@ fun ContentfulModel.Companion.fromRestEntry(
     }
 )
 
+/// ModelGroup
 fun ContentfulModelGroup.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulModelGroup = ContentfulModelGroup(
@@ -47,6 +50,7 @@ fun ContentfulModelGroup.Companion.fromRestEntry(
         .map { ContentfulModel.fromRestEntry(it) },
 )
 
+/// Exercise
 fun ContentfulExercise.Companion.fromRestEntry(
     entry : CDAEntry
 ): ContentfulExercise = ContentfulExercise(
@@ -64,5 +68,7 @@ fun ContentfulExercise.Companion.fromRestEntry(
     entry.getField<Int>("minimalTime"),
     entry.getField<Int>("maximumTime"),
     entry.getField<List<String>?>("steps").orEmpty(),
-    ContentfulModelGroup.fromRestEntry(entry.getField<CDAEntry>("models"))
+    entry.getField<List<CDAEntry>?>("models")
+        .orEmpty()
+        .map { ContentfulModel.fromRestEntry(it) }
 )
