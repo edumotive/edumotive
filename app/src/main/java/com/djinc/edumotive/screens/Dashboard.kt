@@ -33,7 +33,8 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
                     list = viewModels.modelGroups,
                     component = SliderComponent.PartCard,
                     nav = nav,
-                    windowSize = windowSize
+                    windowSize = windowSize,
+                    viewModels = viewModels
             )
         }
         item {
@@ -72,7 +73,8 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
                     list = exercises,
                     component = SliderComponent.ExerciseCard,
                     nav = nav,
-                    windowSize = windowSize
+                    windowSize = windowSize,
+                    viewModels = viewModels
             )
         }
     }

@@ -11,10 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
-import com.djinc.edumotive.models.Exercise
-import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.WindowSize
 
 enum class SliderDirection { Horizontal, Vertical }
@@ -30,7 +27,8 @@ fun <T> LazySlider(
     list2: List<T> = emptyList<T>(),
     component: SliderComponent,
     nav: NavController,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    viewModels: ViewModels
 ) {
     if (title.isNotEmpty()) {
         Text(
@@ -53,7 +51,8 @@ fun <T> LazySlider(
                                 partId = item.id,
                                 partName = item.title,
                                 imageUrl = item.image,
-                                nav = nav
+                                nav = nav,
+                                viewModels = viewModels
                             )
                         }
                     }
@@ -95,7 +94,8 @@ fun <T> LazySlider(
                                 partId = item.id,
                                 partName = item.title,
                                 imageUrl = item.image,
-                                nav = nav
+                                nav = nav,
+                                viewModels = viewModels
                             )
                         }
                         itemsIndexed(list2 as List<ContentfulModel>) { index, item ->
@@ -103,7 +103,8 @@ fun <T> LazySlider(
                                 partId = item.id,
                                 partName = item.title,
                                 imageUrl = item.image,
-                                nav = nav
+                                nav = nav,
+                                viewModels = viewModels
                             )
                         }
                     }

@@ -29,12 +29,13 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 PartDetails(
                         partId = it,
                         nav = navController,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModels = viewModels
                 )
             }
         }
         composable(route = Screen.Exercises.route) {
-            Exercises(nav = navController, windowSize = windowSize)
+            Exercises(nav = navController, windowSize = windowSize, viewModels = viewModels)
         }
         composable(
                 route = Screen.Exercise.route,
@@ -44,7 +45,8 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 ExerciseDetails(
                         exerciseId = it,
                         nav = navController,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModels = viewModels
                 )
             }
         }

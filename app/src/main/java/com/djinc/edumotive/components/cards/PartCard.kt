@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 
@@ -22,7 +23,8 @@ fun PartCard(
         partId: String,
         partName: String = "",
         imageUrl: String,
-        nav: NavController
+        nav: NavController,
+        viewModels: ViewModels
 ) {
     Card(
             backgroundColor = Background,
