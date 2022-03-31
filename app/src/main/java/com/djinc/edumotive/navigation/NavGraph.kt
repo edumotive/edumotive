@@ -2,21 +2,21 @@ package com.djinc.edumotive.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.*
 import com.djinc.edumotive.utils.WindowSize
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
+fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModels: ViewModels) {
     NavHost(navController = navController, startDestination = Screen.Dashboard.route) {
         composable(route = Screen.Dashboard.route) {
-            Dashboard(nav = navController, windowSize = windowSize)
+            Dashboard(nav = navController, windowSize = windowSize, viewModels = viewModels)
         }
         composable(route = Screen.Parts.route) {
             Parts(nav = navController, windowSize = windowSize)

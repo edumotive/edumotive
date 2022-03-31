@@ -18,7 +18,12 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 
 @Composable
-fun PartCard(partId: String, partName: String = "", imageUrl: String, nav: NavController) {
+fun PartCard(
+        partId: String,
+        partName: String = "",
+        imageUrl: String,
+        nav: NavController
+) {
     Card(
             backgroundColor = Background,
             elevation = 3.dp,
