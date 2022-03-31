@@ -21,4 +21,22 @@ interface ContentfulInfrastructure {
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (List<ContentfulExercise>) -> Unit
     )
+
+    fun fetchModelByID(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModel) -> Unit
+    )
+
+    fun fetchModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModelGroup) -> Unit
+    )
+
+    fun fetchExercisesById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExercise) -> Unit
+    )
 }

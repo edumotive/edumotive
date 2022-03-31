@@ -39,7 +39,3 @@ data class ContentfulExercise (
 ) {
     companion object
 }
-
-data class ARModel (
-    val modelNode : ArModelNode
-)
