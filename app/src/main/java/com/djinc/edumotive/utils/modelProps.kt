@@ -1,11 +1,15 @@
 package com.djinc.edumotive.utils
 
+import android.os.Parcelable
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
-class modelProps(val obj: Any) {
-    val id get() = if (this.obj is ContentfulModel) obj.id else (this.obj as ContentfulModelGroup).id
-    val title get() = if (this.obj is ContentfulModel) obj.title else (this.obj as ContentfulModelGroup).title
-    val image get() = if (this.obj is ContentfulModel) obj.image else (this.obj as ContentfulModelGroup).image
-    val description get() = if (this.obj is ContentfulModel) obj.id else (this.obj as ContentfulModelGroup).description
+@Parcelize
+data class modelProps(val cModel: @RawValue ContentfulModel? = null, val cModelGroup: @RawValue ContentfulModelGroup? = null) : Parcelable {
+    val id get() = cModel?.id ?: cModelGroup?.id
+    val title get() = cModel?.title ?: cModelGroup?.title
+    val image get() = cModel?.image ?: cModelGroup?.image
+    val description get() = cModel?.description ?: cModelGroup?.description
 }
