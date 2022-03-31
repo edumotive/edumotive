@@ -2,6 +2,7 @@ package com.djinc.edumotive.utils.contentful
 
 import com.contentful.java.cda.CDAClient
 import com.contentful.java.cda.CDAEntry
+import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,30 @@ open class Contentful (
                     }
 
                 successCallBack(modelGroups)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
+
+    override fun fetchAllExercises(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExercise>) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val exercises = client
+                    .fetch(CDAEntry::class.java)
+                    .withContentType("exercise")
+                    .all()
+                    .items()
+                    .map {
+                        ContentfulExercise.fromRestEntry(
+                            it as CDAEntry
+                        )
+                    }
+
+                successCallBack(exercises)
             } catch (throwable: Throwable) {
                 errorCallBack(throwable)
             }

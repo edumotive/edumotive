@@ -1,5 +1,6 @@
 package com.djinc.edumotive.utils.contentful
 
+import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 
@@ -14,5 +15,10 @@ interface ContentfulInfrastructure {
     fun fetchAllModelGroups(
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (List<ContentfulModelGroup>) -> Unit
+    )
+
+    fun fetchAllExercises(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExercise>) -> Unit
     )
 }
