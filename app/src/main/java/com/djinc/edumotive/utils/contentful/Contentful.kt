@@ -88,4 +88,70 @@ open class Contentful (
             }
         }
     }
+
+    override fun fetchModelByID(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModel) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val model = ContentfulModel.fromRestEntry(
+                    client
+                        .fetch(CDAEntry::class.java)
+                        .withContentType("model")
+                        .one(id)
+
+                )
+
+                successCallBack(model)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
+
+    override fun fetchModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModelGroup) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val modelGroup = ContentfulModelGroup.fromRestEntry(
+                    client
+                        .fetch(CDAEntry::class.java)
+                        .withContentType("modelGroup")
+                        .one(id)
+
+                )
+
+                successCallBack(modelGroup)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
+
+    override fun fetchExercisesById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExercise) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val exercise = ContentfulExercise.fromRestEntry(
+                    client
+                        .fetch(CDAEntry::class.java)
+                        .withContentType("exercise")
+                        .one(id)
+
+                )
+
+                successCallBack(exercise)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
 }
