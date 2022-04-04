@@ -26,8 +26,15 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private val arModels = mutableListOf<ArModelNode>()
 
-    private var models : List<ContentfulModel> = listOf(
-        ContentfulModel("1","Engine", "models/V8_motor.png", "THis is an engine", "models/V8_motor.glb")
+    private var models: List<ContentfulModel> = listOf(
+        ContentfulModel(
+            "1",
+            "Model",
+            title = "Engine",
+            "models/V8_motor.png",
+            "THis is an engine",
+            "models/V8_motor.glb"
+        )
     )
 
     private var isLoading = false
@@ -46,7 +53,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
             doOnApplyWindowInsets { systemBarsInsets ->
                 (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                        systemBarsInsets.bottom + bottomMargin
+                    systemBarsInsets.bottom + bottomMargin
             }
             setOnClickListener { cursorNode.createAnchor()?.let { anchorOrMove(it) } }
         }
@@ -80,14 +87,14 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
         isLoading = true
 
-        models.forEach {
-                model -> arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelURL))
+        models.forEach { model ->
+            arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelURL))
         }
     }
 
     private fun anchorOrMove(anchor: Anchor) {
-        arModels.forEach {
-            arModel -> if (!sceneView.children.contains(arModel)) {
+        arModels.forEach { arModel ->
+            if (!sceneView.children.contains(arModel)) {
                 sceneView.addChild(arModel)
             }
             arModel.anchor = anchor

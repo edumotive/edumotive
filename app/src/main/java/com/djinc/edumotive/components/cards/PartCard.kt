@@ -21,6 +21,7 @@ import com.djinc.edumotive.ui.theme.PinkPrimary
 @Composable
 fun PartCard(
         partId: String,
+        partType: String,
         partName: String = "",
         imageUrl: String,
         nav: NavController,
@@ -33,7 +34,7 @@ fun PartCard(
             modifier = Modifier
                     .width(200.dp)
                     .clickable {
-                        nav.navigate("part/$partId")
+                        nav.navigate("part/$partId/$partType")
                     }
     ) {
         Column(

@@ -35,38 +35,42 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-            models: List<ContentfulModel> ->
-                models.forEach { model ->
-                    Log.i("modelAPI", "id " + model.id)
-                    Log.i("modelAPI", "1 " + model.modelURL)
-                    Log.i("modelAPI", "2 " + model.title)
-                    Log.i("modelAPI", "3 " + model.image)
-                    Log.i("modelAPI", "4 " + model.description)
-                }
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) { models: List<ContentfulModel> ->
+            models.forEach { model ->
+                Log.i("modelAPI", "Model: id = ${model.id}")
+                Log.i("modelAPI", "Model: type = ${model.type}")
+                Log.i("modelAPI", "Model: title = ${model.title}")
+                Log.i("modelAPI", "Model: imageURL = ${model.image}")
+                Log.i("modelAPI", "Model: info = ${model.description}")
+                Log.i("modelAPI", "Model: ModelURL = ${model.modelURL}")
+            }
         }
 
-        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
-            modelGroups: List<ContentfulModelGroup> ->
-                modelGroups.forEach { modelGroup ->
-                    Log.i("modelAPI", "5 " + modelGroup.title)
-                    Log.i("modelAPI", "6 " + modelGroup.models.get(0).title)
-                }
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) { modelGroups: List<ContentfulModelGroup> ->
+            modelGroups.forEach { modelGroup ->
+                Log.i("modelAPI", "ModelGroup: id = ${modelGroup.id}")
+                Log.i("modelAPI", "ModelGroup: type = ${modelGroup.type}")
+                Log.i("modelAPI", "ModelGroup: title = ${modelGroup.title}")
+                Log.i("modelAPI", "ModelGroup: imageURL = ${modelGroup.image}")
+                Log.i("modelAPI", "ModelGroup: info = ${modelGroup.description}")
+                Log.i("modelAPI", "ModelGroup: models = ${modelGroup.models}")
+            }
         }
 
-        Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
-            exercises: List<ContentfulExercise> ->
-                exercises.forEach { exercise ->
-                    Log.i("modelAPI", "7 " + exercise.maxTime)
-                    Log.i("modelAPI", "8 " + exercise.steps[1])
-                    Log.i("modelAPI", "9 " + exercise.models[0].title)
-                }
+        Contentful().fetchAllExercises(errorCallBack = ::errorCatch) { exercises: List<ContentfulExercise> ->
+            exercises.forEach { exercise ->
+                Log.i("modelAPI", "8 " + exercise.maxTime)
+                Log.i("modelAPI", "9 " + exercise.steps[1])
+                Log.i("modelAPI", "10 " + exercise.models[0].title)
+            }
         }
 
 
-        Contentful().fetchModelByID(id = "3LAIooNGUr60jfslJderrb", errorCallBack = ::errorCatch) {
-            model: ContentfulModel ->
-                Log.i("modelAPI", "10 " + model.title)
+        Contentful().fetchModelByID(
+            id = "3LAIooNGUr60jfslJderrb",
+            errorCallBack = ::errorCatch
+        ) { model: ContentfulModel ->
+            Log.i("modelAPI", "11 " + model.title)
         }
     }
 }
