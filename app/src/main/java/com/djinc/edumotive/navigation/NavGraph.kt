@@ -40,20 +40,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                     windowSize = windowSize,
                     viewModels = viewModels
             )
-//            backStackEntry.arguments?.getString("partId")?.let {
-//                PartDetails(
-//                        partId = it,
-//                        nav = navController,
-//                        windowSize = windowSize,
-//                        viewModels = viewModels
-//                )
-//            }
         }
-//        { backStackEntry ->
-//            CreateExerciseScreen(
-//                    exerciseId = backStackEntry.arguments!!.getInt("exerciseId"),
-//                    workoutId = backStackEntry.arguments!!.getInt("workoutId"),
-//            )
         composable(route = Screen.Exercises.route) {
             Exercises(nav = navController, windowSize = windowSize, viewModels = viewModels)
         }
