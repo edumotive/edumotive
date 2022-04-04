@@ -8,11 +8,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.djinc.edumotive.components.BottomBar
 import com.djinc.edumotive.components.SideBar
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.NavGraph
 import com.djinc.edumotive.utils.WindowSize
 
 @Composable
-fun App(windowSize: WindowSize) {
+fun App(windowSize: WindowSize, viewModels: ViewModels) {
     val navController = rememberNavController()
     if (windowSize == WindowSize.Compact) {
         Scaffold(
@@ -20,7 +21,7 @@ fun App(windowSize: WindowSize) {
                     BottomBar(navController = navController)
                 },
         ) {
-            NavGraph(navController = navController, windowSize = windowSize)
+            NavGraph(navController = navController, windowSize = windowSize, viewModels = viewModels)
         }
     } else {
         Row() {
@@ -30,7 +31,7 @@ fun App(windowSize: WindowSize) {
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
-                NavGraph(navController = navController, windowSize = windowSize)
+                NavGraph(navController = navController, windowSize = windowSize, viewModels = viewModels)
             }
         }
     }

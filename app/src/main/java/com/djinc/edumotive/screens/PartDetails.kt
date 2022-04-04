@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,18 +21,75 @@ import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.*
 import com.djinc.edumotive.components.cards.PartCard
-import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.ar.ARActivity
+import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.utils.contentful.Contentful
+import com.djinc.edumotive.utils.contentful.errorCatch
 
 @ExperimentalFoundationApi
 @Composable
-fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize) {
+fun PartDetails(
+        partId: String = "",
+        modelType: String,
+        nav: NavController,
+        windowSize: WindowSize,
+        viewModels: ViewModels
+) {
+    var isLoading by remember { mutableStateOf(true) }
+    if (modelType == "model") {
+        LaunchedEffect(key1 = partId) {
+            Contentful().fetchModelByID(partId, errorCallBack = ::errorCatch) {
+                viewModels.activeModel = it
+                isLoading = false
+            }
+        }
+        if (!isLoading) Details(model = viewModels.activeModel, modelType = modelType, nav = nav, windowSize = windowSize, viewModels = viewModels)
+    } else {
+        LaunchedEffect(key1 = partId) {
+            Contentful().fetchModelGroupById(partId, errorCallBack = ::errorCatch) {
+                viewModels.activeModelGroup = it
+                isLoading = false
+            }
+        }
+        if (!isLoading) Details(model = viewModels.activeModelGroup, modelType = modelType, nav = nav, windowSize = windowSize, viewModels = viewModels)
+    }
+}
+
+@Composable
+fun Details(
+        model: Any,
+        modelType: String,
+        nav: NavController,
+        windowSize: WindowSize,
+        viewModels: ViewModels
+) {
     val context = LocalContext.current
-    // GET DATA FROM PART BASED ON GIVEN ID
-    val imageUrl = "https://picsum.photos/seed/edumotive-16/400"
+    val modelURL: String
+    val title: String
+    val imageUrl: String
+    val description: String
+    val models: List<ContentfulModel>
+
+    if (modelType == "model") {
+        model as ContentfulModel
+        modelURL = model.modelURL
+        title = model.title
+        imageUrl = model.image
+        description = model.description
+        models = emptyList()
+    } else {
+        model as ContentfulModelGroup
+        title = model.title
+        imageUrl = model.image
+        description = model.description
+        models = model.models
+    }
 
     LazyColumn(
             contentPadding = PaddingValues(horizontal = 20.dp),
@@ -48,26 +105,41 @@ fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize)
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth(1f)
             ) {
-                ScreenTitle(title = "Onderdeel")
+                ScreenTitle(title = title)
                 Box(modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .background(PinkSecondary)
                         .clickable {
+                            // SEND MODELURL OR LIST OF MODELURLS ALONG WITH ACTIVITY
                             context.startActivity(Intent(context, ARActivity::class.java))
                         }
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-                        Icon(painter = painterResource(id = R.drawable.ic_augmented_reality), contentDescription = "See $partId in Augmented Reality", tint = PinkPrimary)
-                        Text(text = "Open in AR", color = PinkPrimary, fontSize = 15.sp, modifier = Modifier.padding(top = 2.dp))
+                    Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Icon(
+                                painter = painterResource(id = R.drawable.ic_augmented_reality),
+                                contentDescription = "See in Augmented Reality",
+                                tint = PinkPrimary
+                        )
+                        Text(
+                                text = "Open in AR",
+                                color = PinkPrimary,
+                                fontSize = 15.sp,
+                                modifier = Modifier.padding(top = 2.dp)
+                        )
                     }
                 }
             }
         }
         item {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier
+            Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier
                     .fillMaxWidth(1f)
                     .aspectRatio(1F)
-                    .background(PinkSecondary, RoundedCornerShape(8.dp))
+                    .background(Background, RoundedCornerShape(8.dp))
             ) {
                 AsyncImage(imageUrl = imageUrl, imageName = "TODO")
             }
@@ -75,62 +147,29 @@ fun PartDetails(partId: String = "", nav: NavController, windowSize: WindowSize)
         item {
             Text(text = "Informatie", style = MaterialTheme.typography.h4)
             Text(
-                    text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
+                    text = description,
                     style = MaterialTheme.typography.body2,
             )
         }
-        item {
-            ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0)
-        }
-        val parts = listOf(
-                Part(
-                        id = "abcdef",
-                        name = "Onderdeel 1",
-                        imageUrl = "https://picsum.photos/seed/edumotive-1/400"
-                ),
-                Part(
-                        id = "abcdefg",
-                        name = "Onderdeel 2",
-                        imageUrl = "https://picsum.photos/seed/edumotive-2/400"
-                ),
-                Part(
-                        id = "abcdefgh",
-                        name = "Onderdeel 3",
-                        imageUrl = "https://picsum.photos/seed/edumotive-3/400"
-                ),
-                Part(
-                        id = "abcdefghi",
-                        name = "Onderdeel 4",
-                        imageUrl = "https://picsum.photos/seed/edumotive-4/400"
-                ),
-                Part(
-                        id = "abcdefghij",
-                        name = "Onderdeel 5",
-                        imageUrl = "https://picsum.photos/seed/edumotive-5/400"
-                ),
-                Part(
-                        id = "abcdefghijk",
-                        name = "Onderdeel 6",
-                        imageUrl = "https://picsum.photos/seed/edumotive-6/400"
-                ),
-                Part(
-                        id = "abcdefghijkl",
-                        name = "Onderdeel 7",
-                        imageUrl = "https://picsum.photos/seed/edumotive-7/400"
-                ),
-                Part(
-                        id = "abcdefghijklm",
-                        name = "Onderdeel 8",
-                        imageUrl = "https://picsum.photos/seed/edumotive-8/400"
-                ),
-        )
-        gridItems(
-                data = parts,
-                columnCount = 2,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-        ) { item ->
-            PartCard(partId = item.id, partName = item.name, imageUrl = item.imageUrl, nav = nav)
+        if (!models.isEmpty()) {
+            item {
+                ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0)
+            }
+            gridItems(
+                    data = models,
+                    columnCount = 2,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+            ) { item ->
+                PartCard(
+                        partId = item.id,
+                        partType = item.type,
+                        partName = item.title,
+                        imageUrl = item.image,
+                        nav = nav,
+                        viewModels = viewModels
+                )
+            }
         }
         if (windowSize == WindowSize.Compact) {
             item { Spacer(modifier = Modifier.height(65.dp)) }

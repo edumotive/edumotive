@@ -14,11 +14,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 
 @Composable
-fun PartCard(partId: String, partName: String = "", imageUrl: String, nav: NavController) {
+fun PartCard(
+        partId: String,
+        partType: String,
+        partName: String = "",
+        imageUrl: String,
+        nav: NavController,
+        viewModels: ViewModels
+) {
     Card(
             backgroundColor = Background,
             elevation = 3.dp,
@@ -26,7 +34,7 @@ fun PartCard(partId: String, partName: String = "", imageUrl: String, nav: NavCo
             modifier = Modifier
                     .width(200.dp)
                     .clickable {
-                        nav.navigate("part/$partId")
+                        nav.navigate("part/$partId/$partType")
                     }
     ) {
         Column(

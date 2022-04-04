@@ -17,12 +17,13 @@ import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.*
 import com.djinc.edumotive.models.ExerciseStep
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.TextSecondary
 import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: WindowSize) {
+fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     LazyColumn(
             contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 85.dp) else PaddingValues(
                     bottom = 24.dp
