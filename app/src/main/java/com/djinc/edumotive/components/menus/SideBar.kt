@@ -1,5 +1,7 @@
 package com.djinc.edumotive.components
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
@@ -43,6 +46,7 @@ fun SideBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var isMinimized by remember { mutableStateOf(false) }
+    val sideBarSize: Dp by animateDpAsState(if (!isMinimized) 220.dp else 60.dp)
 
     Box() {
         Surface(
@@ -51,14 +55,14 @@ fun SideBar(navController: NavHostController) {
                 elevation = 12.dp,
                 modifier = Modifier
                         .fillMaxHeight()
-                        .width(if (!isMinimized) 220.dp else 60.dp)
+                        .width(sideBarSize)
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {
-                Column(modifier = Modifier.padding(top = if (!isMinimized) 11.dp else 20.dp)) {
+                Column(modifier = Modifier.padding(top = if (sideBarSize == 220.dp) 11.dp else 20.dp)) {
                     // LOGO
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
                         Image(painter = painterResource(id = R.drawable.ic_edumotive), contentDescription = "EduMotive logo")
-                        if (!isMinimized) {
+                        if (sideBarSize == 220.dp) {
                             Text(
                                     text = "EduMotive",
                                     fontSize = 26.sp,
@@ -74,7 +78,7 @@ fun SideBar(navController: NavHostController) {
                         AddItem(
                                 screen = screen,
                                 currentDestination = currentDestination,
-                                isMinimized = isMinimized,
+                                sideBarSize = sideBarSize,
                                 navController = navController
                         )
                     }
@@ -85,7 +89,7 @@ fun SideBar(navController: NavHostController) {
                         contentDescription = "Waves",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                                .width(if (!isMinimized) 220.dp else 60.dp)
+                                .width(sideBarSize)
                 )
             }
         }
@@ -93,7 +97,7 @@ fun SideBar(navController: NavHostController) {
                 contentAlignment = Alignment.BottomEnd,
                 modifier = Modifier
                         .fillMaxHeight()
-                        .width(if (!isMinimized) 220.dp else 60.dp)
+                        .width(sideBarSize)
         ) {
             Box(
                     contentAlignment = Alignment.Center,
@@ -124,7 +128,7 @@ fun SideBar(navController: NavHostController) {
                         modifier = Modifier
                                 .width(20.dp)
                                 .height(20.dp)
-                                .rotate(if (isMinimized) 0f else 180f)
+                                .rotate(if (sideBarSize == 220.dp) 0f else 180f)
                 )
             }
         }
@@ -135,14 +139,14 @@ fun SideBar(navController: NavHostController) {
 fun ColumnScope.AddItem(
         screen: Screen,
         currentDestination: NavDestination?,
-        isMinimized: Boolean,
+        sideBarSize: Dp,
         navController: NavHostController
 ) {
     val active = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     Box(
             contentAlignment = Alignment.CenterStart, modifier = Modifier
             .padding(8.dp)
-            .width(if (!isMinimized) 200.dp else 60.dp)
+            .width(sideBarSize)
             .clip(RoundedCornerShape(8.dp))
             .clickable {
                 if (!active) navController.navigate(screen.route)
@@ -164,7 +168,7 @@ fun ColumnScope.AddItem(
                                 .height(20.dp)
                 )
             }
-            if (!isMinimized) {
+            if (sideBarSize == 220.dp) {
                 Text(
                         screen.title,
                         fontSize = 16.sp,
