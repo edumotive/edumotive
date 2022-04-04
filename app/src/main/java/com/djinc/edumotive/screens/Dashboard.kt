@@ -30,7 +30,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
                     title = "Recent bekeken onderdelen",
                     titleManualPadding = true,
                     direction = SliderDirection.Horizontal,
-                    list = viewModels.modelGroups,
+                    list = viewModels.models,
                     component = SliderComponent.PartCard,
                     nav = nav,
                     windowSize = windowSize,
