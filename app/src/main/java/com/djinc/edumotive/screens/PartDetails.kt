@@ -105,7 +105,7 @@ fun Details(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth(1f)
             ) {
-                ScreenTitle(title = title)
+                ScreenTitle(title = title, windowSize = windowSize)
                 Box(modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .background(PinkSecondary)
@@ -153,7 +153,7 @@ fun Details(
         }
         if (!models.isEmpty()) {
             item {
-                ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0)
+                ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0, windowSize = windowSize)
             }
             gridItems(
                     data = models,

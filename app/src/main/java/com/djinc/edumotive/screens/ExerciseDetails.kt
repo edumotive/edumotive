@@ -37,7 +37,7 @@ fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: Win
             Spacer(modifier = Modifier.height(12.dp))
         }
         item {
-            ScreenTitle(title = "Oefening - Naam", spacerHeight = 0)
+            ScreenTitle(title = "Oefening - Naam", spacerHeight = 0, windowSize = windowSize)
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Hoofdstuk X", color = TextSecondary, fontSize = 16.sp)
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {

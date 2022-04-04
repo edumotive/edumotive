@@ -20,9 +20,9 @@ import com.djinc.edumotive.utils.WindowSize
 @ExperimentalFoundationApi
 @Composable
 fun Exercises(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+    Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle("Oefeningen")
+        ScreenTitle(title = "Oefeningen", windowSize = windowSize)
 
         val exercises = listOf(
                 Exercise(

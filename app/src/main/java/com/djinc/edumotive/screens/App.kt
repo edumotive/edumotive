@@ -29,7 +29,6 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
             Box(
                     modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 24.dp, vertical = 16.dp)
             ) {
                 NavGraph(navController = navController, windowSize = windowSize, viewModels = viewModels)
             }

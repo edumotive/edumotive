@@ -23,7 +23,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
             Spacer(modifier = Modifier.height(12.dp))
         }
         item {
-            ScreenTitle("Welkom!", manualPadding = true, spacerHeight = 0)
+            ScreenTitle(title = "Welkom!", manualPadding = true, spacerHeight = 0, windowSize = windowSize)
         }
         item {
             LazySlider(
