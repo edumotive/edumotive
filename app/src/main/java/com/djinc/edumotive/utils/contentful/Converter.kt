@@ -24,6 +24,7 @@ fun ContentfulModel.Companion.fromRestEntry(
         },
         entry.getField<String?>("info"),
         try {
+            "https:" +
             entry.getField<CDAAsset>("object")
                     ?.url()
                     .orEmpty()
@@ -50,6 +51,14 @@ fun ContentfulModelGroup.Companion.fromRestEntry(
         entry.getField<List<CDAEntry>?>("models")
                 .orEmpty()
                 .map { ContentfulModel.fromRestEntry(it) },
+        try {
+                "https:" +
+                        entry.getField<CDAAsset>("object")
+                        ?.url()
+                        .orEmpty()
+        } catch (_: Throwable) {
+                ""
+        }
 )
 
 /// Exercise

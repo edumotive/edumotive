@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 Log.i("modelAPI", "Model: title = ${model.title}")
                 Log.i("modelAPI", "Model: imageURL = ${model.image}")
                 Log.i("modelAPI", "Model: info = ${model.description}")
-                Log.i("modelAPI", "Model: ModelURL = ${model.modelURL}")
+                Log.i("modelAPI", "Model: ModelURL = ${model.modelUrl}")
             }
         }
 
@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 Log.i("modelAPI", "ModelGroup: imageURL = ${modelGroup.image}")
                 Log.i("modelAPI", "ModelGroup: info = ${modelGroup.description}")
                 Log.i("modelAPI", "ModelGroup: models = ${modelGroup.models}")
+                Log.i("modelAPI", "ModelGroup: modelUrl = ${modelGroup.modelUrl}")
             }
         }
 

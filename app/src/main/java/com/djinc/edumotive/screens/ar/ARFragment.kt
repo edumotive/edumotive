@@ -88,7 +88,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
 
         models.forEach { model ->
-            arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelURL))
+            arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelUrl))
         }
     }
 

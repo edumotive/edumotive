@@ -78,7 +78,7 @@ fun Details(
 
     if (modelType == "model") {
         model as ContentfulModel
-        modelURL = model.modelURL
+        modelURL = model.modelUrl
         title = model.title
         imageUrl = model.image
         description = model.description
