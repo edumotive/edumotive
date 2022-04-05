@@ -91,7 +91,7 @@ fun Details(
 
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth(1f)) {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 20.dp),
+                contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 modifier = Modifier.fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
         ) {
@@ -180,7 +180,7 @@ fun Details(
     if (windowSize == WindowSize.Expanded) {
         Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
             LazyColumn(
-                    contentPadding = PaddingValues(end = 20.dp, bottom = 24.dp),
+                    contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier.fillMaxWidth(0.5f)
             ) {
