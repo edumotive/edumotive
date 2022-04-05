@@ -92,7 +92,7 @@ fun <T> LazySlider(
             when (component) {
                 SliderComponent.PartCard -> {
                     LazyVerticalGrid(
-                            cells = GridCells.Adaptive(128.dp),
+                            cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 128.dp else 180.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
