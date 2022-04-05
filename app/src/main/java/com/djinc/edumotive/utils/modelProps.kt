@@ -12,4 +12,5 @@ data class modelProps(val cModel: @RawValue ContentfulModel? = null, val cModelG
     val title get() = cModel?.title ?: cModelGroup?.title
     val image get() = cModel?.image ?: cModelGroup?.image
     val description get() = cModel?.description ?: cModelGroup?.description
+    val modelUrl get() = cModel?.modelUrl ?: cModelGroup?.modelUrl
 }

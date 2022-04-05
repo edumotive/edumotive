@@ -12,7 +12,7 @@ data class ContentfulModel(
         val title: String,
         val image: String,
         val description: String,
-        val modelURL: String,
+        val modelUrl: String,
 ) {
     companion object
 }
@@ -23,7 +23,8 @@ data class ContentfulModelGroup(
         val title: String,
         val image: String,
         val description: String,
-        val models: List<ContentfulModel>
+        val models: List<ContentfulModel>,
+        val modelUrl: String,
 ) {
     companion object
 }
