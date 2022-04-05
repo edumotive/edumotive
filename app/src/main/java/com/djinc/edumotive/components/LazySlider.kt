@@ -124,14 +124,15 @@ fun <T> LazySlider(
                     }
                 }
                 SliderComponent.ExerciseCard -> {
-                    LazyColumn(
+                    LazyVerticalGrid(
+                            cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 200.dp else 250.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
                                     bottom = 24.dp
                             ),
                             modifier = Modifier
                                     .fillMaxWidth(1f)
-                                    .fillMaxHeight(1f)
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
