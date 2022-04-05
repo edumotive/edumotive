@@ -1,6 +1,7 @@
 package com.djinc.edumotive.screens
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,7 +50,7 @@ fun PartDetails(
                 isLoading = false
             }
         }
-        if (!isLoading) Details(model = viewModels.activeModel, modelType = modelType, nav = nav, windowSize = windowSize, viewModels = viewModels)
+        if (!isLoading) Details(model = viewModels.activeModel, modelType = modelType, modelId = partId, nav = nav, windowSize = windowSize, viewModels = viewModels)
     } else {
         LaunchedEffect(key1 = partId) {
             Contentful().fetchModelGroupById(partId, errorCallBack = ::errorCatch) {
@@ -57,7 +58,7 @@ fun PartDetails(
                 isLoading = false
             }
         }
-        if (!isLoading) Details(model = viewModels.activeModelGroup, modelType = modelType, nav = nav, windowSize = windowSize, viewModels = viewModels)
+        if (!isLoading) Details(model = viewModels.activeModelGroup, modelType = modelType, modelId = partId, nav = nav, windowSize = windowSize, viewModels = viewModels)
     }
 }
 
@@ -65,6 +66,7 @@ fun PartDetails(
 fun Details(
         model: Any,
         modelType: String,
+        modelId: String,
         nav: NavController,
         windowSize: WindowSize,
         viewModels: ViewModels
@@ -110,8 +112,12 @@ fun Details(
                         .clip(RoundedCornerShape(8.dp))
                         .background(PinkSecondary)
                         .clickable {
-                            // SEND MODELURL OR LIST OF MODELURLS ALONG WITH ACTIVITY
-                            context.startActivity(Intent(context, ARActivity::class.java))
+                            val intent = Intent(context, ARActivity::class.java)
+                            val params = Bundle()
+                            params.putString("type", modelType)
+                            params.putString("id", modelId)
+                            intent.putExtras(params)
+                            context.startActivity(intent)
                         }
                 ) {
                     Row(

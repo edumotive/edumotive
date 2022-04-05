@@ -65,13 +65,5 @@ class MainActivity : ComponentActivity() {
                 Log.i("modelAPI", "10 " + exercise.models[0].title)
             }
         }
-
-
-        Contentful().fetchModelByID(
-            id = "3LAIooNGUr60jfslJderrb",
-            errorCallBack = ::errorCatch
-        ) { model: ContentfulModel ->
-            Log.i("modelAPI", "11 " + model.title)
-        }
     }
 }
