@@ -34,7 +34,7 @@ fun <T> LazySlider(
         Text(
                 text = title,
                 style = MaterialTheme.typography.h2,
-                modifier = Modifier.then(if (titleManualPadding) Modifier.padding(horizontal = 20.dp) else Modifier)
+                modifier = Modifier.then(if (titleManualPadding) Modifier.padding(start = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -44,9 +44,20 @@ fun <T> LazySlider(
                 SliderComponent.PartCard -> {
                     LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            contentPadding = PaddingValues(horizontal = 20.dp),
+                            contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                     ) {
-                        itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
+                        // MODELGROUPS
+//                        itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
+//                            PartCard(
+//                                partId = item.id,
+//                                partType = item.type,
+//                                partName = item.title,
+//                                imageUrl = item.image,
+//                                nav = nav,
+//                                viewModels = viewModels
+//                            )
+//                        }
+                        itemsIndexed(list as List<ContentfulModel>) { index, item ->
                             PartCard(
                                     partId = item.id,
                                     partType = item.type,
@@ -61,7 +72,7 @@ fun <T> LazySlider(
                 SliderComponent.ExerciseCard -> {
                     LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            contentPadding = PaddingValues(horizontal = 20.dp),
+                            contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
