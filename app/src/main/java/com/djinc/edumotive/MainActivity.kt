@@ -27,10 +27,10 @@ class MainActivity : ComponentActivity() {
             val windowSize = rememberWindowSizeClass()
             EdumotiveTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colors.background
                 ) {
-                    App(windowSize, viewModel)
+                    if (!viewModel.isLoading) App(windowSize, viewModel)
                 }
             }
         }
@@ -68,8 +68,8 @@ class MainActivity : ComponentActivity() {
 
 
         Contentful().fetchModelByID(
-            id = "3LAIooNGUr60jfslJderrb",
-            errorCallBack = ::errorCatch
+                id = "3LAIooNGUr60jfslJderrb",
+                errorCallBack = ::errorCatch
         ) { model: ContentfulModel ->
             Log.i("modelAPI", "11 " + model.title)
         }

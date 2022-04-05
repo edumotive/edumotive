@@ -70,7 +70,6 @@ fun Details(
         viewModels: ViewModels
 ) {
     val context = LocalContext.current
-    val modelURL: String
     val title: String
     val imageUrl: String
     val description: String
@@ -78,7 +77,6 @@ fun Details(
 
     if (modelType == "model") {
         model as ContentfulModel
-        modelURL = model.modelUrl
         title = model.title
         imageUrl = model.image
         description = model.description
@@ -91,90 +89,125 @@ fun Details(
         models = model.models
     }
 
-    LazyColumn(
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier.fillMaxSize()
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item {
-            Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth(1f)
-            ) {
-                ScreenTitle(title = title, windowSize = windowSize)
-                Box(modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(PinkSecondary)
-                        .clickable {
-                            // SEND MODELURL OR LIST OF MODELURLS ALONG WITH ACTIVITY
-                            context.startActivity(Intent(context, ARActivity::class.java))
-                        }
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth(1f)) {
+        LazyColumn(
+                contentPadding = PaddingValues(horizontal = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                modifier = Modifier.fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item {
+                Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth(1f)
                 ) {
-                    Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    ScreenTitle(title = title, windowSize = windowSize)
+                    Box(modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(PinkSecondary)
+                            .clickable {
+                                context.startActivity(Intent(context, ARActivity::class.java))
+                            }
                     ) {
-                        Icon(
-                                painter = painterResource(id = R.drawable.ic_augmented_reality),
-                                contentDescription = "See in Augmented Reality",
-                                tint = PinkPrimary
-                        )
-                        Text(
-                                text = "Open in AR",
-                                color = PinkPrimary,
-                                fontSize = 15.sp,
-                                modifier = Modifier.padding(top = 2.dp)
+                        Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                    painter = painterResource(id = R.drawable.ic_augmented_reality),
+                                    contentDescription = "See in Augmented Reality",
+                                    tint = PinkPrimary
+                            )
+                            Text(
+                                    text = "Open in AR",
+                                    color = PinkPrimary,
+                                    fontSize = 15.sp,
+                                    modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
+                }
+            }
+            item {
+                Box(
+                        contentAlignment = Alignment.Center, modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .aspectRatio(1F)
+                        .background(Background, RoundedCornerShape(8.dp))
+                ) {
+                    AsyncImage(imageUrl = imageUrl, imageName = "TODO")
+                }
+            }
+            item {
+                Text(text = "Informatie", style = MaterialTheme.typography.h4)
+                Text(
+                        text = description,
+                        style = MaterialTheme.typography.body2,
+                )
+            }
+            if (windowSize != WindowSize.Expanded && models.isNotEmpty()) {
+                item {
+                    ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0, windowSize = windowSize)
+                }
+                gridItems(
+                        data = models,
+                        columnCount = 2,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                ) { item ->
+                    PartCard(
+                            partId = item.id,
+                            partType = item.type,
+                            partName = item.title,
+                            imageUrl = item.image,
+                            nav = nav,
+                            viewModels = viewModels
+                    )
+                }
+            }
+            if (windowSize == WindowSize.Compact) {
+                item { Spacer(modifier = Modifier.height(65.dp)) }
+            } else {
+                item { Spacer(modifier = Modifier.height(24.dp)) }
+            }
+        }
+    }
+
+    if (windowSize == WindowSize.Expanded) {
+        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
+            LazyColumn(
+                    contentPadding = PaddingValues(end = 20.dp, bottom = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier.fillMaxWidth(0.5f)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+                item {
+                    ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0, windowSize = windowSize)
+                }
+                if (models.isNotEmpty()) {
+                    gridItems(
+                            data = models,
+                            columnCount = 2,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier
+                    ) { item ->
+                        PartCard(
+                                partId = item.id,
+                                partType = item.type,
+                                partName = item.title,
+                                imageUrl = item.image,
+                                nav = nav,
+                                viewModels = viewModels
                         )
                     }
                 }
             }
-        }
-        item {
-            Box(
-                    contentAlignment = Alignment.Center, modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .aspectRatio(1F)
-                    .background(Background, RoundedCornerShape(8.dp))
-            ) {
-                AsyncImage(imageUrl = imageUrl, imageName = "TODO")
-            }
-        }
-        item {
-            Text(text = "Informatie", style = MaterialTheme.typography.h4)
-            Text(
-                    text = description,
-                    style = MaterialTheme.typography.body2,
-            )
-        }
-        if (!models.isEmpty()) {
-            item {
-                ScreenTitle(title = "Bijbehorende onderdelen", spacerHeight = 0, windowSize = windowSize)
-            }
-            gridItems(
-                    data = models,
-                    columnCount = 2,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier
-            ) { item ->
-                PartCard(
-                        partId = item.id,
-                        partType = item.type,
-                        partName = item.title,
-                        imageUrl = item.image,
-                        nav = nav,
-                        viewModels = viewModels
-                )
-            }
-        }
-        if (windowSize == WindowSize.Compact) {
-            item { Spacer(modifier = Modifier.height(65.dp)) }
-        } else {
-            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
