@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
@@ -53,7 +54,9 @@ fun PartCard(
             Text(
                     text = partName,
                     style = MaterialTheme.typography.h3,
-                    modifier = Modifier.padding(horizontal = 12.dp)
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = 12.dp, end = 30.dp)
             )
             Box(
                     contentAlignment = Alignment.CenterEnd, modifier = Modifier
