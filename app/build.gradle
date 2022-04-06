@@ -11,8 +11,8 @@ android {
         applicationId "com.djinc.edumotive"
         minSdk 26
         targetSdk 31
-        versionCode 1
-        versionName "0.2"
+        versionCode 2
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,15 +27,26 @@ android {
             applicationIdSuffix '.alpha'
             versionNameSuffix '-alpha'
         }
+        beta {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationIdSuffix '.beta'
+            versionNameSuffix '-beta'
+        }
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
         all {
-            buildConfigField("String", "CONTENTFUL_HOST", "\"contentful.com\"")
-            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", "\"WSH6C_fqQpeKG8ilvbAawTSVMgYBgUnSh3cIeK9y3U0\"")
-            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", "\"B18Rzbce7dOlNPTJsfsHVyOUX2QmGWF7OmrYfa_OfpM\"")
-            buildConfigField("String", "CONTENTFUL_SPACE_ID", "\"ptuefbkmcynu\"")
+            Properties properties = new Properties()
+            if (project.rootProject.file('local.properties').canRead()) {
+                properties.load(project.rootProject.file("local.properties").newDataInputStream())
+            }
+
+            buildConfigField("String", "CONTENTFUL_HOST", properties.getProperty('contentful_host'))
+            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", properties.getProperty('contentful_delivery_token'))
+            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", properties.getProperty('contentful_preview_token'))
+            buildConfigField("String", "CONTENTFUL_SPACE_ID", properties.getProperty('contentful_space_id'))
         }
     }
     compileOptions {
