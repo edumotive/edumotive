@@ -16,8 +16,27 @@ class ViewModels : ViewModel() {
         private set
     var models by mutableStateOf(listOf<ContentfulModel>())
         private set
-    var activeModel by mutableStateOf(ContentfulModel(id = "", type = "", title = "", image = "", description = "", modelUrl = ""))
-    var activeModelGroup by mutableStateOf(ContentfulModelGroup(id = "", type = "", title = "", image = "", description = "", models = emptyList(), modelUrl = ""))
+    var activeModel by mutableStateOf(
+        ContentfulModel(
+            id = "",
+            type = "",
+            title = "",
+            image = "",
+            description = "",
+            modelUrl = ""
+        )
+    )
+    var activeModelGroup by mutableStateOf(
+        ContentfulModelGroup(
+            id = "",
+            type = "",
+            title = "",
+            image = "",
+            description = "",
+            models = emptyList(),
+            modelUrl = ""
+        )
+    )
     var isLoading by mutableStateOf(true)
 
     init {
@@ -36,9 +55,10 @@ class ViewModels : ViewModel() {
         }
     }
 
-    fun refreshModels() {
+    fun refreshModels(callback: (result: Boolean) -> Unit) {
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            callback.invoke(false)
         }
     }
 }
