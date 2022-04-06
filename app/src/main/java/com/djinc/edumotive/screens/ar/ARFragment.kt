@@ -1,14 +1,17 @@
 package com.djinc.edumotive.screens.ar
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.utils.ar.createModel
+import com.djinc.edumotive.utils.contentful.Contentful
+import com.djinc.edumotive.utils.contentful.errorCatch
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -26,16 +29,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private val arModels = mutableListOf<ArModelNode>()
 
-    private var models: List<ContentfulModel> = listOf(
-        ContentfulModel(
-            "1",
-            "Model",
-            title = "Engine",
-            "models/V8_motor.png",
-            "THis is an engine",
-            "models/V8_motor.glb"
-        )
-    )
+    private var models = mutableListOf<ContentfulModel>()
 
     private var isLoading = false
         set(value) {
@@ -47,6 +41,27 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val params = this.arguments
+
+        if (params != null) {
+            if (params.getString("type") == "model") {
+                Contentful().fetchModelByID(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { model: ContentfulModel ->
+                    models.add(model)
+                    loadModels()
+                }
+            } else {
+                Contentful().fetchModelGroupById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { modelGroup: ContentfulModelGroup ->
+                    models.addAll(modelGroup.models)
+                    loadModels()
+                }
+            }
+        }
 
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
@@ -86,7 +101,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
+    }
 
+    private fun loadModels() {
         models.forEach { model ->
             arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelUrl))
         }
