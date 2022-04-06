@@ -17,60 +17,93 @@ import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.*
 import com.djinc.edumotive.models.ExerciseStep
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.TextSecondary
 import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: WindowSize) {
-    LazyColumn(
-            contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 85.dp) else PaddingValues(
-                    bottom = 24.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                    .padding(horizontal = 20.dp)
-                    .fillMaxSize()
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item {
-            ScreenTitle(title = "Oefening - Naam", spacerHeight = 0)
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Hoofdstuk X", color = TextSecondary, fontSize = 16.sp)
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(painter = painterResource(id = R.drawable.ic_clock), contentDescription = "Clock icon", tint = TextSecondary, modifier = Modifier.padding(bottom = 3.dp))
-                    Text(text = "10 - 15 min", color = TextSecondary, fontSize = 16.sp)
+fun ExerciseDetails(exerciseId: String = "", nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth(1f)) {
+        LazyColumn(
+                contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                modifier = Modifier.fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item {
+                ScreenTitle(title = "Oefening - Naam", spacerHeight = 0, windowSize = windowSize)
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "Hoofdstuk X", color = TextSecondary, fontSize = 16.sp)
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(painter = painterResource(id = R.drawable.ic_clock), contentDescription = "Clock icon", tint = TextSecondary, modifier = Modifier.padding(bottom = 3.dp))
+                        Text(text = "10 - 15 min", color = TextSecondary, fontSize = 16.sp)
+                    }
+                }
+            }
+            item {
+                Text(text = "Wat je leert in deze oefening", style = MaterialTheme.typography.h4)
+                Text(
+                        text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
+                        style = MaterialTheme.typography.body2,
+                )
+            }
+            val exerciseSteps = listOf(
+                    ExerciseStep(
+                            name = "Stap 1",
+                    ),
+                    ExerciseStep(
+                            name = "Stap 2",
+                    ),
+                    ExerciseStep(
+                            name = "Stap 3",
+                    ),
+                    ExerciseStep(
+                            name = "Stap 4",
+                    ),
+                    ExerciseStep(
+                            name = "Stap 5",
+                    ),
+            )
+            if (windowSize != WindowSize.Expanded && exerciseSteps.isNotEmpty()) {
+                itemsIndexed(exerciseSteps) { index, item ->
+                    ExerciseStep(exerciseStepName = item.name, stepIndex = index + 1)
                 }
             }
         }
-        item {
-            Text(text = "Wat je leert in deze oefening", style = MaterialTheme.typography.h4)
-            Text(
-                    text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
-                    style = MaterialTheme.typography.body2,
-            )
-        }
-        val exerciseSteps = listOf(
-                ExerciseStep(
-                        name = "Stap 1",
-                ),
-                ExerciseStep(
-                        name = "Stap 2",
-                ),
-                ExerciseStep(
-                        name = "Stap 3",
-                ),
-                ExerciseStep(
-                        name = "Stap 4",
-                ),
-                ExerciseStep(
-                        name = "Stap 5",
-                ),
-        )
-        itemsIndexed(exerciseSteps) { index, item ->
-            ExerciseStep(exerciseStepName = item.name, stepIndex = index + 1)
+    }
+    if (windowSize == WindowSize.Expanded) {
+        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
+            LazyColumn(
+                    contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier
+                            .fillMaxWidth(0.5f)
+                            .padding(top = 120.dp)
+            ) {
+                val exerciseSteps = listOf(
+                        ExerciseStep(
+                                name = "Stap 1",
+                        ),
+                        ExerciseStep(
+                                name = "Stap 2",
+                        ),
+                        ExerciseStep(
+                                name = "Stap 3",
+                        ),
+                        ExerciseStep(
+                                name = "Stap 4",
+                        ),
+                        ExerciseStep(
+                                name = "Stap 5",
+                        ),
+                )
+                itemsIndexed(exerciseSteps) { index, item ->
+                    ExerciseStep(exerciseStepName = item.name, stepIndex = index + 1)
+                }
+            }
         }
     }
 }

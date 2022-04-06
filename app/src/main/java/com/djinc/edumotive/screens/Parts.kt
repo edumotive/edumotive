@@ -13,64 +13,24 @@ import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
-import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun Parts(nav: NavController, windowSize: WindowSize) {
-    Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
+    Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle("Onderdelen")
+        ScreenTitle(title = "Onderdelen", windowSize = windowSize)
 
-        val parts = listOf(
-            Part(
-                id = "abcdef",
-                name = "Onderdeel 1",
-                imageUrl = "https://picsum.photos/seed/edumotive-1/400"
-            ),
-            Part(
-                id = "abcdefg",
-                name = "Onderdeel 2",
-                imageUrl = "https://picsum.photos/seed/edumotive-2/400"
-            ),
-            Part(
-                id = "abcdefgh",
-                name = "Onderdeel 3",
-                imageUrl = "https://picsum.photos/seed/edumotive-3/400"
-            ),
-            Part(
-                id = "abcdefghi",
-                name = "Onderdeel 4",
-                imageUrl = "https://picsum.photos/seed/edumotive-4/400"
-            ),
-            Part(
-                id = "abcdefghij",
-                name = "Onderdeel 5",
-                imageUrl = "https://picsum.photos/seed/edumotive-5/400"
-            ),
-            Part(
-                id = "abcdefghijk",
-                name = "Onderdeel 6",
-                imageUrl = "https://picsum.photos/seed/edumotive-6/400"
-            ),
-            Part(
-                id = "abcdefghijkl",
-                name = "Onderdeel 7",
-                imageUrl = "https://picsum.photos/seed/edumotive-7/400"
-            ),
-            Part(
-                id = "abcdefghijklm",
-                name = "Onderdeel 8",
-                imageUrl = "https://picsum.photos/seed/edumotive-8/400"
-            ),
-        )
         LazySlider(
-            direction = SliderDirection.Vertical,
-            list = parts,
-            component = SliderComponent.PartCard,
-            nav = nav,
-            windowSize = windowSize
+                direction = SliderDirection.Vertical,
+                list = viewModels.modelGroups,
+                list2 = viewModels.models,
+                component = SliderComponent.PartCard,
+                nav = nav,
+                windowSize = windowSize,
+                viewModels = viewModels
         )
     }
 }

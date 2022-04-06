@@ -12,50 +12,29 @@ import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
 import com.djinc.edumotive.models.Exercise
-import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.utils.WindowSize
 
 @ExperimentalFoundationApi
 @Composable
-fun Dashboard(nav: NavController, windowSize: WindowSize) {
+fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     LazyColumn(contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 65.dp) else PaddingValues(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(20.dp), modifier = Modifier.fillMaxSize()) {
         item {
             Spacer(modifier = Modifier.height(12.dp))
         }
         item {
-            ScreenTitle("Welkom!", manualPadding = true, spacerHeight = 0)
+            ScreenTitle(title = "Welkom!", manualPadding = true, spacerHeight = 0, windowSize = windowSize)
         }
         item {
-            val parts = listOf(
-                    Part(
-                            id = "abcdef",
-                            name = "Onderdeel 1",
-                            imageUrl = "https://picsum.photos/seed/edumotive-1/400"
-                    ),
-                    Part(
-                            id = "abcdefg",
-                            name = "Onderdeel 2",
-                            imageUrl = "https://picsum.photos/seed/edumotive-2/400"
-                    ),
-                    Part(
-                            id = "abcdefgh",
-                            name = "Onderdeel 3",
-                            imageUrl = "https://picsum.photos/seed/edumotive-3/400"
-                    ),
-                    Part(
-                            id = "abcdefghi",
-                            name = "Onderdeel 4",
-                            imageUrl = "https://picsum.photos/seed/edumotive-4/400"
-                    ),
-            )
             LazySlider(
                     title = "Recent bekeken onderdelen",
                     titleManualPadding = true,
                     direction = SliderDirection.Horizontal,
-                    list = parts,
+                    list = viewModels.models,
                     component = SliderComponent.PartCard,
                     nav = nav,
-                    windowSize = windowSize
+                    windowSize = windowSize,
+                    viewModels = viewModels
             )
         }
         item {
@@ -94,7 +73,8 @@ fun Dashboard(nav: NavController, windowSize: WindowSize) {
                     list = exercises,
                     component = SliderComponent.ExerciseCard,
                     nav = nav,
-                    windowSize = windowSize
+                    windowSize = windowSize,
+                    viewModels = viewModels
             )
         }
     }

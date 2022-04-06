@@ -1,10 +1,42 @@
 package com.djinc.edumotive.utils.contentful
 
+import com.djinc.edumotive.models.ContentfulExercise
+import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
+
 interface ContentfulInfrastructure {
     val parameter: ContentfulParams
 
-    fun fetchAll(
+    fun fetchAllModels(
         errorCallBack: (Throwable) -> Unit,
-        successCallBack: (String) -> Unit
+        successCallBack: (List<ContentfulModel>) -> Unit
+    )
+
+    fun fetchAllModelGroups(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulModelGroup>) -> Unit
+    )
+
+    fun fetchAllExercises(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExercise>) -> Unit
+    )
+
+    fun fetchModelByID(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModel) -> Unit
+    )
+
+    fun fetchModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulModelGroup) -> Unit
+    )
+
+    fun fetchExercisesById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExercise) -> Unit
     )
 }

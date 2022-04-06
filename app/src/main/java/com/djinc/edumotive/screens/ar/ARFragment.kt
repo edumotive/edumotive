@@ -1,16 +1,18 @@
 package com.djinc.edumotive.screens.ar
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
-import com.djinc.edumotive.models.ARModel
 import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
-import com.djinc.edumotive.utils.ar.createTextNode
+import com.djinc.edumotive.utils.contentful.Contentful
+import com.djinc.edumotive.utils.contentful.errorCatch
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -28,9 +30,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private val arModels = mutableListOf<ArModelNode>()
 
-    private var models : List<ContentfulModel> = listOf(
-        ContentfulModel("models/V8_motor.glb", "Engine")
-    )
+    private var models = mutableListOf<ContentfulModel>()
+    private var tModel: ArModelNode? = null
 
     private var isLoading = false
         set(value) {
@@ -42,13 +43,50 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val params = this.arguments
+
+        if (params != null) {
+            if (params.getString("type") == "model") {
+                Contentful().fetchModelByID(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { model: ContentfulModel ->
+                    models.add(model)
+                    loadModels()
+                }
+            } else {
+                Contentful().fetchModelGroupById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { modelGroup: ContentfulModelGroup ->
+                    models.addAll(modelGroup.models)
+                    val tArModel = createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
+
+                    tArModel.isVisible = false
+
+                    tArModel.apply {
+                        onTouched = { _, _ ->
+                            tArModel.isVisible = false
+                            arModels.forEach {
+                                    model ->
+                                if(!model.isVisible) model.isVisible = true
+                                model.children.forEach { child -> child.isVisible = false}
+                            }
+                        }
+                    }
+
+                    tModel = tArModel
+                    loadModels()
+                }
+            }
+        }
 
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
             doOnApplyWindowInsets { systemBarsInsets ->
                 (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                        systemBarsInsets.bottom + bottomMargin
+                    systemBarsInsets.bottom + bottomMargin
             }
             setOnClickListener { cursorNode.createAnchor()?.let { anchorOrMove(it) } }
         }
@@ -81,18 +119,45 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
+    }
 
-        models.forEach {
-                model -> arModels.add(createModel(requireContext(), lifecycleScope, model.modelName, model.modelURL))
+    private fun loadModels() {
+        models.forEach { model ->
+            val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title)
+
+            arModel.apply {
+                onTouched = { _, _ ->
+                    if (tModel != null) {
+                        tModel!!.isVisible = true
+                    }
+                    arModels.forEach {
+                            model ->
+                        if(model != arModel) {
+                            model.isVisible = !model.isVisible
+                        } else {
+                            model.children.forEach { child -> child.isVisible = !child.isVisible}
+                        }
+                    }
+                }
+            }
+
+            arModels.add(arModel)
         }
     }
 
     private fun anchorOrMove(anchor: Anchor) {
-        arModels.forEach {
-            arModel -> if (!sceneView.children.contains(arModel)) {
+        arModels.forEach { arModel ->
+            if (!sceneView.children.contains(arModel)) {
                 sceneView.addChild(arModel)
             }
             arModel.anchor = anchor
+        }
+
+        if(tModel != null) {
+            if (!sceneView.children.contains(tModel!!)) {
+                sceneView.addChild(tModel!!)
+            }
+            tModel!!.anchor = anchor
         }
     }
 }

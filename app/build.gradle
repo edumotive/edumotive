@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -10,8 +11,8 @@ android {
         applicationId "com.djinc.edumotive"
         minSdk 26
         targetSdk 31
-        versionCode 1
-        versionName "0.2"
+        versionCode 2
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,15 +27,26 @@ android {
             applicationIdSuffix '.alpha'
             versionNameSuffix '-alpha'
         }
+        beta {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationIdSuffix '.beta'
+            versionNameSuffix '-beta'
+        }
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
         }
         all {
-            buildConfigField("String", "CONTENTFUL_HOST", "\"contentful.com\"")
-            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", "\"WSH6C_fqQpeKG8ilvbAawTSVMgYBgUnSh3cIeK9y3U0\"")
-            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", "\"B18Rzbce7dOlNPTJsfsHVyOUX2QmGWF7OmrYfa_OfpM\"")
-            buildConfigField("String", "CONTENTFUL_SPACE_ID", "\"ptuefbkmcynu\"")
+            Properties properties = new Properties()
+            if (project.rootProject.file('local.properties').canRead()) {
+                properties.load(project.rootProject.file("local.properties").newDataInputStream())
+            }
+
+            buildConfigField("String", "CONTENTFUL_HOST", properties.getProperty('contentful_host', "\"contentful.com\""))
+            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", properties.getProperty('contentful_delivery_token', "\"abc\""))
+            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", properties.getProperty('contentful_preview_token', "\"abc\""))
+            buildConfigField("String", "CONTENTFUL_SPACE_ID", properties.getProperty('contentful_space_id', "\"abc\""))
         }
     }
     compileOptions {
@@ -101,8 +113,11 @@ dependencies {
 
     // Coil - image loading library
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
-    
+
     // Contentful
     implementation 'com.contentful.java:java-sdk:10.5.2'
-    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.4'
+
+    // SlideToRefresh
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.23.1'
 }

@@ -11,8 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
-import com.djinc.edumotive.models.Exercise
-import com.djinc.edumotive.models.Part
+import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.WindowSize
 
 enum class SliderDirection { Horizontal, Vertical }
@@ -21,19 +20,21 @@ enum class SliderComponent { PartCard, ExerciseCard }
 @ExperimentalFoundationApi
 @Composable
 fun <T> LazySlider(
-    title: String = "",
-    titleManualPadding: Boolean = false,
-    direction: SliderDirection,
-    list: List<T>,
-    component: SliderComponent,
-    nav: NavController,
-    windowSize: WindowSize
+        title: String = "",
+        titleManualPadding: Boolean = false,
+        direction: SliderDirection,
+        list: List<T>,
+        list2: List<T> = emptyList<T>(),
+        component: SliderComponent,
+        nav: NavController,
+        windowSize: WindowSize,
+        viewModels: ViewModels
 ) {
     if (title.isNotEmpty()) {
         Text(
-            text = title,
-            style = MaterialTheme.typography.h2,
-            modifier = Modifier.then(if (titleManualPadding) Modifier.padding(horizontal = 20.dp) else Modifier)
+                text = title,
+                style = MaterialTheme.typography.h2,
+                modifier = Modifier.then(if (titleManualPadding) Modifier.padding(start = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -42,32 +43,45 @@ fun <T> LazySlider(
             when (component) {
                 SliderComponent.PartCard -> {
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(horizontal = 20.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                     ) {
-                        itemsIndexed(list as List<Part>) { index, item ->
+                        // MODELGROUPS
+//                        itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
+//                            PartCard(
+//                                partId = item.id,
+//                                partType = item.type,
+//                                partName = item.title,
+//                                imageUrl = item.image,
+//                                nav = nav,
+//                                viewModels = viewModels
+//                            )
+//                        }
+                        itemsIndexed(list as List<ContentfulModel>) { index, item ->
                             PartCard(
-                                partId = item.id,
-                                partName = item.name,
-                                imageUrl = item.imageUrl,
-                                nav = nav
+                                    partId = item.id,
+                                    partType = item.type,
+                                    partName = item.title,
+                                    imageUrl = item.image,
+                                    nav = nav,
+                                    viewModels = viewModels
                             )
                         }
                     }
                 }
                 SliderComponent.ExerciseCard -> {
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(horizontal = 20.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
-                                exerciseId = item.id,
-                                exerciseName = item.name,
-                                imageUrl = item.imageUrl,
-                                description = item.description,
-                                fullWidth = false,
-                                nav = nav
+                                    exerciseId = item.id,
+                                    exerciseName = item.name,
+                                    imageUrl = item.imageUrl,
+                                    description = item.description,
+                                    fullWidth = false,
+                                    nav = nav
                             )
                         }
                     }
@@ -78,43 +92,56 @@ fun <T> LazySlider(
             when (component) {
                 SliderComponent.PartCard -> {
                     LazyVerticalGrid(
-                        cells = GridCells.Adaptive(128.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
-                            bottom = 24.dp
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
+                            cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 128.dp else 180.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
+                                    bottom = 24.dp
+                            ),
+                            modifier = Modifier
+                                    .fillMaxWidth(1f)
                     ) {
-                        itemsIndexed(list as List<Part>) { index, item ->
+                        itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
                             PartCard(
-                                partId = item.id,
-                                partName = item.name,
-                                imageUrl = item.imageUrl,
-                                nav = nav
+                                    partId = item.id,
+                                    partType = item.type,
+                                    partName = item.title,
+                                    imageUrl = item.image,
+                                    nav = nav,
+                                    viewModels = viewModels
+                            )
+                        }
+                        itemsIndexed(list2 as List<ContentfulModel>) { index, item ->
+                            PartCard(
+                                    partId = item.id,
+                                    partType = item.type,
+                                    partName = item.title,
+                                    imageUrl = item.image,
+                                    nav = nav,
+                                    viewModels = viewModels
                             )
                         }
                     }
                 }
                 SliderComponent.ExerciseCard -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
-                            bottom = 24.dp
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .fillMaxHeight(1f)
+                    LazyVerticalGrid(
+                            cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 200.dp else 250.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(bottom = 100.dp) else PaddingValues(
+                                    bottom = 24.dp
+                            ),
+                            modifier = Modifier
+                                    .fillMaxWidth(1f)
                     ) {
                         itemsIndexed(list as List<Exercise>) { index, item ->
                             ExerciseCard(
-                                exerciseId = item.id,
-                                exerciseName = item.name,
-                                imageUrl = item.imageUrl,
-                                description = item.description,
-                                fullWidth = true,
-                                nav = nav
+                                    exerciseId = item.id,
+                                    exerciseName = item.name,
+                                    imageUrl = item.imageUrl,
+                                    description = item.description,
+                                    fullWidth = true,
+                                    nav = nav
                             )
                         }
                     }
