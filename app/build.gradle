@@ -43,10 +43,10 @@ android {
                 properties.load(project.rootProject.file("local.properties").newDataInputStream())
             }
 
-            buildConfigField("String", "CONTENTFUL_HOST", properties.getProperty('contentful_host'))
-            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", properties.getProperty('contentful_delivery_token'))
-            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", properties.getProperty('contentful_preview_token'))
-            buildConfigField("String", "CONTENTFUL_SPACE_ID", properties.getProperty('contentful_space_id'))
+            buildConfigField("String", "CONTENTFUL_HOST", properties.getProperty('contentful_host', ""))
+            buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", properties.getProperty('contentful_delivery_token', ""))
+            buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", properties.getProperty('contentful_preview_token', ""))
+            buildConfigField("String", "CONTENTFUL_SPACE_ID", properties.getProperty('contentful_space_id', ""))
         }
     }
     compileOptions {
