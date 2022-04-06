@@ -17,20 +17,28 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
     val navController = rememberNavController()
     if (windowSize == WindowSize.Compact) {
         Scaffold(
-                bottomBar = {
-                    BottomBar(navController = navController)
-                },
+            bottomBar = {
+                BottomBar(navController = navController)
+            },
         ) {
-            NavGraph(navController = navController, windowSize = windowSize, viewModels = viewModels)
+            NavGraph(
+                navController = navController,
+                windowSize = windowSize,
+                viewModels = viewModels
+            )
         }
     } else {
         Row() {
             SideBar(navController = navController)
             Box(
-                    modifier = Modifier
-                            .fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                NavGraph(navController = navController, windowSize = windowSize, viewModels = viewModels)
+                NavGraph(
+                    navController = navController,
+                    windowSize = windowSize,
+                    viewModels = viewModels
+                )
             }
         }
     }

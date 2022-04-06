@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
@@ -30,6 +31,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private val arModels = mutableListOf<ArModelNode>()
 
     private var models = mutableListOf<ContentfulModel>()
+    private var tModel: ArModelNode? = null
 
     private var isLoading = false
         set(value) {
@@ -58,6 +60,22 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { modelGroup: ContentfulModelGroup ->
                     models.addAll(modelGroup.models)
+                    val tArModel = createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
+
+                    tArModel.isVisible = false
+
+                    tArModel.apply {
+                        onTouched = { _, _ ->
+                            tArModel.isVisible = false
+                            arModels.forEach {
+                                    model ->
+                                if(!model.isVisible) model.isVisible = true
+                                model.children.forEach { child -> child.isVisible = false}
+                            }
+                        }
+                    }
+
+                    tModel = tArModel
                     loadModels()
                 }
             }
@@ -105,7 +123,25 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun loadModels() {
         models.forEach { model ->
-            arModels.add(createModel(requireContext(), lifecycleScope, model.title, model.modelUrl))
+            val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title)
+
+            arModel.apply {
+                onTouched = { _, _ ->
+                    if (tModel != null) {
+                        tModel!!.isVisible = true
+                    }
+                    arModels.forEach {
+                            model ->
+                        if(model != arModel) {
+                            model.isVisible = !model.isVisible
+                        } else {
+                            model.children.forEach { child -> child.isVisible = !child.isVisible}
+                        }
+                    }
+                }
+            }
+
+            arModels.add(arModel)
         }
     }
 
@@ -115,6 +151,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 sceneView.addChild(arModel)
             }
             arModel.anchor = anchor
+        }
+
+        if(tModel != null) {
+            if (!sceneView.children.contains(tModel!!)) {
+                sceneView.addChild(tModel!!)
+            }
+            tModel!!.anchor = anchor
         }
     }
 }

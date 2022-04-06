@@ -102,8 +102,11 @@ dependencies {
 
     // Coil - image loading library
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
-    
+
     // Contentful
     implementation 'com.contentful.java:java-sdk:10.5.2'
-    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.4'
+
+    // SlideToRefresh
+    implementation 'com.google.accompanist:accompanist-swiperefresh:0.23.1'
 }
