@@ -8,7 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
@@ -19,9 +18,6 @@ import com.djinc.edumotive.ui.theme.EdumotiveTheme
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import com.djinc.edumotive.utils.rememberWindowSizeClass
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<ViewModels>()
@@ -30,29 +26,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSize = rememberWindowSizeClass()
             EdumotiveTheme {
-                var isRefreshing by remember { mutableStateOf(false) }
-                val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    if (!viewModel.isLoading) {
-                        SwipeRefresh(
-                            state = swipeRefreshState,
-                            onRefresh = {
-                                isRefreshing = true
-                            },
-                        ) {
-                            App(windowSize, viewModel)
-                        }
-                        LaunchedEffect(isRefreshing) {
-                            if (isRefreshing) {
-                                viewModel.refreshModels {
-                                    isRefreshing = it
-                                }
-                            }
-                        }
-                    }
+                    if (viewModel.isInitialLoaded) App(windowSize, viewModel)
                 }
             }
         }

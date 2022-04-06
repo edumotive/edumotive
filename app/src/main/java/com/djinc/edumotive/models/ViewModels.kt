@@ -1,15 +1,11 @@
 package com.djinc.edumotive.models
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+
+enum class EntryType { Models, ModelGroups, Exercises }
 
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
@@ -37,28 +33,56 @@ class ViewModels : ViewModel() {
             modelUrl = ""
         )
     )
-    var isLoading by mutableStateOf(true)
+    var isInitialLoaded by mutableStateOf(false)
+    var isModelsLoaded by mutableStateOf(false)
+    var isModelGroupsLoaded by mutableStateOf(false)
+    var isExercisesLoaded by mutableStateOf(true)
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
+            isModelGroupsLoaded = true
+            isInitialLoaded = entriesLoaded()
         }
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
-            isLoading = false
+            isModelsLoaded = true
+            isInitialLoaded = entriesLoaded()
         }
     }
 
-    fun refreshModelGroups() {
-        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
-            modelGroups = it
+    fun refresh(entryTypes: List<EntryType>, callback: (result: Boolean) -> Unit) {
+        entryTypes.forEach { entryType ->
+            when (entryType) {
+                EntryType.Models -> {
+                    isModelsLoaded = true
+                    Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+                        models = it
+                        isModelsLoaded = false
+                        callback.invoke(entriesLoaded())
+                    }
+                }
+                EntryType.ModelGroups -> {
+                    isModelGroupsLoaded = true
+                    Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+                        modelGroups = it
+                        isModelGroupsLoaded = false
+                        callback.invoke(entriesLoaded())
+                    }
+                }
+                EntryType.Exercises -> {
+//                    Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
+//                        exercises = it
+//                        isExercisesLoading = false
+//                        callback.invoke(false)
+//                    }
+                    callback.invoke(entriesLoaded())
+                }
+            }
         }
     }
 
-    fun refreshModels(callback: (result: Boolean) -> Unit) {
-        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-            models = it
-            callback.invoke(false)
-        }
+    private fun entriesLoaded(): Boolean {
+        return isModelGroupsLoaded && isModelsLoaded && isExercisesLoaded
     }
 }
