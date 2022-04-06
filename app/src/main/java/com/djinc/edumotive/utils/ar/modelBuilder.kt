@@ -10,7 +10,7 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.math.Position
 
-fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelName: String, modelUrl: String): ArModelNode {
+fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String, modelName: String): ArModelNode {
 
     val modelNode = ArModelNode()
     modelNode.loadModelAsync(context = context,
@@ -19,6 +19,17 @@ fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelName:
         onLoaded = {
             createTextNode(context, modelName, modelNode)
         }
+    )
+
+    return modelNode
+}
+
+fun createEmptyModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String): ArModelNode {
+
+    val modelNode = ArModelNode()
+    modelNode.loadModelAsync(context = context,
+        coroutineScope = lifecycle,
+        glbFileLocation = modelUrl
     )
 
     return modelNode
@@ -43,20 +54,11 @@ fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
         .thenAccept { renderable: ViewRenderable ->
             textRendarable = renderable
             textNode.setModel(textRendarable)
+            modelNode.addChild(textNode)
         }
 
     textNode.position = Position(x = 0.0f, y = 1.0f, z = 0.0f)
     textNode.isVisible = false
-    modelNode.addChild(textNode)
-
-    modelNode.apply {
-        onTouched = { _, _ ->
-            toggleVisibility(textNode)}
-    }
-}
-
-private fun toggleVisibility(textNode: ArModelNode) {
-    textNode.isVisible = !textNode.isVisible
 }
 
 
