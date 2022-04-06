@@ -27,10 +27,10 @@ class MainActivity : ComponentActivity() {
             val windowSize = rememberWindowSizeClass()
             EdumotiveTheme {
                 Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colors.background
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
                 ) {
-                    if (!viewModel.isLoading) App(windowSize, viewModel)
+                    if (viewModel.isInitialLoaded) App(windowSize, viewModel)
                 }
             }
         }
