@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class ViewModels : ViewModel() {
@@ -16,31 +18,27 @@ class ViewModels : ViewModel() {
         private set
     var activeModel by mutableStateOf(ContentfulModel(id = "", type = "", title = "", image = "", description = "", modelUrl = ""))
     var activeModelGroup by mutableStateOf(ContentfulModelGroup(id = "", type = "", title = "", image = "", description = "", models = emptyList(), modelUrl = ""))
+    var isLoading by mutableStateOf(true)
 
     init {
-        viewModelScope.launch {
-            Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
-                modelGroups = it
-            }
-            Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-                models = it
-            }
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+            modelGroups = it
+        }
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+            models = it
+            isLoading = false
         }
     }
 
     fun refreshModelGroups() {
-        viewModelScope.launch {
-            Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
-                modelGroups = it
-            }
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+            modelGroups = it
         }
     }
 
     fun refreshModels() {
-        viewModelScope.launch {
-            Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-                models = it
-            }
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+            models = it
         }
     }
 }
