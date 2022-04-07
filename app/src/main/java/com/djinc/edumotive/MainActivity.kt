@@ -1,8 +1,6 @@
 package com.djinc.edumotive
 
-import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -26,13 +24,12 @@ import com.djinc.edumotive.utils.rememberWindowSizeClass
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<ViewModels>()
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val windowSize = rememberWindowSizeClass()
-            if (windowSize == WindowSize.Compact) requestedOrientation =
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            if (windowSize != WindowSize.Compact) requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             EdumotiveTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

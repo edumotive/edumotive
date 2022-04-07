@@ -108,16 +108,16 @@ fun Details(
                 ) {
                     ScreenTitle(title = title, windowSize = windowSize)
                     Box(modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(PinkSecondary)
-                            .clickable {
-                                val intent = Intent(context, ARActivity::class.java)
-                                val params = Bundle()
-                                params.putString("type", modelType)
-                                params.putString("id", modelId)
-                                intent.putExtras(params)
-                                context.startActivity(intent)
-                            }
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(PinkSecondary)
+                        .clickable {
+                            val intent = Intent(context, ARActivity::class.java)
+                            val params = Bundle()
+                            params.putString("type", modelType)
+                            params.putString("id", modelId)
+                            intent.putExtras(params)
+                            context.startActivity(intent)
+                        }
                     ) {
                         Row(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
