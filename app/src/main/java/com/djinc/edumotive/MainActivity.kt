@@ -70,5 +70,20 @@ class MainActivity : ComponentActivity() {
                 Log.i("modelAPI", "10 " + exercise.models[0].title)
             }
         }
+
+        Contentful().fetchLinkedModelGroupById(
+            id = "XvVS9D7JnEKXZgzEsDeeP",
+            errorCallBack = ::errorCatch
+        ) { modelGroups: List<ContentfulModelGroup> ->
+            modelGroups.forEach { modelGroup ->
+                Log.i("modelAPI", "linkedModelGroup: id = ${modelGroup.id}")
+                Log.i("modelAPI", "linkedModelGroup: type = ${modelGroup.type}")
+                Log.i("modelAPI", "linkedModelGroup: title = ${modelGroup.title}")
+                Log.i("modelAPI", "linkedModelGroup: imageURL = ${modelGroup.image}")
+                Log.i("modelAPI", "linkedModelGroup: info = ${modelGroup.description}")
+                Log.i("modelAPI", "linkedModelGroup: models = ${modelGroup.models}")
+                Log.i("modelAPI", "linkedModelGroup: modelUrl = ${modelGroup.modelUrl}")
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 //TODO Change to variable locale instead of hardcoded locale
 private const val DEFAULT_LOCALE = "nl-NL"
 
-open class Contentful (
+open class Contentful(
     private var clientDelivery: CDAClient = CDAClient.builder()
         .setToken(parameterFromBuildConfig().deliveryToken)
         .setSpace(parameterFromBuildConfig().spaceId)
@@ -158,6 +158,34 @@ open class Contentful (
                 )
 
                 successCallBack(exercise)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
+
+    override fun fetchLinkedModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulModelGroup>) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val modelGroups = client
+                    .fetch(CDAEntry::class.java)
+                    .withContentType("modelGroup")
+                    .where("locale", DEFAULT_LOCALE)
+                    .linksToEntryId(id)
+                    .include(1)
+                    .all()
+                    .items()
+                    .map {
+                        ContentfulModelGroup.fromRestEntry(
+                            it as CDAEntry
+                        )
+                    }
+
+                successCallBack(modelGroups)
             } catch (throwable: Throwable) {
                 errorCallBack(throwable)
             }

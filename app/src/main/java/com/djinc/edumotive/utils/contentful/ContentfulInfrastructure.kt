@@ -39,4 +39,10 @@ interface ContentfulInfrastructure {
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExercise) -> Unit
     )
+
+    fun fetchLinkedModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulModelGroup>) -> Unit
+    )
 }
