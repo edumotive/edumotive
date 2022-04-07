@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    if (viewModel.isInitialLoaded) App(windowSize, viewModel)
+                    App(windowSize, viewModel)
                 }
             }
         }
