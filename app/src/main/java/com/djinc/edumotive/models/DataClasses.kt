@@ -7,38 +7,38 @@ data class Exercise(val id: String, val name: String, val imageUrl: String, val 
 data class ExerciseStep(val name: String)
 
 data class ContentfulModel(
-        val id: String,
-        val type: String,
-        val title: String,
-        val image: String,
-        val description: String,
-        val modelUrl: String,
+    val id: String,
+    val type: String,
+    val title: String,
+    val image: String,
+    val description: String,
+    val modelUrl: String,
 ) {
     companion object
 }
 
 data class ContentfulModelGroup(
-        val id: String,
-        val type: String,
-        val title: String,
-        val image: String,
-        val description: String,
-        val models: List<ContentfulModel>,
-        val modelUrl: String,
+    val id: String,
+    val type: String,
+    val title: String,
+    val image: String,
+    val description: String,
+    val models: MutableList<ContentfulModel>,
+    val modelUrl: String,
 ) {
     companion object
 }
 
 data class ContentfulExercise(
-        val id: String,
-        val title: String,
-        val image: String,
-        val description: String,
-        val chapter: String,
-        val minTime: Int,
-        val maxTime: Int,
-        val steps: List<String>,
-        val models: List<ContentfulModel>
+    val id: String,
+    val title: String,
+    val image: String,
+    val description: String,
+    val chapter: String,
+    val minTime: Int,
+    val maxTime: Int,
+    val steps: List<String>,
+    val models: List<ContentfulModel>
 ) {
     companion object
 }

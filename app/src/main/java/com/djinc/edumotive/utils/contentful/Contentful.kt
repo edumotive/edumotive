@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 //TODO Change to variable locale instead of hardcoded locale
 private const val DEFAULT_LOCALE = "nl-NL"
 
-open class Contentful(
+open class Contentful (
     private var clientDelivery: CDAClient = CDAClient.builder()
         .setToken(parameterFromBuildConfig().deliveryToken)
         .setSpace(parameterFromBuildConfig().spaceId)
