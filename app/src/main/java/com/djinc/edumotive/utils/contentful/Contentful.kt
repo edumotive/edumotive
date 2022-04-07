@@ -163,4 +163,32 @@ open class Contentful (
             }
         }
     }
+
+    override fun fetchLinkedModelGroupById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulModelGroup>) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val modelGroups = client
+                    .fetch(CDAEntry::class.java)
+                    .withContentType("modelGroup")
+                    .where("locale", DEFAULT_LOCALE)
+                    .linksToEntryId(id)
+                    .include(1)
+                    .all()
+                    .items()
+                    .map {
+                        ContentfulModelGroup.fromRestEntry(
+                            it as CDAEntry
+                        )
+                    }
+
+                successCallBack(modelGroups)
+            } catch (throwable: Throwable) {
+                errorCallBack(throwable)
+            }
+        }
+    }
 }

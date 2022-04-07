@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,15 +45,19 @@ fun PartDetails(
     windowSize: WindowSize,
     viewModels: ViewModels
 ) {
-    var isLoading by remember { mutableStateOf(true) }
     if (modelType == "model") {
         LaunchedEffect(key1 = partId) {
-            Contentful().fetchModelByID(partId, errorCallBack = ::errorCatch) {
-                viewModels.activeModel = it
-                isLoading = false
+            Contentful().fetchLinkedModelGroupById(partId, errorCallBack = ::errorCatch) {
+                viewModels.linkedModelGroup = it
+                viewModels.isLinkedModelGroupLoaded = true
+                val activeModel =
+                    viewModels.linkedModelGroup[0].models.find { model -> model.id == partId }!!
+                viewModels.activeModel = activeModel
+                viewModels.isActiveModelLoaded = true
+                viewModels.linkedModelGroup[0].models.remove(activeModel)
             }
         }
-        if (!isLoading) Details(
+        if (viewModels.isActiveModelAndLinkedModelGroupLoaded()) Details(
             model = viewModels.activeModel,
             modelType = modelType,
             modelId = partId,
@@ -64,10 +69,10 @@ fun PartDetails(
         LaunchedEffect(key1 = partId) {
             Contentful().fetchModelGroupById(partId, errorCallBack = ::errorCatch) {
                 viewModels.activeModelGroup = it
-                isLoading = false
+                viewModels.isActiveModelGroupLoaded = true
             }
         }
-        if (!isLoading) Details(
+        if (viewModels.isActiveModelGroupLoaded) Details(
             model = viewModels.activeModelGroup,
             modelType = modelType,
             modelId = partId,
@@ -98,7 +103,7 @@ fun Details(
         title = model.title
         imageUrl = model.image
         description = model.description
-        models = emptyList()
+        models = viewModels.linkedModelGroup[0].models
     } else {
         model as ContentfulModelGroup
         title = model.title

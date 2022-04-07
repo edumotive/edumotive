@@ -12,6 +12,7 @@ class ViewModels : ViewModel() {
         private set
     var models by mutableStateOf(listOf<ContentfulModel>())
         private set
+    var linkedModelGroup by mutableStateOf(listOf<ContentfulModelGroup>())
     var activeModel by mutableStateOf(
         ContentfulModel(
             id = "",
@@ -29,7 +30,7 @@ class ViewModels : ViewModel() {
             title = "",
             image = "",
             description = "",
-            models = emptyList(),
+            models = mutableListOf(),
             modelUrl = ""
         )
     )
@@ -37,6 +38,9 @@ class ViewModels : ViewModel() {
     var isModelsLoaded by mutableStateOf(false)
     var isModelGroupsLoaded by mutableStateOf(false)
     var isExercisesLoaded by mutableStateOf(true)
+    var isLinkedModelGroupLoaded by mutableStateOf(false)
+    var isActiveModelLoaded by mutableStateOf(false)
+    var isActiveModelGroupLoaded by mutableStateOf(false)
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
@@ -80,6 +84,10 @@ class ViewModels : ViewModel() {
                 }
             }
         }
+    }
+
+    fun isActiveModelAndLinkedModelGroupLoaded(): Boolean {
+        return isActiveModelLoaded && isLinkedModelGroupLoaded
     }
 
     private fun entriesLoaded(): Boolean {
