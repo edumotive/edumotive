@@ -28,8 +28,7 @@ android {
             versionNameSuffix '-alpha'
         }
         beta {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationIdSuffix '.beta'
             versionNameSuffix '-beta'
