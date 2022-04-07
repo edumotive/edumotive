@@ -161,7 +161,7 @@ fun Details(
                 }
             }
             if (windowSize == WindowSize.Compact) {
-                item { Spacer(modifier = Modifier.height(90.dp)) }
+                item { Spacer(modifier = Modifier.height(120.dp)) }
             } else {
                 item { Spacer(modifier = Modifier.height(50.dp)) }
             }
@@ -171,7 +171,7 @@ fun Details(
             modifier = Modifier
                 .fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
                 .fillMaxHeight(1f)
-                .padding(bottom = 16.dp)
+                .padding(bottom = if (windowSize == WindowSize.Compact) 80.dp else 16.dp)
         ) {
             ExtendedFloatingActionButton(
                 shape = RoundedCornerShape(8.dp),
