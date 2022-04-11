@@ -25,7 +25,8 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
             title = "Onderdelen",
             searchButton = true,
             buttonPadding = false,
-            windowSize = windowSize
+            windowSize = windowSize,
+            viewModels = viewModels
         )
 
         LazySlider(

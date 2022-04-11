@@ -122,7 +122,7 @@ fun Details(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item {
-                ScreenTitle(title = title, windowSize = windowSize)
+                ScreenTitle(title = title, windowSize = windowSize, viewModels = viewModels)
             }
             item {
                 Box(
@@ -146,7 +146,8 @@ fun Details(
                     ScreenTitle(
                         title = "Bijbehorende onderdelen",
                         spacerHeight = 0,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModels = viewModels
                     )
                 }
                 gridItems(
@@ -227,7 +228,8 @@ fun Details(
                     ScreenTitle(
                         title = "Bijbehorende onderdelen",
                         spacerHeight = 0,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModels = viewModels
                     )
                 }
                 if (models.isNotEmpty()) {

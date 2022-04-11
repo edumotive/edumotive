@@ -29,11 +29,12 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.djinc.edumotive.R
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.Screen
 import com.djinc.edumotive.ui.theme.*
 
 @Composable
-fun SideBar(navController: NavHostController) {
+fun SideBar(navController: NavHostController, viewModels: ViewModels) {
     val screens = listOf(
         Screen.Dashboard,
         Screen.Parts,
@@ -113,14 +114,14 @@ fun SideBar(navController: NavHostController) {
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
-                        if (isLanguageDropdownOpen) {
+                        if (viewModels.isLanguageModalOpen) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
-                                        isLanguageDropdownOpen = false
+                                        viewModels.isLanguageModalOpen = false
                                     }
                                     .background(Background)
                                     .border(
@@ -153,7 +154,7 @@ fun SideBar(navController: NavHostController) {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
-                                        isLanguageDropdownOpen = false
+                                        viewModels.isLanguageModalOpen = false
                                     }
                                     .background(PinkSecondary)
                                     .border(
@@ -186,7 +187,7 @@ fun SideBar(navController: NavHostController) {
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .clickable {
-                                    isLanguageDropdownOpen = !isLanguageDropdownOpen
+                                    viewModels.isLanguageModalOpen = !viewModels.isLanguageModalOpen
                                 }
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(Background)
@@ -206,7 +207,7 @@ fun SideBar(navController: NavHostController) {
                                 modifier = Modifier
                                     .width(15.dp)
                                     .height(9.dp)
-                                    .rotate(if (isLanguageDropdownOpen) 180f else 0f)
+                                    .rotate(if (viewModels.isLanguageModalOpen) 180f else 0f)
                             )
                         }
                     }

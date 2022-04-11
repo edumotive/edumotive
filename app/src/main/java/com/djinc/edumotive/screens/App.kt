@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.djinc.edumotive.components.BottomBar
 import com.djinc.edumotive.components.SideBar
+import com.djinc.edumotive.components.modals.LanguageModal
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.NavGraph
 import com.djinc.edumotive.utils.WindowSize
@@ -27,9 +27,12 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
                 viewModels = viewModels
             )
         }
+        if (viewModels.isLanguageModalOpen) {
+            LanguageModal(windowSize = windowSize, viewModels = viewModels)
+        }
     } else {
         Row() {
-            SideBar(navController = navController)
+            SideBar(navController = navController, viewModels = viewModels)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

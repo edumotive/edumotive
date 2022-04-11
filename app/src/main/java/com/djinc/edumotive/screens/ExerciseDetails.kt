@@ -39,7 +39,12 @@ fun ExerciseDetails(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item {
-                ScreenTitle(title = "Oefening - Naam", spacerHeight = 0, windowSize = windowSize)
+                ScreenTitle(
+                    title = "Oefening - Naam",
+                    spacerHeight = 0,
+                    windowSize = windowSize,
+                    viewModels = viewModels
+                )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically

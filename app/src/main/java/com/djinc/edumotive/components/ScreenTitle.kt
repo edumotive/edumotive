@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.djinc.edumotive.R
+import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
@@ -32,7 +33,8 @@ fun ScreenTitle(
     buttonPadding: Boolean = true,
     spacerHeight: Int = 12,
     manualPadding: Boolean = false,
-    windowSize: WindowSize
+    windowSize: WindowSize,
+    viewModels: ViewModels
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -62,7 +64,7 @@ fun ScreenTitle(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
                             .clickable {
-//                        TODO
+                                viewModels.isLanguageModalOpen = true
                             }
                             .background(PinkSecondary)
                             .padding(10.dp)
