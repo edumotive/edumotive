@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.djinc.edumotive.R
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
@@ -22,7 +24,7 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle(
-            title = "Onderdelen",
+            title = stringResource(R.string.parts),
             searchButton = true,
             buttonPadding = false,
             windowSize = windowSize,

@@ -2,10 +2,8 @@ package com.djinc.edumotive.screens
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -14,10 +12,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -135,7 +132,7 @@ fun Details(
                 }
             }
             item {
-                Text(text = "Informatie", style = MaterialTheme.typography.h4)
+                Text(text = stringResource(R.string.information), style = MaterialTheme.typography.h4)
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body2,
@@ -144,7 +141,7 @@ fun Details(
             if (windowSize != WindowSize.Expanded && models.isNotEmpty()) {
                 item {
                     ScreenTitle(
-                        title = "Bijbehorende onderdelen",
+                        title = stringResource(R.string.corresponding_parts),
                         spacerHeight = 0,
                         windowSize = windowSize,
                         viewModels = viewModels
@@ -184,7 +181,7 @@ fun Details(
                 backgroundColor = PinkSecondary,
                 text = {
                     Text(
-                        text = "Open in AR",
+                        text = stringResource(R.string.open_ar),
                         color = PinkPrimary,
                         fontSize = 16.sp,
                         fontFamily = fonts,
@@ -202,7 +199,7 @@ fun Details(
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_augmented_reality),
-                        contentDescription = "See in Augmented Reality",
+                        contentDescription = stringResource(R.string.see_in_augmented_reality),
                         tint = PinkPrimary
                     )
                 },
@@ -226,7 +223,7 @@ fun Details(
                 }
                 item {
                     ScreenTitle(
-                        title = "Bijbehorende onderdelen",
+                        title = stringResource(R.string.corresponding_parts),
                         spacerHeight = 0,
                         windowSize = windowSize,
                         viewModels = viewModels

@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.djinc.edumotive.R
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
@@ -32,7 +34,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
         }
         item {
             ScreenTitle(
-                title = "Welkom!",
+                title = stringResource(R.string.welcome),
                 languageButton = true,
                 manualPadding = true,
                 spacerHeight = 0,
@@ -42,7 +44,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
         }
         item {
             LazySlider(
-                title = "Recent bekeken onderdelen",
+                title = stringResource(R.string.recent_updated),
                 titleManualPadding = true,
                 direction = SliderDirection.Horizontal,
                 list = viewModels.models,
@@ -82,7 +84,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
                 ),
             )
             LazySlider(
-                title = "Oefeningen voor dit hoofdstuk",
+                title = stringResource(R.string.exercises_this_chapter),
                 titleManualPadding = true,
                 direction = SliderDirection.Horizontal,
                 list = exercises,
