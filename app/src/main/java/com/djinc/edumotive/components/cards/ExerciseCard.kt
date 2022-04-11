@@ -15,6 +15,7 @@ import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.navigation.Screen
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
+import com.djinc.edumotive.utils.WindowSize
 
 @Composable
 fun ExerciseCard(
@@ -23,14 +24,15 @@ fun ExerciseCard(
     imageUrl: String,
     description: String = "",
     fullWidth: Boolean,
-    nav: NavController
+    nav: NavController,
+    windowSize: WindowSize
 ) {
     Card(
         backgroundColor = Background,
         elevation = 3.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
-            .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(260.dp))
+            .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(if (windowSize == WindowSize.Compact) 260.dp else 240.dp))
             .clickable {
                 nav.navigate("exercise/$exerciseId")
             }

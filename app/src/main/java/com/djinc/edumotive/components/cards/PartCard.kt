@@ -18,55 +18,56 @@ import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
+import com.djinc.edumotive.utils.WindowSize
 
 @Composable
 fun PartCard(
-        partId: String,
-        partType: String,
-        partName: String = "",
-        imageUrl: String,
-        nav: NavController,
-        viewModels: ViewModels
+    partId: String,
+    partType: String,
+    partName: String = "",
+    imageUrl: String,
+    nav: NavController,
+    windowSize: WindowSize
 ) {
     Card(
-            backgroundColor = Background,
-            elevation = 3.dp,
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                    .width(200.dp)
-                    .clickable {
-                        nav.navigate("part/$partId/$partType")
-                    }
+        backgroundColor = Background,
+        elevation = 3.dp,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .width(if (windowSize == WindowSize.Compact) 200.dp else 170.dp)
+            .clickable {
+                nav.navigate("part/$partId/$partType")
+            }
     ) {
         Column(
-                verticalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                            .fillMaxWidth(1f)
-                            .aspectRatio(1.0F)
-                            .padding(start = 12.dp, top = 12.dp, end = 12.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .aspectRatio(1.0F)
+                    .padding(start = 12.dp, top = 12.dp, end = 12.dp)
+                    .clip(RoundedCornerShape(8.dp))
             ) {
                 AsyncImage(imageUrl = imageUrl, imageName = partName)
             }
             Text(
-                    text = partName,
-                    style = MaterialTheme.typography.h3,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 12.dp, end = 30.dp)
+                text = partName,
+                style = MaterialTheme.typography.h3,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(start = 12.dp, end = 30.dp)
             )
             Box(
-                    contentAlignment = Alignment.CenterEnd, modifier = Modifier
+                contentAlignment = Alignment.CenterEnd, modifier = Modifier
                     .fillMaxWidth()
                     .height(12.dp)
                     .background(PinkPrimary)
             ) {
                 val negativePadding = 8.dp
                 Box(
-                        contentAlignment = Alignment.Center, modifier = Modifier
+                    contentAlignment = Alignment.Center, modifier = Modifier
                         .offset(y = -negativePadding)
                         .requiredHeight(28.dp)
                         .requiredWidth(28.dp)
@@ -75,12 +76,12 @@ fun PartCard(
                         .padding(5.dp)
                 ) {
                     Icon(
-                            painter = painterResource(id = R.drawable.ic_arrows_right),
-                            contentDescription = "See details of part: $partName",
-                            tint = Background,
-                            modifier = Modifier
-                                    .fillMaxWidth()
-                                    .fillMaxHeight()
+                        painter = painterResource(id = R.drawable.ic_arrows_right),
+                        contentDescription = "See details of part: $partName",
+                        tint = Background,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
                     )
                 }
             }

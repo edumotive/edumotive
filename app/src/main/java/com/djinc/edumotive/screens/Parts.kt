@@ -24,13 +24,13 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
         ScreenTitle(title = "Onderdelen", windowSize = windowSize)
 
         LazySlider(
-                direction = SliderDirection.Vertical,
-                list = viewModels.modelGroups,
-                list2 = viewModels.models,
-                component = SliderComponent.PartCard,
-                nav = nav,
-                windowSize = windowSize,
-                viewModels = viewModels
+            direction = SliderDirection.Vertical,
+            list = viewModels.modelGroups,
+            list2 = viewModels.models,
+            component = SliderComponent.PartCard,
+            nav = nav,
+            windowSize = windowSize,
+            viewModels = viewModels
         )
     }
 }
