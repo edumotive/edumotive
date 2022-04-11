@@ -161,7 +161,7 @@ fun Details(
                         partName = item.title,
                         imageUrl = item.image,
                         nav = nav,
-                        viewModels = viewModels
+                        windowSize = windowSize
                     )
                 }
             }
@@ -243,7 +243,7 @@ fun Details(
                             partName = item.title,
                             imageUrl = item.image,
                             nav = nav,
-                            viewModels = viewModels
+                            windowSize = windowSize
                         )
                     }
                 }

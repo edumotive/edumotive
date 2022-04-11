@@ -35,9 +35,9 @@ import com.djinc.edumotive.ui.theme.*
 @Composable
 fun SideBar(navController: NavHostController) {
     val screens = listOf(
-            Screen.Dashboard,
-            Screen.Parts,
-            Screen.Exercises
+        Screen.Dashboard,
+        Screen.Parts,
+        Screen.Exercises
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -46,25 +46,32 @@ fun SideBar(navController: NavHostController) {
 
     Box() {
         Surface(
-                shape = RectangleShape,
-                color = Background,
-                elevation = 12.dp,
-                modifier = Modifier
-                        .fillMaxHeight()
-                        .width(sideBarSize)
+            shape = RectangleShape,
+            color = Background,
+            elevation = 12.dp,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(sideBarSize)
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 Column(modifier = Modifier.padding(top = if (sideBarSize == 220.dp) 11.dp else 20.dp)) {
                     // LOGO
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
-                        Image(painter = painterResource(id = R.drawable.ic_edumotive), contentDescription = "EduMotive logo")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(start = 16.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_edumotive),
+                            contentDescription = "EduMotive logo"
+                        )
                         if (sideBarSize == 220.dp) {
                             Text(
-                                    text = "EduMotive",
-                                    fontSize = 26.sp,
-                                    fontFamily = fonts,
-                                    style = TextStyle(color = PinkPrimary),
-                                    modifier = Modifier.padding(top = 4.dp)
+                                text = "EduMotive",
+                                fontSize = 26.sp,
+                                fontFamily = fonts,
+                                style = TextStyle(color = PinkPrimary),
+                                modifier = Modifier.padding(top = 4.dp)
                             )
                         }
                     }
@@ -72,59 +79,59 @@ fun SideBar(navController: NavHostController) {
                     // LINKS TO DIFFERENT SCREENS
                     screens.forEach { screen ->
                         AddItem(
-                                screen = screen,
-                                currentDestination = currentDestination,
-                                sideBarSize = sideBarSize,
-                                navController = navController
+                            screen = screen,
+                            currentDestination = currentDestination,
+                            sideBarSize = sideBarSize,
+                            navController = navController
                         )
                     }
                 }
                 // WAVES
                 Image(
-                        painter = painterResource(id = R.drawable.wave),
-                        contentDescription = "Waves",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                                .width(sideBarSize)
+                    painter = painterResource(id = R.drawable.wave),
+                    contentDescription = "Waves",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(sideBarSize)
                 )
             }
         }
         Box(
-                contentAlignment = Alignment.BottomEnd,
-                modifier = Modifier
-                        .fillMaxHeight()
-                        .width(sideBarSize)
+            contentAlignment = Alignment.BottomEnd,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(sideBarSize)
         ) {
             Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                            .padding(bottom = 12.dp)
-                            .offset(x = 18.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                isMinimized = !isMinimized
-                            }
-                            .background(
-                                    brush = Brush.radialGradient(
-                                            colors = listOf(
-                                                    TextSecondary,
-                                                    Color.Transparent
-                                            ),
-                                            radius = 150f
-                                    )
-                            )
-                            .background(
-                                    Background
-                            )
-                            .padding(8.dp)
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .padding(bottom = 12.dp)
+                    .offset(x = 18.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        isMinimized = !isMinimized
+                    }
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                TextSecondary,
+                                Color.Transparent
+                            ),
+                            radius = 150f
+                        )
+                    )
+                    .background(
+                        Background
+                    )
+                    .padding(8.dp)
             ) {
                 Icon(
-                        painter = painterResource(id = R.drawable.ic_arrows_right),
-                        contentDescription = "Minimize sidebar",
-                        modifier = Modifier
-                                .width(20.dp)
-                                .height(20.dp)
-                                .rotate(if (sideBarSize == 220.dp) 180f else 0f)
+                    painter = painterResource(id = R.drawable.ic_arrows_right),
+                    contentDescription = "Minimize sidebar",
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
+                        .rotate(if (sideBarSize == 220.dp) 180f else 0f)
                 )
             }
         }
@@ -133,14 +140,14 @@ fun SideBar(navController: NavHostController) {
 
 @Composable
 fun ColumnScope.AddItem(
-        screen: Screen,
-        currentDestination: NavDestination?,
-        sideBarSize: Dp,
-        navController: NavHostController
+    screen: Screen,
+    currentDestination: NavDestination?,
+    sideBarSize: Dp,
+    navController: NavHostController
 ) {
     val active = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     Box(
-            contentAlignment = Alignment.CenterStart, modifier = Modifier
+        contentAlignment = Alignment.CenterStart, modifier = Modifier
             .padding(8.dp)
             .width(sideBarSize)
             .clip(RoundedCornerShape(8.dp))
@@ -151,26 +158,26 @@ fun ColumnScope.AddItem(
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             screen.icon?.let {
                 Icon(
-                        painter = painterResource(id = it),
-                        tint = if (active) PinkPrimary else TextPrimary,
-                        contentDescription = "${screen.title} navigation icon",
-                        modifier = Modifier
-                                .width(20.dp)
-                                .height(20.dp)
+                    painter = painterResource(id = it),
+                    tint = if (active) PinkPrimary else TextPrimary,
+                    contentDescription = "${screen.title} navigation icon",
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
                 )
             }
             if (sideBarSize == 220.dp) {
                 Text(
-                        screen.title,
-                        fontSize = 16.sp,
-                        fontFamily = fonts,
-                        style = TextStyle(color = if (active) PinkPrimary else TextPrimary),
-                        modifier = Modifier.padding(top = 3.dp)
+                    screen.title,
+                    fontSize = 16.sp,
+                    fontFamily = fonts,
+                    style = TextStyle(color = if (active) PinkPrimary else TextPrimary),
+                    modifier = Modifier.padding(top = 3.dp)
                 )
             }
         }

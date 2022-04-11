@@ -25,38 +25,38 @@ fun Exercises(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
         ScreenTitle(title = "Oefeningen", windowSize = windowSize)
 
         val exercises = listOf(
-                Exercise(
-                        id = "abcdef",
-                        name = "Oefening 1",
-                        imageUrl = "https://picsum.photos/seed/edumotive-9/400/200",
-                        description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                        id = "abcdefg",
-                        name = "Oefening 2",
-                        imageUrl = "https://picsum.photos/seed/edumotive-10/400/200",
-                        description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                        id = "abcdefgh",
-                        name = "Oefening 3",
-                        imageUrl = "https://picsum.photos/seed/edumotive-11/400/200",
-                        description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                        id = "abcdefghi",
-                        name = "Oefening 4",
-                        imageUrl = "https://picsum.photos/seed/edumotive-12/400/200",
-                        description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
+            Exercise(
+                id = "abcdef",
+                name = "Oefening 1",
+                imageUrl = "https://picsum.photos/seed/edumotive-9/400/200",
+                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
+            ),
+            Exercise(
+                id = "abcdefg",
+                name = "Oefening 2",
+                imageUrl = "https://picsum.photos/seed/edumotive-10/400/200",
+                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
+            ),
+            Exercise(
+                id = "abcdefgh",
+                name = "Oefening 3",
+                imageUrl = "https://picsum.photos/seed/edumotive-11/400/200",
+                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
+            ),
+            Exercise(
+                id = "abcdefghi",
+                name = "Oefening 4",
+                imageUrl = "https://picsum.photos/seed/edumotive-12/400/200",
+                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
+            ),
         )
         LazySlider(
-                direction = SliderDirection.Vertical,
-                list = exercises,
-                component = SliderComponent.ExerciseCard,
-                nav = nav,
-                windowSize = windowSize,
-                viewModels = viewModels
+            direction = SliderDirection.Vertical,
+            list = exercises,
+            component = SliderComponent.ExerciseCard,
+            nav = nav,
+            windowSize = windowSize,
+            viewModels = viewModels
         )
     }
 }

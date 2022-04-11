@@ -20,26 +20,41 @@ import com.djinc.edumotive.ui.theme.fonts
 @Composable
 fun ExerciseStep(exerciseStepName: String = "", stepIndex: Int = 0) {
     Card(
-            backgroundColor = Background,
-            elevation = 3.dp,
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                    .fillMaxWidth(1f)
+        backgroundColor = Background,
+        elevation = 3.dp,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .fillMaxWidth(1f)
     ) {
         Column() {
-            Text(text = exerciseStepName, style = MaterialTheme.typography.h5, modifier = Modifier.padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 8.dp))
-            Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier
+            Text(
+                text = exerciseStepName,
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 8.dp)
+            )
+            Box(
+                contentAlignment = Alignment.CenterEnd, modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
-                    .background(PinkPrimary)) {
+                    .background(PinkPrimary)
+            ) {
                 val negativePadding = 8.dp
-                Box(contentAlignment = Alignment.Center, modifier = Modifier
+                Box(
+                    contentAlignment = Alignment.Center, modifier = Modifier
                         .offset(y = -negativePadding)
                         .requiredHeight(24.dp)
                         .requiredWidth(24.dp)
                         .clip(RoundedCornerShape(topStart = 8.dp))
-                        .background(PinkPrimary)) {
-                    Text(text = stepIndex.toString(), fontWeight = FontWeight.Medium, fontFamily = fonts, fontSize = 14.sp, color = Background, modifier = Modifier.padding(top = 2.dp))
+                        .background(PinkPrimary)
+                ) {
+                    Text(
+                        text = stepIndex.toString(),
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = fonts,
+                        fontSize = 14.sp,
+                        color = Background,
+                        modifier = Modifier.padding(top = 2.dp)
+                    )
                 }
             }
         }

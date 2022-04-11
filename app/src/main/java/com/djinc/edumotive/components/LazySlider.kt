@@ -56,7 +56,7 @@ fun <T> LazySlider(
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -73,7 +73,8 @@ fun <T> LazySlider(
                                     imageUrl = item.imageUrl,
                                     description = item.description,
                                     fullWidth = false,
-                                    nav = nav
+                                    nav = nav,
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -102,7 +103,7 @@ fun <T> LazySlider(
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
                             itemsIndexed(list2 as List<ContentfulModel>) { index, item ->
@@ -112,7 +113,7 @@ fun <T> LazySlider(
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -137,7 +138,8 @@ fun <T> LazySlider(
                                     imageUrl = item.imageUrl,
                                     description = item.description,
                                     fullWidth = true,
-                                    nav = nav
+                                    nav = nav,
+                                    windowSize = windowSize
                                 )
                             }
                         }
