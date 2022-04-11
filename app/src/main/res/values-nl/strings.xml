@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Edumotive</string>
+    <string name="place_object">Plaats op doelwit</string>
+    <string name="move_object">Verplaats naar doelwit</string>
+    <string name="welcome">Welkom!</string>
+    <string name="recent_updated">Recent bekeken onderdelen</string>
+    <string name="exercises_this_chapter">Oefeningen voor dit hoofdstuk</string>
+    <string name="exercise_info">Wat je leert in deze oefening</string>
+    <string name="exercises">Oefeningen</string>
+    <string name="information">Informatie</string>
+    <string name="corresponding_parts">Bijbehorende onderdelen</string>
+    <string name="open_ar">Open in AR</string>
+    <string name="see_in_augmented_reality">Zie in Augmented Reality</string>
+    <string name="parts">Onderdelen</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="exercise">Oefening</string>
+    <string name="part">Onderdeel</string>
+    <string name="more_info">Meer info</string>
+</resources>

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -60,7 +61,7 @@ fun ExerciseDetails(
                 }
             }
             item {
-                Text(text = "Wat je leert in deze oefening", style = MaterialTheme.typography.h4)
+                Text(text = stringResource(R.string.exercise_info), style = MaterialTheme.typography.h4)
                 Text(
                     text = "Amet hendrerit amet, donec vulputate auctor imperdiet curabitur sagittis. Integer vitae id a, nunc, vestibulum consectetur nunc, cursus. Nibh vulputate vitae arcu sed ac eu. Massa ultricies sodales sagittis, consequat, egestas lorem sit.",
                     style = MaterialTheme.typography.body2,

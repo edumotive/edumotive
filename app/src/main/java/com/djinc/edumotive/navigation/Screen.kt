@@ -9,31 +9,31 @@ sealed class Screen(
 ) {
     object Dashboard : Screen(
         route = "dashboard",
-        title = "Dashboard",
+        title = "dashboard",
         icon = R.drawable.ic_dashboard
     )
 
     object Parts : Screen(
         route = "parts",
-        title = "Onderdelen",
+        title = "parts",
         icon = R.drawable.ic_parts
     )
 
     object Part : Screen(
         route = "part/{partId}/{modelType}",
-        title = "Onderdeel",
+        title = "part",
         icon = null
     )
 
     object Exercises : Screen(
         route = "exercises",
-        title = "Oefeningen",
+        title = "exercises",
         icon = R.drawable.ic_exercises
     )
 
     object Exercise : Screen(
         route = "exercise/{exerciseId}",
-        title = "Oefening",
+        title = "exercise",
         icon = null
     )
 }
