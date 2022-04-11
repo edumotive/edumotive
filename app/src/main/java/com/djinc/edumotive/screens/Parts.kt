@@ -23,7 +23,13 @@ import com.djinc.edumotive.utils.WindowSize
 fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle(title = stringResource(R.string.parts), windowSize = windowSize)
+        ScreenTitle(
+            title = stringResource(R.string.parts),
+            searchButton = true,
+            buttonPadding = false,
+            windowSize = windowSize,
+            viewModels = viewModels
+        )
 
         LazySlider(
             direction = SliderDirection.Vertical,

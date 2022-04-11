@@ -24,7 +24,7 @@ import com.djinc.edumotive.utils.WindowSize
 fun Exercises(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle(title = stringResource(R.string.exercises), windowSize = windowSize)
+        ScreenTitle(title = stringResource(R.string.exercises), windowSize = windowSize, viewModels = viewModels)
 
         val exercises = listOf(
             Exercise(

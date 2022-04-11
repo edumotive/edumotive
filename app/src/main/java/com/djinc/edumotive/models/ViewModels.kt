@@ -34,6 +34,8 @@ class ViewModels : ViewModel() {
             modelUrl = ""
         )
     )
+
+    // LOADING STATES
     var isInitialLoaded by mutableStateOf(false)
     var isModelsLoaded by mutableStateOf(false)
     var isModelGroupsLoaded by mutableStateOf(false)
@@ -41,6 +43,8 @@ class ViewModels : ViewModel() {
     var isLinkedModelGroupLoaded by mutableStateOf(false)
     var isActiveModelLoaded by mutableStateOf(false)
     var isActiveModelGroupLoaded by mutableStateOf(false)
+    
+    var isLanguageModalOpen by mutableStateOf(false)
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
