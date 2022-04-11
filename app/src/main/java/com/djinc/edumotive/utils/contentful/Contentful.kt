@@ -19,7 +19,7 @@ private const val DEFAULT_LOCALE = "nl-NL"
 open class Contentful(
     private var context: Context = MainEdumotive.appContext!!,
     private var sharedPrefs: SharedPreferences = MainEdumotive.sharedPref!!,
-    private var locale: String = sharedPrefs.getString(context.getString(R.string.locale), "en-US")!!,
+    private var locale: String = if (sharedPrefs.getString(context.getString(R.string.locale), "en-US")!! !in listOf<String>("nl-NL", "en-US")) "en-US" else sharedPrefs.getString(context.getString(R.string.locale), "en-US")!! ,
     private var clientDelivery: CDAClient = CDAClient.builder()
         .setToken(parameterFromBuildConfig().deliveryToken)
         .setSpace(parameterFromBuildConfig().spaceId)
