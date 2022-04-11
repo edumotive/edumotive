@@ -13,7 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -65,7 +67,9 @@ fun AddItem(
     val active = currentDestination?.hierarchy?.any {
         it.route == screen.route
     } == true
-    val title = screen.title
+    val title = stringResource(LocalContext.current.resources
+        .getIdentifier(screen.title.lowercase(), "string", LocalContext.current.packageName)
+    )
     val interactionSource = remember { MutableInteractionSource() }
     Box(contentAlignment = Alignment.Center, modifier = Modifier
         .fillMaxHeight()
