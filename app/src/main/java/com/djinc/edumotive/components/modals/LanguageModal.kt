@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,9 +26,12 @@ import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.TextPrimary
 import com.djinc.edumotive.ui.theme.fonts
 import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.utils.changeLocale
+import java.util.*
 
 @Composable
 fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
+    val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -52,6 +56,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                     .background(PinkSecondary)
                     .fillMaxWidth()
                     .clickable {
+                        changeLocale(context, Locale("nl", "NL"))
                         viewModels.isLanguageModalOpen = false
                     }
             ) {
@@ -83,6 +88,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                     .background(Background)
                     .fillMaxWidth()
                     .clickable {
+                        changeLocale(context, Locale("en", "US"))
                         viewModels.isLanguageModalOpen = false
                     }
             ) {

@@ -18,7 +18,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -32,6 +34,8 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.Screen
 import com.djinc.edumotive.ui.theme.*
+import com.djinc.edumotive.utils.changeLocale
+import java.util.*
 
 @Composable
 fun SideBar(navController: NavHostController, viewModels: ViewModels) {
@@ -40,6 +44,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
         Screen.Parts,
         Screen.Exercises
     )
+    var context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var isLanguageDropdownOpen by remember { mutableStateOf(false) }
@@ -121,6 +126,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
+                                        changeLocale(context, Locale("en", "US"))
                                         viewModels.isLanguageModalOpen = false
                                     }
                                     .background(Background)
@@ -154,6 +160,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
+                                        changeLocale(context, Locale("nl", "NL"))
                                         viewModels.isLanguageModalOpen = false
                                     }
                                     .background(PinkSecondary)
@@ -263,6 +270,10 @@ fun ColumnScope.AddItem(
     navController: NavHostController
 ) {
     val active = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+    val title = stringResource(
+        LocalContext.current.resources
+            .getIdentifier(screen.title.lowercase(), "string", LocalContext.current.packageName)
+    )
     Box(
         contentAlignment = Alignment.CenterStart, modifier = Modifier
             .padding(8.dp)
@@ -290,7 +301,7 @@ fun ColumnScope.AddItem(
             }
             if (sideBarSize == 220.dp) {
                 Text(
-                    screen.title,
+                    title,
                     fontSize = 16.sp,
                     fontFamily = fonts,
                     style = TextStyle(color = if (active) PinkPrimary else TextPrimary),
