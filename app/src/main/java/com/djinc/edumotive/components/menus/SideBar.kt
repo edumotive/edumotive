@@ -1,13 +1,12 @@
 package com.djinc.edumotive.components
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -21,6 +20,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +41,7 @@ fun SideBar(navController: NavHostController) {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    var isLanguageDropdownOpen by remember { mutableStateOf(false) }
     var isMinimized by remember { mutableStateOf(false) }
     val sideBarSize: Dp by animateDpAsState(if (!isMinimized) 220.dp else 60.dp)
 
@@ -96,6 +97,121 @@ fun SideBar(navController: NavHostController) {
                 )
             }
         }
+        // SIDEBAR LANGUAGE BUTTON
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(sideBarSize)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.padding(bottom = 12.dp, start = 12.dp)
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    if (isLanguageDropdownOpen) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .clickable {
+                                    isLanguageDropdownOpen = false
+                                }
+                                .background(Background)
+                                .border(
+                                    0.2.dp,
+                                    TextSecondary,
+                                    RoundedCornerShape(4.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_american_flag),
+                                contentDescription = "Choose language",
+                                modifier = Modifier
+                                    .width(28.dp)
+                                    .height(21.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                            )
+                            Text(
+                                text = "English",
+                                color = BluePrimary,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .clickable {
+                                    isLanguageDropdownOpen = false
+                                }
+                                .background(Background)
+                                .border(
+                                    0.2.dp,
+                                    TextSecondary,
+                                    RoundedCornerShape(4.dp)
+                                )
+                                .padding(6.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_dutch_flag),
+                                contentDescription = "Choose language",
+                                modifier = Modifier
+                                    .width(28.dp)
+                                    .height(21.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                            )
+                            Text(
+                                text = "Nederlands",
+                                color = BluePrimary,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clickable {
+                                isLanguageDropdownOpen = !isLanguageDropdownOpen
+                            }
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Background)
+                            .padding(6.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_dutch_flag),
+                            contentDescription = "Choose language",
+                            modifier = Modifier
+                                .width(28.dp)
+                                .height(21.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_dropdown),
+                            contentDescription = "Choose language dropdown arrow",
+                            modifier = Modifier
+                                .width(15.dp)
+                                .height(9.dp)
+                                .rotate(if (isLanguageDropdownOpen) 180f else 0f)
+                        )
+                    }
+                }
+            }
+        }
+        // SIDEBAR MINIMIZE BUTTON
         Box(
             contentAlignment = Alignment.BottomEnd,
             modifier = Modifier
@@ -120,9 +236,7 @@ fun SideBar(navController: NavHostController) {
                             radius = 150f
                         )
                     )
-                    .background(
-                        Background
-                    )
+                    .background(Background)
                     .padding(8.dp)
             ) {
                 Icon(
