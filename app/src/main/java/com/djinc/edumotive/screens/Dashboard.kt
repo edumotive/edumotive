@@ -29,6 +29,7 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
         item {
             ScreenTitle(
                 title = "Welkom!",
+                languageButton = true,
                 manualPadding = true,
                 spacerHeight = 0,
                 windowSize = windowSize
