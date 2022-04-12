@@ -1,6 +1,7 @@
 package com.djinc.edumotive.utils.contentful
 
 import com.djinc.edumotive.models.ContentfulExercise
+import com.djinc.edumotive.models.ContentfulLocale
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 
@@ -44,5 +45,10 @@ interface ContentfulInfrastructure {
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (List<ContentfulModelGroup>) -> Unit
+    )
+
+    fun fetchAllLocales(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulLocale>) -> Unit
     )
 }

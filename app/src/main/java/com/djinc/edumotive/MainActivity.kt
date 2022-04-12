@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -17,9 +18,11 @@ import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.App
 import com.djinc.edumotive.ui.theme.EdumotiveTheme
 import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.utils.changeLocale
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import com.djinc.edumotive.utils.rememberWindowSizeClass
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<ViewModels>()
@@ -35,6 +38,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+                    val currentLocale = MainEdumotive.sharedPref!!.getString(getString(R.string.locale), getString(R.string.default_locale))
+                    if (currentLocale != null) {
+                        changeLocale(LocalContext.current, Locale(currentLocale.split("-")[0], currentLocale.split("-")[1]))
+                    }
                     App(windowSize, viewModel)
                 }
             }
