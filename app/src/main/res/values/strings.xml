@@ -18,4 +18,6 @@
     <string name="more_info">More info</string>
     <string name="preference_file_key" translatable="false">EduMotiveKey</string>
     <string name="locale" translatable="false">locale</string>
+    <string name="default_locale" translatable="false">en-US</string>
+    <string name="nl_locale" translatable="false">nl-NL</string>
 </resources>

@@ -2,8 +2,10 @@ package com.djinc.edumotive.utils.contentful
 
 import com.contentful.java.cda.CDAAsset
 import com.contentful.java.cda.CDAEntry
+import com.contentful.java.cda.CDALocale
 import com.contentful.java.cda.image.ImageOption
 import com.djinc.edumotive.models.ContentfulExercise
+import com.djinc.edumotive.models.ContentfulLocale
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 
@@ -83,4 +85,14 @@ fun ContentfulExercise.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()
         .map { ContentfulModel.fromRestEntry(it) }
+)
+
+/// Locale
+fun ContentfulLocale.Companion.fromRestEntry(
+    entry: CDALocale
+): ContentfulLocale = ContentfulLocale(
+    entry.id(),
+    entry.code(),
+    entry.isDefaultLocale,
+    entry.name()
 )

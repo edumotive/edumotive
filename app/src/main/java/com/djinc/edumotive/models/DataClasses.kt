@@ -42,3 +42,12 @@ data class ContentfulExercise(
 ) {
     companion object
 }
+
+data class ContentfulLocale(
+    val id: String,
+    val code: String,
+    val defaultLocale: Boolean,
+    val name: String
+) {
+    companion object
+}
