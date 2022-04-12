@@ -43,7 +43,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
         Screen.Parts,
         Screen.Exercises
     )
-    var context = LocalContext.current
+    val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var isLanguageDropdownOpen by remember { mutableStateOf(false) }
@@ -126,6 +126,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
                                         changeLocale(context, Locale("en", "US"))
+                                        viewModels.refreshAll()
                                         viewModels.currentLocale = "en-US"
                                         viewModels.isLanguageModalOpen = false
                                     }
@@ -161,6 +162,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
                                         changeLocale(context, Locale("nl", "NL"))
+                                        viewModels.refreshAll()
                                         viewModels.currentLocale = "nl-NL"
                                         viewModels.isLanguageModalOpen = false
                                     }

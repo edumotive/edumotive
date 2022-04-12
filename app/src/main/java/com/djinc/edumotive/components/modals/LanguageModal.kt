@@ -53,7 +53,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
             )
             Box(
                 modifier = Modifier
-                    .background(PinkSecondary)
+                    .background(if (viewModels.currentLocale == "nl-NL") PinkSecondary else Background)
                     .fillMaxWidth()
                     .clickable {
                         changeLocale(context, Locale("nl", "NL"))
@@ -86,7 +86,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
             }
             Box(
                 modifier = Modifier
-                    .background(Background)
+                    .background(if (viewModels.currentLocale == "en-US") PinkSecondary else Background)
                     .fillMaxWidth()
                     .clickable {
                         changeLocale(context, Locale("en", "US"))

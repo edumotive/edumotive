@@ -77,30 +77,49 @@ class ViewModels : ViewModel() {
         entryTypes.forEach { entryType ->
             when (entryType) {
                 EntryType.Models -> {
-                    isModelsLoaded = true
+                    isModelsLoaded = false
                     Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                         models = it
-                        isModelsLoaded = false
+                        isModelsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                 }
                 EntryType.ModelGroups -> {
-                    isModelGroupsLoaded = true
-                    Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
-                        modelGroups = it
-                        isModelGroupsLoaded = false
+                    isModelGroupsLoaded = false
+                    Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+                        models = it
+                        isModelsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                 }
                 EntryType.Exercises -> {
+                    isExercisesLoaded = false
                     Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                         exercises = it
-                        isExercisesLoaded = false
+                        isExercisesLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                     callback.invoke(entriesLoaded())
                 }
             }
+        }
+    }
+
+    fun refreshAll() {
+        isModelsLoaded = false
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+            models = it
+            isModelsLoaded = true
+        }
+        isModelGroupsLoaded = false
+        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
+            models = it
+            isModelsLoaded = true
+        }
+        isExercisesLoaded = false
+        Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
+            exercises = it
+            isExercisesLoaded = true
         }
     }
 
