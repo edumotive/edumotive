@@ -38,9 +38,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val currentLocale = MainEdumotive.sharedPref!!.getString(getString(R.string.locale), getString(R.string.default_locale))
+                    val currentLocale = MainEdumotive.sharedPref!!.getString(
+                        getString(R.string.locale),
+                        getString(R.string.default_locale)
+                    )
                     if (currentLocale != null) {
-                        changeLocale(LocalContext.current, Locale(currentLocale.split("-")[0], currentLocale.split("-")[1]))
+                        changeLocale(
+                            LocalContext.current,
+                            Locale(currentLocale.split("-")[0], currentLocale.split("-")[1])
+                        )
+                        viewModel.currentLocale = currentLocale
                     }
                     App(windowSize, viewModel)
                 }

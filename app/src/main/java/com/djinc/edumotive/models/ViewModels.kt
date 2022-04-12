@@ -53,10 +53,7 @@ class ViewModels : ViewModel() {
 
     // LOCALISATION
     var isLanguageModalOpen by mutableStateOf(false)
-    var currentLocale by mutableStateOf(sharedPrefs.getString(context.getString(R.string.locale), "en-US"))
-    
-    private var context: Context = MainEdumotive.appContext!!
-    private var sharedPrefs: SharedPreferences = MainEdumotive.sharedPref!!
+    var currentLocale by mutableStateOf("")
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
