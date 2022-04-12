@@ -57,37 +57,11 @@ fun Dashboard(nav: NavController, windowSize: WindowSize, viewModels: ViewModels
         item {
             Spacer(modifier = Modifier.height(10.dp))
 
-            val exercises = listOf(
-                Exercise(
-                    id = "abcdef",
-                    name = "Oefening 1",
-                    imageUrl = "https://picsum.photos/seed/edumotive-9/400/200",
-                    description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                    id = "abcdefg",
-                    name = "Oefening 2",
-                    imageUrl = "https://picsum.photos/seed/edumotive-10/400/200",
-                    description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                    id = "abcdefgh",
-                    name = "Oefening 3",
-                    imageUrl = "https://picsum.photos/seed/edumotive-11/400/200",
-                    description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-                Exercise(
-                    id = "abcdefghi",
-                    name = "Oefening 4",
-                    imageUrl = "https://picsum.photos/seed/edumotive-12/400/200",
-                    description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-                ),
-            )
             LazySlider(
                 title = stringResource(R.string.exercises_this_chapter),
                 titleManualPadding = true,
                 direction = SliderDirection.Horizontal,
-                list = exercises,
+                list = viewModels.exercises,
                 component = SliderComponent.ExerciseCard,
                 nav = nav,
                 windowSize = windowSize,

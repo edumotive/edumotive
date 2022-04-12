@@ -66,11 +66,11 @@ fun <T> LazySlider(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                         ) {
-                            itemsIndexed(list as List<Exercise>) { index, item ->
+                            itemsIndexed(list as List<ContentfulExercise>) { index, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
-                                    exerciseName = item.name,
-                                    imageUrl = item.imageUrl,
+                                    exerciseName = item.title,
+                                    imageUrl = item.image,
                                     description = item.description,
                                     fullWidth = false,
                                     nav = nav,
@@ -131,11 +131,11 @@ fun <T> LazySlider(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                         ) {
-                            itemsIndexed(list as List<Exercise>) { index, item ->
+                            itemsIndexed(list as List<ContentfulExercise>) { index, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
-                                    exerciseName = item.name,
-                                    imageUrl = item.imageUrl,
+                                    exerciseName = item.title,
+                                    imageUrl = item.image,
                                     description = item.description,
                                     fullWidth = true,
                                     nav = nav,

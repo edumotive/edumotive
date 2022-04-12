@@ -15,7 +15,6 @@ import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.SliderComponent
 import com.djinc.edumotive.components.SliderDirection
-import com.djinc.edumotive.models.Exercise
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.utils.WindowSize
 
@@ -24,37 +23,14 @@ import com.djinc.edumotive.utils.WindowSize
 fun Exercises(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
-        ScreenTitle(title = stringResource(R.string.exercises), windowSize = windowSize, viewModels = viewModels)
-
-        val exercises = listOf(
-            Exercise(
-                id = "abcdef",
-                name = "Oefening 1",
-                imageUrl = "https://picsum.photos/seed/edumotive-9/400/200",
-                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-            ),
-            Exercise(
-                id = "abcdefg",
-                name = "Oefening 2",
-                imageUrl = "https://picsum.photos/seed/edumotive-10/400/200",
-                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-            ),
-            Exercise(
-                id = "abcdefgh",
-                name = "Oefening 3",
-                imageUrl = "https://picsum.photos/seed/edumotive-11/400/200",
-                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-            ),
-            Exercise(
-                id = "abcdefghi",
-                name = "Oefening 4",
-                imageUrl = "https://picsum.photos/seed/edumotive-12/400/200",
-                description = "Consectetur amet met da adipiscing maecenas. Daia di consectetur amet met."
-            ),
+        ScreenTitle(
+            title = stringResource(R.string.exercises),
+            windowSize = windowSize,
+            viewModels = viewModels
         )
         LazySlider(
             direction = SliderDirection.Vertical,
-            list = exercises,
+            list = viewModels.exercises,
             component = SliderComponent.ExerciseCard,
             nav = nav,
             windowSize = windowSize,

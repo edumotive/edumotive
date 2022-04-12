@@ -70,7 +70,10 @@ fun ExerciseCard(
                         .background(PinkPrimary)
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
-                    Text(text = stringResource(R.string.more_info), style = MaterialTheme.typography.button)
+                    Text(
+                        text = stringResource(R.string.more_info),
+                        style = MaterialTheme.typography.button
+                    )
                 }
             }
         }
