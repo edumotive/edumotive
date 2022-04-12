@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -127,9 +126,10 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
                                         changeLocale(context, Locale("en", "US"))
+                                        viewModels.currentLocale = "en-US"
                                         viewModels.isLanguageModalOpen = false
                                     }
-                                    .background(Background)
+                                    .background(if (viewModels.currentLocale == "en-US") PinkSecondary else Background)
                                     .border(
                                         0.2.dp,
                                         TextSecondary,
@@ -161,9 +161,10 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                     .clip(RoundedCornerShape(4.dp))
                                     .clickable {
                                         changeLocale(context, Locale("nl", "NL"))
+                                        viewModels.currentLocale = "nl-NL"
                                         viewModels.isLanguageModalOpen = false
                                     }
-                                    .background(PinkSecondary)
+                                    .background(if (viewModels.currentLocale == "nl-NL") PinkSecondary else Background)
                                     .border(
                                         0.2.dp,
                                         TextSecondary,
@@ -201,7 +202,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
                                 .padding(6.dp)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_dutch_flag),
+                                painter = painterResource(id = if (viewModels.currentLocale == "nl-NL") R.drawable.ic_dutch_flag else R.drawable.ic_american_flag),
                                 contentDescription = "Choose language",
                                 modifier = Modifier
                                     .width(28.dp)

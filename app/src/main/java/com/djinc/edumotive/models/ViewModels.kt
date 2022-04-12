@@ -1,9 +1,14 @@
 package com.djinc.edumotive.models
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import com.djinc.edumotive.MainEdumotive
+import com.djinc.edumotive.R
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import java.util.*
 
 enum class EntryType { Models, ModelGroups, Exercises }
 
@@ -43,8 +48,12 @@ class ViewModels : ViewModel() {
     var isLinkedModelGroupLoaded by mutableStateOf(false)
     var isActiveModelLoaded by mutableStateOf(false)
     var isActiveModelGroupLoaded by mutableStateOf(false)
-    
+
+    // LOCALISATION
     var isLanguageModalOpen by mutableStateOf(false)
+    private var context: Context = MainEdumotive.appContext!!
+    private var sharedPrefs: SharedPreferences = MainEdumotive.sharedPref!!
+    var currentLocale by mutableStateOf(sharedPrefs.getString(context.getString(R.string.locale), "en-US"))
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
