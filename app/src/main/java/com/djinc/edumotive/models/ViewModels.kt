@@ -17,6 +17,8 @@ class ViewModels : ViewModel() {
         private set
     var models by mutableStateOf(listOf<ContentfulModel>())
         private set
+    var exercises by mutableStateOf(listOf<ContentfulExercise>())
+        private set
     var linkedModelGroup by mutableStateOf(listOf<ContentfulModelGroup>())
     var activeModel by mutableStateOf(
         ContentfulModel(
@@ -44,16 +46,17 @@ class ViewModels : ViewModel() {
     var isInitialLoaded by mutableStateOf(false)
     var isModelsLoaded by mutableStateOf(false)
     var isModelGroupsLoaded by mutableStateOf(false)
-    var isExercisesLoaded by mutableStateOf(true)
+    var isExercisesLoaded by mutableStateOf(false)
     var isLinkedModelGroupLoaded by mutableStateOf(false)
     var isActiveModelLoaded by mutableStateOf(false)
     var isActiveModelGroupLoaded by mutableStateOf(false)
 
     // LOCALISATION
     var isLanguageModalOpen by mutableStateOf(false)
+    var currentLocale by mutableStateOf(sharedPrefs.getString(context.getString(R.string.locale), "en-US"))
+    
     private var context: Context = MainEdumotive.appContext!!
     private var sharedPrefs: SharedPreferences = MainEdumotive.sharedPref!!
-    var currentLocale by mutableStateOf(sharedPrefs.getString(context.getString(R.string.locale), "en-US"))
 
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
@@ -64,6 +67,11 @@ class ViewModels : ViewModel() {
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
             isModelsLoaded = true
+            isInitialLoaded = entriesLoaded()
+        }
+        Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
+            exercises = it
+            isExercisesLoaded = true
             isInitialLoaded = entriesLoaded()
         }
     }
@@ -88,11 +96,11 @@ class ViewModels : ViewModel() {
                     }
                 }
                 EntryType.Exercises -> {
-//                    Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
-//                        exercises = it
-//                        isExercisesLoading = false
-//                        callback.invoke(false)
-//                    }
+                    Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
+                        exercises = it
+                        isExercisesLoaded = false
+                        callback.invoke(entriesLoaded())
+                    }
                     callback.invoke(entriesLoaded())
                 }
             }
