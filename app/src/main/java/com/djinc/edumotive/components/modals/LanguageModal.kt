@@ -57,6 +57,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                     .fillMaxWidth()
                     .clickable {
                         changeLocale(context, Locale("nl", "NL"))
+                        viewModels.currentLocale = "nl-NL"
                         viewModels.isLanguageModalOpen = false
                     }
             ) {
@@ -89,6 +90,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                     .fillMaxWidth()
                     .clickable {
                         changeLocale(context, Locale("en", "US"))
+                        viewModels.currentLocale = "en-US"
                         viewModels.isLanguageModalOpen = false
                     }
             ) {
