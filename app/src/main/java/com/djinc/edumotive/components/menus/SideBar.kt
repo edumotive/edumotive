@@ -41,7 +41,6 @@ fun SideBar(navController: NavHostController) {
         Screen.Parts,
         Screen.Exercises
     )
-    LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var isMinimized by remember { mutableStateOf(false) }
