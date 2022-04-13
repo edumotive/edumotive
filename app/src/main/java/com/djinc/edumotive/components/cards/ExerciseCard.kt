@@ -24,6 +24,7 @@ import com.djinc.edumotive.utils.WindowSize
 fun ExerciseCard(
     exerciseId: String,
     exerciseName: String = "",
+    chapter: String = "",
     imageUrl: String,
     description: String = "",
     fullWidth: Boolean,
@@ -60,7 +61,7 @@ fun ExerciseCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = exerciseName,
+                    text = chapter,
                     style = MaterialTheme.typography.caption,
                     modifier = Modifier.padding(start = 12.dp)
                 )

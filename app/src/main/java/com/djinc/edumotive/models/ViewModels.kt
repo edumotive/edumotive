@@ -15,27 +15,9 @@ class ViewModels : ViewModel() {
     var exercises by mutableStateOf(listOf<ContentfulExercise>())
         private set
     var linkedModelGroup by mutableStateOf(listOf<ContentfulModelGroup>())
-    var activeModel by mutableStateOf(
-        ContentfulModel(
-            id = "",
-            type = "",
-            title = "",
-            image = "",
-            description = "",
-            modelUrl = ""
-        )
-    )
-    var activeModelGroup by mutableStateOf(
-        ContentfulModelGroup(
-            id = "",
-            type = "",
-            title = "",
-            image = "",
-            description = "",
-            models = mutableListOf(),
-            modelUrl = ""
-        )
-    )
+    var activeModel by mutableStateOf(ContentfulModel())
+    var activeModelGroup by mutableStateOf(ContentfulModelGroup())
+    var activeExercise by mutableStateOf(ContentfulExercise())
 
     // LOADING STATES
     var isInitialLoaded by mutableStateOf(false)
@@ -45,6 +27,7 @@ class ViewModels : ViewModel() {
     var isLinkedModelGroupLoaded by mutableStateOf(false)
     var isActiveModelLoaded by mutableStateOf(false)
     var isActiveModelGroupLoaded by mutableStateOf(false)
+    var isActiveExerciseLoaded by mutableStateOf(false)
 
     // LOCALISATION
     var isLanguageModalOpen by mutableStateOf(false)
