@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.ScreenTitle
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.TextPrimary
 import com.djinc.edumotive.ui.theme.fonts
-import com.djinc.edumotive.utils.WindowSize
 import com.djinc.edumotive.utils.changeLocale
 import java.util.*
 

@@ -10,9 +10,9 @@ import androidx.navigation.compose.rememberNavController
 import com.djinc.edumotive.components.menus.BottomBar
 import com.djinc.edumotive.components.menus.SideBar
 import com.djinc.edumotive.components.modals.LanguageModal
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.NavGraph
-import com.djinc.edumotive.utils.WindowSize
 
 @Composable
 fun App(windowSize: WindowSize, viewModels: ViewModels) {
