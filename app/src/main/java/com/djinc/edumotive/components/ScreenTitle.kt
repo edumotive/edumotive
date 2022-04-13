@@ -17,7 +17,7 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.constants.WindowSize
 
 @Composable
 fun ScreenTitle(

@@ -16,14 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.SliderComponent
+import com.djinc.edumotive.constants.SliderDirection
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.models.ViewModels
-import com.djinc.edumotive.utils.WindowSize
-
-enum class SliderDirection { Horizontal, Vertical }
-enum class SliderComponent { PartCard, ExerciseCard }
 
 @ExperimentalFoundationApi
 @Composable

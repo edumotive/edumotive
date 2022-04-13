@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.djinc.edumotive.models.EntryType
+import com.djinc.edumotive.constants.EntryType
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.*
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.constants.WindowSize
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 

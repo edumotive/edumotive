@@ -11,10 +11,10 @@ import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.LazySlider
 import com.djinc.edumotive.components.ScreenTitle
-import com.djinc.edumotive.components.SliderComponent
-import com.djinc.edumotive.components.SliderDirection
+import com.djinc.edumotive.constants.SliderComponent
+import com.djinc.edumotive.constants.SliderDirection
 import com.djinc.edumotive.models.ViewModels
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.constants.WindowSize
 
 @ExperimentalFoundationApi
 @Composable

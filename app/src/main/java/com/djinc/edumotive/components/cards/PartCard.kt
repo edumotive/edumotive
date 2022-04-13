@@ -20,7 +20,7 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.constants.WindowSize
 
 @Composable
 fun PartCard(

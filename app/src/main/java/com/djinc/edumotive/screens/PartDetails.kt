@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,8 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.*
+import com.djinc.edumotive.components.AsyncImage
+import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.models.ViewModels
@@ -29,7 +35,6 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.fonts
-import com.djinc.edumotive.utils.WindowSize
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 
