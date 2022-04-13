@@ -1,14 +1,9 @@
 package com.djinc.edumotive.models
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import com.djinc.edumotive.MainEdumotive
-import com.djinc.edumotive.R
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
-import java.util.*
 
 enum class EntryType { Models, ModelGroups, Exercises }
 
