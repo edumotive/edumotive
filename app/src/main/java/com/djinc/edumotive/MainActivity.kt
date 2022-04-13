@@ -2,28 +2,22 @@ package com.djinc.edumotive
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.djinc.edumotive.constants.Common
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.App
 import com.djinc.edumotive.ui.theme.EdumotiveTheme
+import com.djinc.edumotive.utils.SplitTag
 import com.djinc.edumotive.utils.WindowSize
 import com.djinc.edumotive.utils.changeLocale
-import com.djinc.edumotive.utils.contentful.Contentful
-import com.djinc.edumotive.utils.contentful.errorCatch
 import com.djinc.edumotive.utils.rememberWindowSizeClass
-import com.djinc.edumotive.utils.SplitTag
 import java.util.*
 
 class MainActivity : ComponentActivity() {
@@ -55,49 +49,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-//        Contentful().fetchAllModels(errorCallBack = ::errorCatch) { models: List<ContentfulModel> ->
-//            models.forEach { model ->
-//                Log.i("modelAPI", "Model: id = ${model.id}")
-//                Log.i("modelAPI", "Model: type = ${model.type}")
-//                Log.i("modelAPI", "Model: title = ${model.title}")
-//                Log.i("modelAPI", "Model: imageURL = ${model.image}")
-//                Log.i("modelAPI", "Model: info = ${model.description}")
-//                Log.i("modelAPI", "Model: ModelURL = ${model.modelUrl}")
-//            }
-//        }
-//
-//        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) { modelGroups: List<ContentfulModelGroup> ->
-//            modelGroups.forEach { modelGroup ->
-//                Log.i("modelAPI", "ModelGroup: id = ${modelGroup.id}")
-//                Log.i("modelAPI", "ModelGroup: type = ${modelGroup.type}")
-//                Log.i("modelAPI", "ModelGroup: title = ${modelGroup.title}")
-//                Log.i("modelAPI", "ModelGroup: imageURL = ${modelGroup.image}")
-//                Log.i("modelAPI", "ModelGroup: info = ${modelGroup.description}")
-//                Log.i("modelAPI", "ModelGroup: models = ${modelGroup.models}")
-//                Log.i("modelAPI", "ModelGroup: modelUrl = ${modelGroup.modelUrl}")
-//            }
-//        }
-//
-//        Contentful().fetchAllExercises(errorCallBack = ::errorCatch) { exercises: List<ContentfulExercise> ->
-//            exercises.forEach { exercise ->
-//                Log.i("modelAPI", "8 " + exercise.maxTime)
-//                Log.i("modelAPI", "9 " + exercise.steps[1])
-//                Log.i("modelAPI", "10 " + exercise.models[0].title)
-//            }
-//        }
-//
-//        Contentful().fetchLinkedModelGroupById(
-//            id = "XvVS9D7JnEKXZgzEsDeeP",
-//            errorCallBack = ::errorCatch
-//        ) { modelGroup: ContentfulModelGroup ->
-//            Log.i("modelAPI", "linkedModelGroup: id = ${modelGroup.id}")
-//            Log.i("modelAPI", "linkedModelGroup: type = ${modelGroup.type}")
-//            Log.i("modelAPI", "linkedModelGroup: title = ${modelGroup.title}")
-//            Log.i("modelAPI", "linkedModelGroup: imageURL = ${modelGroup.image}")
-//            Log.i("modelAPI", "linkedModelGroup: info = ${modelGroup.description}")
-//            Log.i("modelAPI", "linkedModelGroup: models = ${modelGroup.models}")
-//            Log.i("modelAPI", "linkedModelGroup: modelUrl = ${modelGroup.modelUrl}")
-//        }
     }
 }

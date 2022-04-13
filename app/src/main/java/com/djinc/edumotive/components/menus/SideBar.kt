@@ -1,7 +1,9 @@
-package com.djinc.edumotive.components
+package com.djinc.edumotive.components.menus
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,26 +31,22 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.djinc.edumotive.R
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.Screen
 import com.djinc.edumotive.ui.theme.*
-import com.djinc.edumotive.utils.changeLocale
-import java.util.*
 
 @Composable
-fun SideBar(navController: NavHostController, viewModels: ViewModels) {
+fun SideBar(navController: NavHostController) {
     val screens = listOf(
         Screen.Dashboard,
         Screen.Parts,
         Screen.Exercises
     )
-    val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     var isMinimized by remember { mutableStateOf(false) }
     val sideBarSize: Dp by animateDpAsState(if (!isMinimized) 220.dp else 60.dp)
 
-    Box() {
+    Box {
         Surface(
             shape = RectangleShape,
             color = Background,
@@ -143,7 +140,7 @@ fun SideBar(navController: NavHostController, viewModels: ViewModels) {
 }
 
 @Composable
-fun ColumnScope.AddItem(
+fun AddItem(
     screen: Screen,
     currentDestination: NavDestination?,
     sideBarSize: Dp,
