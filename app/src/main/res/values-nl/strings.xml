@@ -17,4 +17,7 @@
     <string name="exercise">Oefening</string>
     <string name="part">Onderdeel</string>
     <string name="more_info">Meer info</string>
+    <string name="choose_language_nl">Kies Nederlands als taal</string>
+    <string name="choose_language_en">Kies Engels als taal</string>
+    <string name="choose_language">Selecteer gewenste taal</string>
 </resources>

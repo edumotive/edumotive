@@ -49,58 +49,58 @@ fun ScreenTitle(
             style = MaterialTheme.typography.h1,
             modifier = Modifier.then(if (manualPadding) Modifier.padding(start = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
         )
-        if (windowSize == WindowSize.Compact) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .then(if (buttonPadding) Modifier.padding(end = 20.dp) else Modifier)
-                    .padding(bottom = 4.dp)
-            ) {
-                // LANGUAGE BUTTON
-                if (languageButton) {
-                    Box(
-                        contentAlignment = Alignment.Center,
+//        if (windowSize == WindowSize.Compact) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .then(if (buttonPadding) Modifier.padding(end = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
+                .padding(bottom = 4.dp)
+        ) {
+            // LANGUAGE BUTTON
+            if (languageButton) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            viewModels.isLanguageModalOpen = true
+                        }
+                        .background(PinkSecondary)
+                        .padding(10.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_language),
+                        tint = PinkPrimary,
+                        contentDescription = "Change language button",
                         modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                viewModels.isLanguageModalOpen = true
-                            }
-                            .background(PinkSecondary)
-                            .padding(10.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_language),
-                            tint = PinkPrimary,
-                            contentDescription = "Change language button",
-                            modifier = Modifier
-                                .width(25.dp)
-                                .height(25.dp)
-                        )
-                    }
+                            .width(25.dp)
+                            .height(25.dp)
+                    )
                 }
-                if (searchButton) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
+            }
+            if (searchButton) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
 //                        TODO
-                            }
-                            .background(PinkSecondary)
-                            .padding(10.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_search),
-                            tint = PinkPrimary,
-                            contentDescription = "Search button",
-                            modifier = Modifier
-                                .width(25.dp)
-                                .height(25.dp)
-                        )
-                    }
+                        }
+                        .background(PinkSecondary)
+                        .padding(10.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_search),
+                        tint = PinkPrimary,
+                        contentDescription = "Search button",
+                        modifier = Modifier
+                            .width(25.dp)
+                            .height(25.dp)
+                    )
                 }
             }
         }
+//        }
     }
 }

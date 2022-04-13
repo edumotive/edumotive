@@ -20,4 +20,7 @@
     <string name="locale" translatable="false">locale</string>
     <string name="default_locale" translatable="false">en-US</string>
     <string name="nl_locale" translatable="false">nl-NL</string>
+    <string name="choose_language_nl">Choose Dutch as language</string>
+    <string name="choose_language_en">Choose English as language</string>
+    <string name="choose_language">Choose preferred language</string>
 </resources>

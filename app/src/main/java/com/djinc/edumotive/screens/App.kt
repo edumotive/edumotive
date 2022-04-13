@@ -44,5 +44,8 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
                 )
             }
         }
+        if (viewModels.isLanguageModalOpen) {
+            LanguageModal(windowSize = windowSize, viewModels = viewModels)
+        }
     }
 }

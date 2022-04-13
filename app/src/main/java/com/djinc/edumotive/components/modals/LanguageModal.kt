@@ -1,5 +1,6 @@
 package com.djinc.edumotive.components.modals
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,77 +48,29 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                 .fillMaxWidth()
         ) {
             ScreenTitle(
-                title = "Selecteer gewenste taal",
+                title = stringResource(R.string.choose_language),
                 manualPadding = true,
                 windowSize = windowSize,
                 viewModels = viewModels
             )
-            Box(
-                modifier = Modifier
-                    .background(if (viewModels.currentLocale == "nl-NL") PinkSecondary else Background)
-                    .fillMaxWidth()
-                    .clickable {
-                        changeLocale(context, Locale("nl", "NL"))
-                        viewModels.currentLocale = "nl-NL"
-                        viewModels.isLanguageModalOpen = false
-                    }
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_dutch_flag),
-                        contentDescription = "Choose Dutch as language",
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(30.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                    )
-                    Text(
-                        text = "Nederlands",
-                        color = TextPrimary,
-                        fontSize = 18.sp,
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .background(if (viewModels.currentLocale == "en-US") PinkSecondary else Background)
-                    .fillMaxWidth()
-                    .clickable {
-                        changeLocale(context, Locale("en", "US"))
-                        viewModels.currentLocale = "en-US"
-                        viewModels.isLanguageModalOpen = false
-                    }
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_american_flag),
-                        contentDescription = "Choose English as language",
-                        modifier = Modifier
-                            .width(40.dp)
-                            .height(30.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                    )
-                    Text(
-                        text = "English",
-                        color = TextPrimary,
-                        fontSize = 18.sp,
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
-            }
+            AddLanguageRow(
+                locale = listOf("nl", "NL"),
+                languageName = "Nederlands",
+                contentDescription = stringResource(R.string.choose_language_nl),
+                flagId = R.drawable.ic_dutch_flag,
+                context = context,
+                windowSize = windowSize,
+                viewModels = viewModels
+            )
+            AddLanguageRow(
+                locale = listOf("en", "US"),
+                languageName = "English",
+                contentDescription = stringResource(R.string.choose_language_en),
+                flagId = R.drawable.ic_american_flag,
+                context = context,
+                windowSize = windowSize,
+                viewModels = viewModels
+            )
         }
         Box(
             modifier = Modifier
@@ -127,5 +81,54 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                     viewModels.isLanguageModalOpen = false
                 }
         )
+    }
+}
+
+@Composable
+fun AddLanguageRow(
+    locale: List<String>,
+    languageName: String,
+    contentDescription: String,
+    flagId: Int,
+    context: Context,
+    windowSize: WindowSize,
+    viewModels: ViewModels
+) {
+    val localeString = locale.joinToString(separator = "-")
+    Box(
+        modifier = Modifier
+            .background(if (viewModels.currentLocale == localeString) PinkSecondary else Background)
+            .fillMaxWidth()
+            .clickable {
+                changeLocale(context, Locale(locale[0], locale[1]))
+                viewModels.currentLocale = localeString
+                viewModels.isLanguageModalOpen = false
+            }
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(
+                horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp,
+                vertical = 12.dp
+            )
+        ) {
+            Image(
+                painter = painterResource(id = flagId),
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .width(40.dp)
+                    .height(30.dp)
+                    .clip(RoundedCornerShape(2.dp))
+            )
+            Text(
+                text = languageName,
+                color = TextPrimary,
+                fontSize = 18.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.padding(top = 2.dp)
+            )
+        }
     }
 }
