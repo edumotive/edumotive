@@ -17,3 +17,8 @@ fun changeLocale(context: Context, locale: Locale) {
     configuration.setLocale(locale)
     resources.updateConfiguration(configuration, resources.displayMetrics)
 }
+
+class SplitTag(tag: String) {
+    val language = tag.split("-")[0]
+    val country = tag.split("-")[1]
+}

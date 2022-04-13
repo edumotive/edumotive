@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.djinc.edumotive.constants.Common
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -22,11 +23,11 @@ import com.djinc.edumotive.utils.changeLocale
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import com.djinc.edumotive.utils.rememberWindowSizeClass
+import com.djinc.edumotive.utils.SplitTag
 import java.util.*
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<ViewModels>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,12 +41,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val currentLocale = MainEdumotive.sharedPref!!.getString(
                         getString(R.string.locale),
-                        getString(R.string.default_locale)
+                        Common.defaultLanguage
                     )
+
                     if (currentLocale != null) {
                         changeLocale(
                             LocalContext.current,
-                            Locale(currentLocale.split("-")[0], currentLocale.split("-")[1])
+                            Locale(SplitTag(currentLocale).language, SplitTag(currentLocale).country)
                         )
                         viewModel.currentLocale = currentLocale
                     }
