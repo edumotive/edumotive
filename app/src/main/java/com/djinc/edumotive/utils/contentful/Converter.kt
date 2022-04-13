@@ -2,10 +2,8 @@ package com.djinc.edumotive.utils.contentful
 
 import com.contentful.java.cda.CDAAsset
 import com.contentful.java.cda.CDAEntry
-import com.contentful.java.cda.CDALocale
 import com.contentful.java.cda.image.ImageOption
 import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulLocale
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 
@@ -24,7 +22,7 @@ fun ContentfulModel.Companion.fromRestEntry(
     } catch (_: Throwable) {
         ""
     },
-    entry.getField<String?>("info"),
+    entry.getField("info"),
     try {
         "https:" +
                 entry.getField<CDAAsset>("object")
@@ -79,20 +77,10 @@ fun ContentfulExercise.Companion.fromRestEntry(
     },
     entry.getField<String?>("info").orEmpty(),
     entry.getField<String?>("chapter").orEmpty(),
-    entry.getField<Int>("minimalTime"),
-    entry.getField<Int>("maximumTime"),
+    entry.getField("minimalTime"),
+    entry.getField("maximumTime"),
     entry.getField<List<String>?>("steps").orEmpty(),
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()
         .map { ContentfulModel.fromRestEntry(it) }
-)
-
-/// Locale
-fun ContentfulLocale.Companion.fromRestEntry(
-    entry: CDALocale
-): ContentfulLocale = ContentfulLocale(
-    entry.id(),
-    entry.code(),
-    entry.isDefaultLocale,
-    entry.name()
 )

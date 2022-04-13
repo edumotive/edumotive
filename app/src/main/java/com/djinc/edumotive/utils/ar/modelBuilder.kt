@@ -37,7 +37,7 @@ fun createEmptyModel(context: Context, lifecycle: LifecycleCoroutineScope, model
 
 fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
     val textNode = ArModelNode()
-    var textRendarable : Renderable
+    var textRenderable : Renderable
 
     val textView = TextView(context)
 
@@ -52,8 +52,8 @@ fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
         .setView(context, textView)
         .build()
         .thenAccept { renderable: ViewRenderable ->
-            textRendarable = renderable
-            textNode.setModel(textRendarable)
+            textRenderable = renderable
+            textNode.setModel(textRenderable)
             modelNode.addChild(textNode)
         }
 

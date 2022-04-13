@@ -1,6 +1,7 @@
-package com.djinc.edumotive.components
+package com.djinc.edumotive.components.menus
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,7 +26,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.djinc.edumotive.navigation.Screen
-import com.djinc.edumotive.ui.theme.*
+import com.djinc.edumotive.ui.theme.Background
+import com.djinc.edumotive.ui.theme.PinkPrimary
+import com.djinc.edumotive.ui.theme.PinkSecondary
+import com.djinc.edumotive.ui.theme.fonts
 
 @Composable
 fun BottomBar(navController: NavHostController) {
@@ -44,7 +48,7 @@ fun BottomBar(navController: NavHostController) {
             .height(65.dp)
             .background(Background)
     ) {
-        Row() {
+        Row {
             screens.forEach { screen ->
                 AddItem(
                     screen = screen,

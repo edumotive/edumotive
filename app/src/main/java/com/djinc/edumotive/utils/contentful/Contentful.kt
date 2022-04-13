@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.contentful.java.cda.CDAClient
 import com.contentful.java.cda.CDAEntry
-import com.contentful.java.cda.CDALocale
 import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulLocale
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +21,7 @@ open class Contentful(
         .setToken(parameterFromBuildConfig().deliveryToken)
         .setSpace(parameterFromBuildConfig().spaceId)
         .build(),
-    var client: CDAClient = clientDelivery,
+    private var client: CDAClient = clientDelivery,
     override var parameter: ContentfulParams = parameterFromBuildConfig()
 ) : ContentfulInfrastructure {
     override fun fetchAllModels(
@@ -192,29 +190,6 @@ open class Contentful(
                     }
 
                 successCallBack(modelGroups)
-            } catch (throwable: Throwable) {
-                errorCallBack(throwable)
-            }
-        }
-    }
-
-    override fun fetchAllLocales(
-        errorCallBack: (Throwable) -> Unit,
-        successCallBack: (List<ContentfulLocale>) -> Unit
-    ) {
-        CoroutineScope(Dispatchers.Default).launch {
-            try {
-                val locales = client
-                    .fetch(CDALocale::class.java)
-                    .all()
-                    .items()
-                    .map {
-                        ContentfulLocale.fromRestEntry(
-                            it as CDALocale
-                        )
-                    }
-
-                successCallBack(locales)
             } catch (throwable: Throwable) {
                 errorCallBack(throwable)
             }

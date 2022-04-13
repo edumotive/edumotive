@@ -26,7 +26,7 @@ fun ExerciseStep(exerciseStepName: String = "", stepIndex: Int = 0) {
         modifier = Modifier
             .fillMaxWidth(1f)
     ) {
-        Column() {
+        Column {
             Text(
                 text = exerciseStepName,
                 style = MaterialTheme.typography.h5,
