@@ -44,49 +44,56 @@ fun PartCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .aspectRatio(1.0F)
-                    .padding(start = 12.dp, top = 12.dp, end = 12.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            ) {
-                AsyncImage(imageUrl = imageUrl, imageName = partName)
-            }
-            Text(
-                text = partName,
-                style = MaterialTheme.typography.h3,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(start = 12.dp, end = 30.dp)
+            CardImage(
+                url = imageUrl,
+                name = partName,
+                aspectRatio = 1f,
+                padding = true,
+                rounded = true
             )
-            Box(
-                contentAlignment = Alignment.CenterEnd, modifier = Modifier
+            PartName(name = partName)
+            BottomBar(name = partName)
+        }
+    }
+}
+
+@Composable
+fun PartName(name: String) {
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h3,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.padding(start = 12.dp, end = 30.dp)
+    )
+}
+
+@Composable
+fun BottomBar(name: String) {
+    Box(
+        contentAlignment = Alignment.CenterEnd, modifier = Modifier
+            .fillMaxWidth()
+            .height(12.dp)
+            .background(PinkPrimary)
+    ) {
+        val negativePadding = 8.dp
+        Box(
+            contentAlignment = Alignment.Center, modifier = Modifier
+                .offset(y = -negativePadding)
+                .requiredHeight(28.dp)
+                .requiredWidth(28.dp)
+                .clip(RoundedCornerShape(topStart = 8.dp))
+                .background(PinkPrimary)
+                .padding(5.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrows_right),
+                contentDescription = "See details of part: $name",
+                tint = Background,
+                modifier = Modifier
                     .fillMaxWidth()
-                    .height(12.dp)
-                    .background(PinkPrimary)
-            ) {
-                val negativePadding = 8.dp
-                Box(
-                    contentAlignment = Alignment.Center, modifier = Modifier
-                        .offset(y = -negativePadding)
-                        .requiredHeight(28.dp)
-                        .requiredWidth(28.dp)
-                        .clip(RoundedCornerShape(topStart = 8.dp))
-                        .background(PinkPrimary)
-                        .padding(5.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrows_right),
-                        contentDescription = "See details of part: $partName",
-                        tint = Background,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                    )
-                }
-            }
+                    .fillMaxHeight()
+            )
         }
     }
 }

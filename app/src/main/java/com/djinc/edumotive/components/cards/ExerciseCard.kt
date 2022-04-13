@@ -42,22 +42,14 @@ fun ExerciseCard(
             }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            ExerciseImage(url = imageUrl, name = exerciseName)
+            CardImage(
+                url = imageUrl,
+                name = exerciseName,
+                aspectRatio = 2f
+            )
             ExerciseDescription(text = description)
             ChapterWithButton(chapter = chapter)
         }
-    }
-}
-
-@Composable
-fun ExerciseImage(url: String, name: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .aspectRatio(2F)
-            .background(PinkPrimary)
-    ) {
-        AsyncImage(imageUrl = url, imageName = name)
     }
 }
 
