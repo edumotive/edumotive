@@ -57,26 +57,7 @@ fun SideBar(navController: NavHostController) {
         ) {
             Column(verticalArrangement = Arrangement.SpaceBetween) {
                 Column(modifier = Modifier.padding(top = if (sideBarSize == 220.dp) 11.dp else 20.dp)) {
-                    // LOGO
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(start = 16.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_edumotive),
-                            contentDescription = "EduMotive logo"
-                        )
-                        if (sideBarSize == 220.dp) {
-                            Text(
-                                text = "EduMotive",
-                                fontSize = 26.sp,
-                                fontFamily = fonts,
-                                style = TextStyle(color = PinkPrimary),
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
-                        }
-                    }
+                    EdumotiveLogo(sideBarSize = sideBarSize)
                     Spacer(modifier = Modifier.height(24.dp))
                     // LINKS TO DIFFERENT SCREENS
                     screens.forEach { screen ->
@@ -89,52 +70,12 @@ fun SideBar(navController: NavHostController) {
                     }
                 }
                 // WAVES
-                Image(
-                    painter = painterResource(id = R.drawable.wave),
-                    contentDescription = "Waves",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(sideBarSize)
-                )
+                BottomWaves(sideBarSize = sideBarSize)
             }
         }
         // SIDEBAR MINIMIZE BUTTON
-        Box(
-            contentAlignment = Alignment.BottomEnd,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(sideBarSize)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(bottom = 12.dp)
-                    .offset(x = 18.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        isMinimized = !isMinimized
-                    }
-                    .background(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                TextSecondary,
-                                Color.Transparent
-                            ),
-                            radius = 150f
-                        )
-                    )
-                    .background(Background)
-                    .padding(8.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_arrows_right),
-                    contentDescription = "Minimize sidebar",
-                    modifier = Modifier
-                        .width(20.dp)
-                        .height(20.dp)
-                        .rotate(if (sideBarSize == 220.dp) 180f else 0f)
-                )
-            }
+        SideBarMinimizeButton(isMinimized = isMinimized, sideBarSize = sideBarSize) {
+            isMinimized = it
         }
     }
 }
@@ -185,6 +126,85 @@ fun AddItem(
                     modifier = Modifier.padding(top = 3.dp)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun EdumotiveLogo(sideBarSize: Dp) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(start = 16.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_edumotive),
+            contentDescription = "EduMotive logo"
+        )
+        if (sideBarSize == 220.dp) {
+            Text(
+                text = "EduMotive",
+                fontSize = 26.sp,
+                fontFamily = fonts,
+                style = TextStyle(color = PinkPrimary),
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun BottomWaves(sideBarSize: Dp) {
+    Image(
+        painter = painterResource(id = R.drawable.wave),
+        contentDescription = "Waves",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .width(sideBarSize)
+    )
+}
+
+@Composable
+fun SideBarMinimizeButton(
+    isMinimized: Boolean,
+    sideBarSize: Dp,
+    callback: (result: Boolean) -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.BottomEnd,
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(sideBarSize)
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(bottom = 12.dp)
+                .offset(x = 18.dp)
+                .clip(CircleShape)
+                .clickable {
+                    callback.invoke(!isMinimized)
+                }
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            TextSecondary,
+                            Color.Transparent
+                        ),
+                        radius = 150f
+                    )
+                )
+                .background(Background)
+                .padding(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrows_right),
+                contentDescription = "Minimize sidebar",
+                modifier = Modifier
+                    .width(20.dp)
+                    .height(20.dp)
+                    .rotate(if (sideBarSize == 220.dp) 180f else 0f)
+            )
         }
     }
 }
