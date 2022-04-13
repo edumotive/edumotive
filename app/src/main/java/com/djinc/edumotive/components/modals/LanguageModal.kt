@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +48,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                 .fillMaxWidth()
         ) {
             ScreenTitle(
-                title = "Selecteer gewenste taal",
+                title = stringResource(R.string.choose_language),
                 manualPadding = true,
                 windowSize = windowSize,
                 viewModels = viewModels
@@ -55,7 +56,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
             AddLanguageRow(
                 locale = listOf("nl", "NL"),
                 languageName = "Nederlands",
-                contentDescription = "Choose Dutch as language",
+                contentDescription = stringResource(R.string.choose_language_nl),
                 flagId = R.drawable.ic_dutch_flag,
                 context = context,
                 windowSize = windowSize,
@@ -64,7 +65,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
             AddLanguageRow(
                 locale = listOf("en", "US"),
                 languageName = "English",
-                contentDescription = "Choose English as language",
+                contentDescription = stringResource(R.string.choose_language_en),
                 flagId = R.drawable.ic_american_flag,
                 context = context,
                 windowSize = windowSize,
