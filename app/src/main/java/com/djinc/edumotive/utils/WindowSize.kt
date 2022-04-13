@@ -10,8 +10,7 @@ import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.window.layout.WindowMetricsCalculator
-
-enum class WindowSize { Compact, Medium, Expanded }
+import com.djinc.edumotive.constants.WindowSize
 
 @Composable
 fun Activity.rememberWindowSizeClass(): WindowSize {

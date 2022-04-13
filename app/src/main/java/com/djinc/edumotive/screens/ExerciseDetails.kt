@@ -21,7 +21,7 @@ import com.djinc.edumotive.components.*
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.TextSecondary
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 

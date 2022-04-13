@@ -2,10 +2,9 @@ package com.djinc.edumotive.models
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import com.djinc.edumotive.constants.EntryType
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
-
-enum class EntryType { Models, ModelGroups, Exercises }
 
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
