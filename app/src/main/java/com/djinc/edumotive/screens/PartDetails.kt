@@ -132,7 +132,10 @@ fun Details(
                 }
             }
             item {
-                Text(text = stringResource(R.string.information), style = MaterialTheme.typography.h4)
+                Text(
+                    text = stringResource(R.string.information),
+                    style = MaterialTheme.typography.h4
+                )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body2,
