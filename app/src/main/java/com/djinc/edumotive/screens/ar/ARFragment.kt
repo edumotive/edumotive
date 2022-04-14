@@ -1,5 +1,6 @@
 package com.djinc.edumotive.screens.ar
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -119,7 +120,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun loadModels() {
         models.forEach { model ->
             val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
-                whenLoaded() {
+                whenLoaded {
                     isLoading = false
                     actionButton.text = getString(R.string.move_object)
                     actionButton.setIconResource(R.drawable.ic_target)
@@ -162,6 +163,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun whenLoaded(callBack: () -> Unit) {
         loadedModels.value = loadedModels.value + 1
         actionButton.text = getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
