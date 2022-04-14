@@ -3,6 +3,7 @@ package com.djinc.edumotive.screens.ar
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +34,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var models = mutableListOf<ContentfulModel>()
     private var tModel: ArModelNode? = null
 
-    private var isLoading = false
+    private var loadedModels = mutableStateOf(0)
+
+    private var isLoading = true
         set(value) {
             field = value
             loadingView.isGone = !value
@@ -89,6 +92,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     systemBarsInsets.bottom + bottomMargin
             }
             setOnClickListener { cursorNode.createAnchor()?.let { anchorOrMove(it) } }
+            text = getString(R.string.move_object)
+            setIconResource(R.drawable.ic_target)
         }
 
         sceneView = view.findViewById<ArSceneView?>(R.id.sceneView).apply {
@@ -106,16 +111,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
         }
 
-        cursorNode = CursorNode(context = requireContext(), coroutineScope = lifecycleScope).apply {
-            onTrackingChanged = { _, isTracking, _ ->
-                isLoading = false
-                if (!isLoading) {
-                    actionButton.isGone = !isTracking
-                    actionButton.text = getString(R.string.move_object)
-                    actionButton.setIconResource(R.drawable.ic_target)
-                }
-            }
-        }
+        cursorNode = CursorNode(context = requireContext(), coroutineScope = lifecycleScope)
         sceneView.addChild(cursorNode)
 
         isLoading = true
@@ -123,7 +119,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun loadModels() {
         models.forEach { model ->
-            val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title)
+            val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
+                whenLoaded() {
+                    isLoading = false
+                }
+            }
 
             arModel.apply {
                 onTouched = { _, _ ->
@@ -158,6 +158,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 sceneView.addChild(tModel!!)
             }
             tModel!!.anchor = anchor
+        }
+    }
+
+    private fun whenLoaded(callBack: () -> Unit) {
+        loadedModels.value = loadedModels.value + 1
+        if(loadedModels.value == models.size) {
+            callBack()
         }
     }
 }
