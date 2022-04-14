@@ -1,5 +1,6 @@
 package com.djinc.edumotive.screens
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -137,7 +138,10 @@ fun Details(
                 }
             }
             item {
-                Text(text = stringResource(R.string.information), style = MaterialTheme.typography.h4)
+                Text(
+                    text = stringResource(R.string.information),
+                    style = MaterialTheme.typography.h4
+                )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body2,
@@ -174,85 +178,11 @@ fun Details(
                 item { Spacer(modifier = Modifier.height(50.dp)) }
             }
         }
-        Box(
-            contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier
-                .fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
-                .fillMaxHeight(1f)
-                .padding(bottom = if (windowSize == WindowSize.Compact) 80.dp else 16.dp)
-        ) {
-            ExtendedFloatingActionButton(
-                shape = RoundedCornerShape(8.dp),
-                backgroundColor = PinkSecondary,
-                text = {
-                    Text(
-                        text = stringResource(R.string.open_ar),
-                        color = PinkPrimary,
-                        fontSize = 16.sp,
-                        fontFamily = fonts,
-                        modifier = Modifier.padding(top = 3.dp)
-                    )
-                },
-                onClick = {
-                    val intent = Intent(context, ARActivity::class.java)
-                    val params = Bundle()
-                    params.putString("type", modelType)
-                    params.putString("id", modelId)
-                    intent.putExtras(params)
-                    context.startActivity(intent)
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_augmented_reality),
-                        contentDescription = stringResource(R.string.see_in_augmented_reality),
-                        tint = PinkPrimary
-                    )
-                },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .height(40.dp)
-            )
-        }
-
+        OpenInArButton(modelId, modelType, context, windowSize)
     }
 
     if (windowSize == WindowSize.Expanded) {
-        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
-            LazyColumn(
-                contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth(0.5f)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-                item {
-                    ScreenTitle(
-                        title = stringResource(R.string.corresponding_parts),
-                        spacerHeight = 0,
-                        windowSize = windowSize,
-                        viewModels = viewModels
-                    )
-                }
-                if (models.isNotEmpty()) {
-                    gridItems(
-                        data = models,
-                        columnCount = 2,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                    ) { item ->
-                        PartCard(
-                            partId = item.id,
-                            partType = item.type,
-                            partName = item.title,
-                            imageUrl = item.image,
-                            nav = nav,
-                            windowSize = windowSize
-                        )
-                    }
-                }
-            }
-        }
+        PartsSplitScreen(models, nav, windowSize, viewModels)
     }
 }
 
@@ -281,6 +211,94 @@ fun <T> LazyListScope.gridItems(
                     }
                 } else {
                     Spacer(Modifier.weight(1F, fill = true))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun OpenInArButton(modelId: String, modelType: String, context: Context, windowSize: WindowSize) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier
+            .fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
+            .fillMaxHeight(1f)
+            .padding(bottom = if (windowSize == WindowSize.Compact) 80.dp else 16.dp)
+    ) {
+        ExtendedFloatingActionButton(
+            shape = RoundedCornerShape(8.dp),
+            backgroundColor = PinkSecondary,
+            text = {
+                Text(
+                    text = stringResource(R.string.open_ar),
+                    color = PinkPrimary,
+                    fontSize = 16.sp,
+                    fontFamily = fonts,
+                    modifier = Modifier.padding(top = 3.dp)
+                )
+            },
+            onClick = {
+                val intent = Intent(context, ARActivity::class.java)
+                val params = Bundle()
+                params.putString("type", modelType)
+                params.putString("id", modelId)
+                intent.putExtras(params)
+                context.startActivity(intent)
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_augmented_reality),
+                    contentDescription = stringResource(R.string.see_in_augmented_reality),
+                    tint = PinkPrimary
+                )
+            },
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .height(40.dp)
+        )
+    }
+}
+
+@Composable
+fun PartsSplitScreen(
+    models: List<ContentfulModel>,
+    nav: NavController,
+    windowSize: WindowSize,
+    viewModels: ViewModels
+) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
+        LazyColumn(
+            contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier.fillMaxWidth(0.5f)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item {
+                ScreenTitle(
+                    title = stringResource(R.string.corresponding_parts),
+                    spacerHeight = 0,
+                    windowSize = windowSize,
+                    viewModels = viewModels
+                )
+            }
+            if (models.isNotEmpty()) {
+                gridItems(
+                    data = models,
+                    columnCount = 2,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                ) { item ->
+                    PartCard(
+                        partId = item.id,
+                        partType = item.type,
+                        partName = item.title,
+                        imageUrl = item.image,
+                        nav = nav,
+                        windowSize = windowSize
+                    )
                 }
             }
         }

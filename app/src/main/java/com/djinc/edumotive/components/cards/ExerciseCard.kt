@@ -42,42 +42,49 @@ fun ExerciseCard(
             }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .aspectRatio(2F)
-                    .background(PinkPrimary)
-            ) {
-                AsyncImage(imageUrl = imageUrl, imageName = exerciseName)
-            }
-            Text(
-                text = description,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+            CardImage(
+                url = imageUrl,
+                name = exerciseName,
+                aspectRatio = 2f
             )
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = chapter,
-                    style = MaterialTheme.typography.caption,
-                    modifier = Modifier.padding(start = 12.dp)
-                )
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(topStart = 8.dp))
-                        .background(PinkPrimary)
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.more_info),
-                        style = MaterialTheme.typography.button
-                    )
-                }
-            }
+            ExerciseDescription(text = description)
+            ChapterWithButton(chapter = chapter)
+        }
+    }
+}
+
+@Composable
+fun ExerciseDescription(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.body1,
+        modifier = Modifier.padding(start = 12.dp, end = 12.dp)
+    )
+}
+
+@Composable
+fun ChapterWithButton(chapter: String) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth(1f),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = chapter,
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier.padding(start = 12.dp)
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 8.dp))
+                .background(PinkPrimary)
+                .padding(horizontal = 12.dp, vertical = 4.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.more_info),
+                style = MaterialTheme.typography.button
+            )
         }
     }
 }

@@ -27,36 +27,46 @@ fun ExerciseStep(exerciseStepName: String = "", stepIndex: Int = 0) {
             .fillMaxWidth(1f)
     ) {
         Column {
+            StepName(name = exerciseStepName)
+            BottomBar(index = stepIndex.toString())
+        }
+    }
+}
+
+@Composable
+fun StepName(name: String) {
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h5,
+        modifier = Modifier.padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 8.dp)
+    )
+}
+
+@Composable
+fun BottomBar(index: String) {
+    Box(
+        contentAlignment = Alignment.CenterEnd, modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .background(PinkPrimary)
+    ) {
+        val negativePadding = 8.dp
+        Box(
+            contentAlignment = Alignment.Center, modifier = Modifier
+                .offset(y = -negativePadding)
+                .requiredHeight(24.dp)
+                .requiredWidth(24.dp)
+                .clip(RoundedCornerShape(topStart = 8.dp))
+                .background(PinkPrimary)
+        ) {
             Text(
-                text = exerciseStepName,
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier.padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 8.dp)
+                text = index,
+                fontWeight = FontWeight.Medium,
+                fontFamily = fonts,
+                fontSize = 14.sp,
+                color = Background,
+                modifier = Modifier.padding(top = 2.dp)
             )
-            Box(
-                contentAlignment = Alignment.CenterEnd, modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp)
-                    .background(PinkPrimary)
-            ) {
-                val negativePadding = 8.dp
-                Box(
-                    contentAlignment = Alignment.Center, modifier = Modifier
-                        .offset(y = -negativePadding)
-                        .requiredHeight(24.dp)
-                        .requiredWidth(24.dp)
-                        .clip(RoundedCornerShape(topStart = 8.dp))
-                        .background(PinkPrimary)
-                ) {
-                    Text(
-                        text = stepIndex.toString(),
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = fonts,
-                        fontSize = 14.sp,
-                        color = Background,
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
-            }
         }
     }
 }
