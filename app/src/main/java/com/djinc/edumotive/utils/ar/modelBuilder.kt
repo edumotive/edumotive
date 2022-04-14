@@ -10,14 +10,14 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.math.Position
 
-fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String, modelName: String): ArModelNode {
+fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String, modelName: String, callback: () -> Unit): ArModelNode {
 
     val modelNode = ArModelNode()
     modelNode.loadModelAsync(context = context,
         coroutineScope = lifecycle,
         glbFileLocation = modelUrl,
         onLoaded = {
-            createTextNode(context, modelName, modelNode)
+            createTextNode(context, modelName, modelNode, callback)
         }
     )
 
@@ -35,9 +35,9 @@ fun createEmptyModel(context: Context, lifecycle: LifecycleCoroutineScope, model
     return modelNode
 }
 
-fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
+fun createTextNode(context: Context, text: String, modelNode: ArModelNode, callback: () -> Unit) {
     val textNode = ArModelNode()
-    var textRendarable : Renderable
+    var textRenderable : Renderable
 
     val textView = TextView(context)
 
@@ -52,9 +52,10 @@ fun createTextNode(context: Context, text: String, modelNode: ArModelNode) {
         .setView(context, textView)
         .build()
         .thenAccept { renderable: ViewRenderable ->
-            textRendarable = renderable
-            textNode.setModel(textRendarable)
+            textRenderable = renderable
+            textNode.setModel(textRenderable)
             modelNode.addChild(textNode)
+            callback()
         }
 
     textNode.position = Position(x = 0.0f, y = 1.0f, z = 0.0f)

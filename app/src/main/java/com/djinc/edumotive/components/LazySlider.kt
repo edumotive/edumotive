@@ -2,7 +2,10 @@ package com.djinc.edumotive.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,11 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
-import com.djinc.edumotive.models.*
-import com.djinc.edumotive.utils.WindowSize
-
-enum class SliderDirection { Horizontal, Vertical }
-enum class SliderComponent { PartCard, ExerciseCard }
+import com.djinc.edumotive.constants.SliderComponent
+import com.djinc.edumotive.constants.SliderDirection
+import com.djinc.edumotive.constants.WindowSize
+import com.djinc.edumotive.models.ContentfulExercise
+import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.ViewModels
 
 @ExperimentalFoundationApi
 @Composable
@@ -26,7 +31,7 @@ fun <T> LazySlider(
     titleManualPadding: Boolean = false,
     direction: SliderDirection,
     list: List<T>,
-    list2: List<T> = emptyList<T>(),
+    list2: List<T> = emptyList(),
     component: SliderComponent,
     nav: NavController,
     windowSize: WindowSize,
@@ -49,14 +54,14 @@ fun <T> LazySlider(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                         ) {
-                            itemsIndexed(list as List<ContentfulModel>) { index, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulModel>()) { _, item ->
                                 PartCard(
                                     partId = item.id,
                                     partType = item.type,
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -66,14 +71,16 @@ fun <T> LazySlider(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                         ) {
-                            itemsIndexed(list as List<Exercise>) { index, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulExercise>()) { _, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
-                                    exerciseName = item.name,
-                                    imageUrl = item.imageUrl,
+                                    exerciseName = item.title,
+                                    imageUrl = item.image,
+                                    chapter = item.chapter,
                                     description = item.description,
                                     fullWidth = false,
-                                    nav = nav
+                                    nav = nav,
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -95,24 +102,24 @@ fun <T> LazySlider(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                         ) {
-                            itemsIndexed(list as List<ContentfulModelGroup>) { index, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulModelGroup>()) { _, item ->
                                 PartCard(
                                     partId = item.id,
                                     partType = item.type,
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
-                            itemsIndexed(list2 as List<ContentfulModel>) { index, item ->
+                            itemsIndexed(list2.filterIsInstance<ContentfulModel>()) { _, item ->
                                 PartCard(
                                     partId = item.id,
                                     partType = item.type,
                                     partName = item.title,
                                     imageUrl = item.image,
                                     nav = nav,
-                                    viewModels = viewModels
+                                    windowSize = windowSize
                                 )
                             }
                         }
@@ -130,14 +137,16 @@ fun <T> LazySlider(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                         ) {
-                            itemsIndexed(list as List<Exercise>) { index, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulExercise>()) { _, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
-                                    exerciseName = item.name,
-                                    imageUrl = item.imageUrl,
+                                    exerciseName = item.title,
+                                    imageUrl = item.image,
+                                    chapter = item.chapter,
                                     description = item.description,
                                     fullWidth = true,
-                                    nav = nav
+                                    nav = nav,
+                                    windowSize = windowSize
                                 )
                             }
                         }

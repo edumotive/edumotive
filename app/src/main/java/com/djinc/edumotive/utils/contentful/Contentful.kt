@@ -1,7 +1,11 @@
 package com.djinc.edumotive.utils.contentful
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.contentful.java.cda.CDAClient
 import com.contentful.java.cda.CDAEntry
+import com.djinc.edumotive.MainEdumotive
+import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -9,15 +13,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//TODO Change to variable locale instead of hardcoded locale
-private const val DEFAULT_LOCALE = "nl-NL"
-
-open class Contentful (
+open class Contentful(
+    private var context: Context = MainEdumotive.appContext!!,
+    private var sharedPrefs: SharedPreferences = MainEdumotive.sharedPref!!,
+    private var locale: String = sharedPrefs.getString(context.getString(R.string.locale), "en-US")!!,
     private var clientDelivery: CDAClient = CDAClient.builder()
         .setToken(parameterFromBuildConfig().deliveryToken)
         .setSpace(parameterFromBuildConfig().spaceId)
         .build(),
-    var client: CDAClient = clientDelivery,
+    private var client: CDAClient = clientDelivery,
     override var parameter: ContentfulParams = parameterFromBuildConfig()
 ) : ContentfulInfrastructure {
     override fun fetchAllModels(
@@ -29,7 +33,7 @@ open class Contentful (
                 val models = client
                     .fetch(CDAEntry::class.java)
                     .withContentType("model")
-                    .where("locale", DEFAULT_LOCALE)
+                    .where("locale", locale)
                     .all()
                     .items()
                     .map {
@@ -54,7 +58,7 @@ open class Contentful (
                 val modelGroups = client
                     .fetch(CDAEntry::class.java)
                     .withContentType("modelGroup")
-                    .where("locale", DEFAULT_LOCALE)
+                    .where("locale", locale)
                     .all()
                     .items()
                     .map {
@@ -79,7 +83,7 @@ open class Contentful (
                 val exercises = client
                     .fetch(CDAEntry::class.java)
                     .withContentType("exercise")
-                    .where("locale", DEFAULT_LOCALE)
+                    .where("locale", locale)
                     .all()
                     .items()
                     .map {
@@ -106,7 +110,7 @@ open class Contentful (
                     client
                         .fetch(CDAEntry::class.java)
                         .withContentType("model")
-                        .where("locale", DEFAULT_LOCALE)
+                        .where("locale", locale)
                         .one(id)
 
                 )
@@ -129,7 +133,7 @@ open class Contentful (
                     client
                         .fetch(CDAEntry::class.java)
                         .withContentType("modelGroup")
-                        .where("locale", DEFAULT_LOCALE)
+                        .where("locale", locale)
                         .one(id)
 
                 )
@@ -152,7 +156,7 @@ open class Contentful (
                     client
                         .fetch(CDAEntry::class.java)
                         .withContentType("exercise")
-                        .where("locale", DEFAULT_LOCALE)
+                        .where("locale", locale)
                         .one(id)
 
                 )
@@ -174,7 +178,7 @@ open class Contentful (
                 val modelGroups = client
                     .fetch(CDAEntry::class.java)
                     .withContentType("modelGroup")
-                    .where("locale", DEFAULT_LOCALE)
+                    .where("locale", locale)
                     .linksToEntryId(id)
                     .include(1)
                     .all()

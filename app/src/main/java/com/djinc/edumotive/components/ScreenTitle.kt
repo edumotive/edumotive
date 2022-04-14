@@ -1,24 +1,99 @@
 package com.djinc.edumotive.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.djinc.edumotive.utils.WindowSize
+import com.djinc.edumotive.R
+import com.djinc.edumotive.models.ViewModels
+import com.djinc.edumotive.ui.theme.PinkPrimary
+import com.djinc.edumotive.ui.theme.PinkSecondary
+import com.djinc.edumotive.constants.WindowSize
 
 @Composable
 fun ScreenTitle(
-        title: String = "",
-        spacerHeight: Int = 12,
-        manualPadding: Boolean = false,
-        windowSize: WindowSize
+    title: String = "",
+    languageButton: Boolean = false,
+    searchButton: Boolean = false,
+    buttonPadding: Boolean = true,
+    spacerHeight: Int = 12,
+    manualPadding: Boolean = false,
+    windowSize: WindowSize,
+    viewModels: ViewModels
 ) {
-    Text(
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(bottom = spacerHeight.dp)
+            .fillMaxWidth()
+    ) {
+        // TITLE
+        Text(
             text = title,
             style = MaterialTheme.typography.h1,
             modifier = Modifier.then(if (manualPadding) Modifier.padding(start = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
-    )
-    Spacer(modifier = Modifier.height(spacerHeight.dp))
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .then(if (buttonPadding) Modifier.padding(end = if (windowSize == WindowSize.Compact) 20.dp else 40.dp) else Modifier)
+                .padding(bottom = 4.dp)
+        ) {
+            // LANGUAGE BUTTON
+            if (languageButton) {
+                CustomIconButton(
+                    iconId = R.drawable.ic_language,
+                    imageDescription = "Change language button"
+                ) {
+                    viewModels.isLanguageModalOpen = true
+                }
+            }
+            if (searchButton) {
+                if (windowSize == WindowSize.Compact) {
+                    CustomIconButton(
+                        iconId = R.drawable.ic_search,
+                        imageDescription = "Search button"
+                    ) {
+                        // TODO MOBILE SEARCH
+                    }
+                } else {
+                    // TODO TABLET SEARCH
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomIconButton(iconId: Int, imageDescription: String, callback: () -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable {
+                callback.invoke()
+            }
+            .background(PinkSecondary)
+            .padding(10.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = iconId),
+            tint = PinkPrimary,
+            contentDescription = imageDescription,
+            modifier = Modifier
+                .width(25.dp)
+                .height(25.dp)
+        )
+    }
 }

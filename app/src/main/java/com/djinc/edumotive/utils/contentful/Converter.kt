@@ -22,7 +22,7 @@ fun ContentfulModel.Companion.fromRestEntry(
     } catch (_: Throwable) {
         ""
     },
-    entry.getField<String?>("info"),
+    entry.getField("info"),
     try {
         "https:" +
                 entry.getField<CDAAsset>("object")
@@ -77,8 +77,8 @@ fun ContentfulExercise.Companion.fromRestEntry(
     },
     entry.getField<String?>("info").orEmpty(),
     entry.getField<String?>("chapter").orEmpty(),
-    entry.getField<Int>("minimalTime"),
-    entry.getField<Int>("maximumTime"),
+    entry.getField("minimalTime"),
+    entry.getField("maximumTime"),
     entry.getField<List<String>?>("steps").orEmpty(),
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()

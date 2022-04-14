@@ -1,29 +1,33 @@
 package com.djinc.edumotive.screens
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.*
+import com.djinc.edumotive.components.AsyncImage
+import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.models.ViewModels
@@ -32,7 +36,6 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.fonts
-import com.djinc.edumotive.utils.WindowSize
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 
@@ -122,7 +125,7 @@ fun Details(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item {
-                ScreenTitle(title = title, windowSize = windowSize)
+                ScreenTitle(title = title, windowSize = windowSize, viewModels = viewModels)
             }
             item {
                 Box(
@@ -135,7 +138,10 @@ fun Details(
                 }
             }
             item {
-                Text(text = "Informatie", style = MaterialTheme.typography.h4)
+                Text(
+                    text = stringResource(R.string.information),
+                    style = MaterialTheme.typography.h4
+                )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.body2,
@@ -144,9 +150,10 @@ fun Details(
             if (windowSize != WindowSize.Expanded && models.isNotEmpty()) {
                 item {
                     ScreenTitle(
-                        title = "Bijbehorende onderdelen",
+                        title = stringResource(R.string.corresponding_parts),
                         spacerHeight = 0,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        viewModels = viewModels
                     )
                 }
                 gridItems(
@@ -161,7 +168,7 @@ fun Details(
                         partName = item.title,
                         imageUrl = item.image,
                         nav = nav,
-                        viewModels = viewModels
+                        windowSize = windowSize
                     )
                 }
             }
@@ -171,84 +178,11 @@ fun Details(
                 item { Spacer(modifier = Modifier.height(50.dp)) }
             }
         }
-        Box(
-            contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier
-                .fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
-                .fillMaxHeight(1f)
-                .padding(bottom = if (windowSize == WindowSize.Compact) 80.dp else 16.dp)
-        ) {
-            ExtendedFloatingActionButton(
-                shape = RoundedCornerShape(8.dp),
-                backgroundColor = PinkSecondary,
-                text = {
-                    Text(
-                        text = "Open in AR",
-                        color = PinkPrimary,
-                        fontSize = 16.sp,
-                        fontFamily = fonts,
-                        modifier = Modifier.padding(top = 3.dp)
-                    )
-                },
-                onClick = {
-                    val intent = Intent(context, ARActivity::class.java)
-                    val params = Bundle()
-                    params.putString("type", modelType)
-                    params.putString("id", modelId)
-                    intent.putExtras(params)
-                    context.startActivity(intent)
-                },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_augmented_reality),
-                        contentDescription = "See in Augmented Reality",
-                        tint = PinkPrimary
-                    )
-                },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .height(40.dp)
-            )
-        }
-
+        OpenInArButton(modelId, modelType, context, windowSize)
     }
 
     if (windowSize == WindowSize.Expanded) {
-        Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
-            LazyColumn(
-                contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth(0.5f)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-                item {
-                    ScreenTitle(
-                        title = "Bijbehorende onderdelen",
-                        spacerHeight = 0,
-                        windowSize = windowSize
-                    )
-                }
-                if (models.isNotEmpty()) {
-                    gridItems(
-                        data = models,
-                        columnCount = 2,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                    ) { item ->
-                        PartCard(
-                            partId = item.id,
-                            partType = item.type,
-                            partName = item.title,
-                            imageUrl = item.image,
-                            nav = nav,
-                            viewModels = viewModels
-                        )
-                    }
-                }
-            }
-        }
+        PartsSplitScreen(models, nav, windowSize, viewModels)
     }
 }
 
@@ -277,6 +211,94 @@ fun <T> LazyListScope.gridItems(
                     }
                 } else {
                     Spacer(Modifier.weight(1F, fill = true))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun OpenInArButton(modelId: String, modelType: String, context: Context, windowSize: WindowSize) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier
+            .fillMaxWidth(if (windowSize == WindowSize.Expanded) 0.5f else 1f)
+            .fillMaxHeight(1f)
+            .padding(bottom = if (windowSize == WindowSize.Compact) 80.dp else 16.dp)
+    ) {
+        ExtendedFloatingActionButton(
+            shape = RoundedCornerShape(8.dp),
+            backgroundColor = PinkSecondary,
+            text = {
+                Text(
+                    text = stringResource(R.string.open_ar),
+                    color = PinkPrimary,
+                    fontSize = 16.sp,
+                    fontFamily = fonts,
+                    modifier = Modifier.padding(top = 3.dp)
+                )
+            },
+            onClick = {
+                val intent = Intent(context, ARActivity::class.java)
+                val params = Bundle()
+                params.putString("type", modelType)
+                params.putString("id", modelId)
+                intent.putExtras(params)
+                context.startActivity(intent)
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_augmented_reality),
+                    contentDescription = stringResource(R.string.see_in_augmented_reality),
+                    tint = PinkPrimary
+                )
+            },
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .height(40.dp)
+        )
+    }
+}
+
+@Composable
+fun PartsSplitScreen(
+    models: List<ContentfulModel>,
+    nav: NavController,
+    windowSize: WindowSize,
+    viewModels: ViewModels
+) {
+    Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
+        LazyColumn(
+            contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = Modifier.fillMaxWidth(0.5f)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            item {
+                ScreenTitle(
+                    title = stringResource(R.string.corresponding_parts),
+                    spacerHeight = 0,
+                    windowSize = windowSize,
+                    viewModels = viewModels
+                )
+            }
+            if (models.isNotEmpty()) {
+                gridItems(
+                    data = models,
+                    columnCount = 2,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                ) { item ->
+                    PartCard(
+                        partId = item.id,
+                        partType = item.type,
+                        partName = item.title,
+                        imageUrl = item.image,
+                        nav = nav,
+                        windowSize = windowSize
+                    )
                 }
             }
         }
