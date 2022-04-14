@@ -3,6 +3,7 @@ package com.djinc.edumotive.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -70,28 +71,7 @@ fun Details(
                     windowSize = windowSize,
                     viewModels = viewModels
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = exercise.chapter, color = TextSecondary, fontSize = 16.sp)
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_clock),
-                            contentDescription = "Clock icon",
-                            tint = TextSecondary,
-                            modifier = Modifier.padding(bottom = 3.dp)
-                        )
-                        Text(
-                            text = "${exercise.minTime} - ${exercise.maxTime} min",
-                            color = TextSecondary,
-                            fontSize = 16.sp
-                        )
-                    }
-                }
+                ChapterWithTime(exercise = exercise)
             }
             item {
                 Text(
@@ -104,9 +84,7 @@ fun Details(
                 )
             }
             if (windowSize != WindowSize.Expanded) {
-                itemsIndexed(exercise.steps) { index, item ->
-                    ExerciseStep(exerciseStepName = item, stepIndex = index + 1)
-                }
+                generateSteps(exercise = exercise)
             }
         }
     }
@@ -119,10 +97,40 @@ fun Details(
                     .fillMaxWidth(0.5f)
                     .padding(top = 120.dp)
             ) {
-                itemsIndexed(exercise.steps) { index, item ->
-                    ExerciseStep(exerciseStepName = item, stepIndex = index + 1)
-                }
+                generateSteps(exercise = exercise)
             }
+        }
+    }
+}
+
+fun LazyListScope.generateSteps(exercise: ContentfulExercise) {
+    itemsIndexed(exercise.steps) { index, item ->
+        ExerciseStep(exerciseStepName = item, stepIndex = index + 1)
+    }
+}
+
+@Composable
+fun ChapterWithTime(exercise: ContentfulExercise) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = exercise.chapter, color = TextSecondary, fontSize = 16.sp)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_clock),
+                contentDescription = "Clock icon",
+                tint = TextSecondary,
+                modifier = Modifier.padding(bottom = 3.dp)
+            )
+            Text(
+                text = "${exercise.minTime} - ${exercise.maxTime} min",
+                color = TextSecondary,
+                fontSize = 16.sp
+            )
         }
     }
 }
