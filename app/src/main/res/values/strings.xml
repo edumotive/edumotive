@@ -21,4 +21,6 @@
     <string name="choose_language_nl">Choose Dutch as language</string>
     <string name="choose_language_en">Choose English as language</string>
     <string name="choose_language">Choose preferred language</string>
+    <string name="loading">Loading</string>
+    <string name="loading_models">Loading models</string>
 </resources>

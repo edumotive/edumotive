@@ -40,7 +40,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         set(value) {
             field = value
             loadingView.isGone = !value
-            actionButton.isGone = value
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,10 +90,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
                     systemBarsInsets.bottom + bottomMargin
             }
-            setOnClickListener { cursorNode.createAnchor()?.let { anchorOrMove(it) } }
-            text = getString(R.string.move_object)
-            setIconResource(R.drawable.ic_target)
+            setOnClickListener { if(!isLoading) {cursorNode.createAnchor()?.let { anchorOrMove(it) } } }
+            isGone = false
         }
+        actionButton.text = getString(R.string.loading)
 
         sceneView = view.findViewById<ArSceneView?>(R.id.sceneView).apply {
             planeRenderer.isVisible = false
@@ -122,6 +121,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
                 whenLoaded() {
                     isLoading = false
+                    actionButton.text = getString(R.string.move_object)
+                    actionButton.setIconResource(R.drawable.ic_target)
                 }
             }
 
@@ -163,6 +164,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun whenLoaded(callBack: () -> Unit) {
         loadedModels.value = loadedModels.value + 1
+        actionButton.text = getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
+
         if(loadedModels.value == models.size) {
             callBack()
         }
