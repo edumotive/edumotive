@@ -3,8 +3,8 @@ package com.djinc.edumotive.utils.ar
 import android.content.Context
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.setPadding
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.djinc.edumotive.R
 import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.rendering.ViewRenderable
 import io.github.sceneview.ar.node.ArModelNode
@@ -57,10 +57,11 @@ fun createTextNode(
     val textView = TextView(context)
 
     textView.apply {
-        setPadding(6)
         setText(text)
         setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Large)
-        setTextColor(ContextCompat.getColor(context, android.R.color.white))
+        setTextColor(ContextCompat.getColor(context, android.R.color.black))
+        setBackgroundResource(R.drawable.rounded_corner) // Rounded Corner
+        setPadding(100, 50, 100, 50)
     }
 
     ViewRenderable.builder()
