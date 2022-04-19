@@ -10,7 +10,13 @@ import com.google.ar.sceneform.rendering.ViewRenderable
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.math.Position
 
-fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String, modelName: String, callback: () -> Unit): ArModelNode {
+fun createModel(
+    context: Context,
+    lifecycle: LifecycleCoroutineScope,
+    modelUrl: String,
+    modelName: String,
+    callback: (ArModelNode) -> Unit
+): ArModelNode {
 
     val modelNode = ArModelNode()
     modelNode.loadModelAsync(context = context,
@@ -20,14 +26,18 @@ fun createModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: 
             createTextNode(context, modelName, modelNode, callback)
         }
     )
-
     return modelNode
 }
 
-fun createEmptyModel(context: Context, lifecycle: LifecycleCoroutineScope, modelUrl: String): ArModelNode {
+fun createEmptyModel(
+    context: Context,
+    lifecycle: LifecycleCoroutineScope,
+    modelUrl: String
+): ArModelNode {
 
     val modelNode = ArModelNode()
-    modelNode.loadModelAsync(context = context,
+    modelNode.loadModelAsync(
+        context = context,
         coroutineScope = lifecycle,
         glbFileLocation = modelUrl
     )
@@ -35,9 +45,14 @@ fun createEmptyModel(context: Context, lifecycle: LifecycleCoroutineScope, model
     return modelNode
 }
 
-fun createTextNode(context: Context, text: String, modelNode: ArModelNode, callback: () -> Unit) {
+fun createTextNode(
+    context: Context,
+    text: String,
+    modelNode: ArModelNode,
+    callback: (ArModelNode) -> Unit
+) {
     val textNode = ArModelNode()
-    var textRenderable : Renderable
+    var textRenderable: Renderable
 
     val textView = TextView(context)
 
@@ -55,7 +70,7 @@ fun createTextNode(context: Context, text: String, modelNode: ArModelNode, callb
             textRenderable = renderable
             textNode.setModel(textRenderable)
             modelNode.addChild(textNode)
-            callback()
+            callback(modelNode)
         }
 
     textNode.position = Position(x = 0.0f, y = 1.0f, z = 0.0f)
