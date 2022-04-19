@@ -63,21 +63,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { modelGroup: ContentfulModelGroup ->
                     models.addAll(modelGroup.models)
-                    val tArModel = createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
+                    val tArModel =
+                        createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
 
                     tArModel.isVisible = false
 
                     tArModel.apply {
                         onTouched = { _, _ ->
                             tArModel.isVisible = false
-                            arModels.forEach {
-                                    model ->
-                                if(!model.isVisible) model.isVisible = true
-                                model.children.forEach { child -> child.isVisible = false}
+                            arModels.forEach { model ->
+                                if (!model.isVisible) model.isVisible = true
+                                model.children.forEach { child -> child.isVisible = false }
                             }
                         }
                     }
-
                     tModel = tArModel
                     loadModels()
                 }
@@ -91,7 +90,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
                     systemBarsInsets.bottom + bottomMargin
             }
-            setOnClickListener { if(!isLoading) {cursorNode.createAnchor()?.let { anchorOrMove(it) } } }
+            setOnClickListener {
+                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+            }
             isGone = false
         }
         actionButton.text = getString(R.string.loading)
@@ -119,46 +120,42 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun loadModels() {
         models.forEach { model ->
-            val arModel = createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
+            createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
+                if (models.size <= 1) it.centerModel(origin = Position(x = 0.0f, y = -1f, z = 0.0f))
+
+                arModels.add(addOnTouched(it))
+
                 whenLoaded {
                     isLoading = false
                     actionButton.text = getString(R.string.move_object)
                     actionButton.setIconResource(R.drawable.ic_target)
                 }
             }
+        }
+    }
 
-            arModel.apply {
-                onTouched = { _, _ ->
-                    if (tModel != null) {
-                        tModel!!.isVisible = true
-                    }
-                    arModels.forEach {
-                            model ->
-                        if(model != arModel) {
-                            model.isVisible = !model.isVisible
-                        } else {
-                            model.children.forEach { child -> child.isVisible = !child.isVisible}
-                        }
-                    }
+    private fun addOnTouched(arModel: ArModelNode): ArModelNode {
+        arModel.apply {
+            onTouched = { _, _ ->
+                if (tModel != null) tModel!!.isVisible = true
+                arModels.forEach { model ->
+                    if (model != arModel) model.isVisible = !model.isVisible
+                    else model.children.forEach { child -> child.isVisible = !child.isVisible }
                 }
             }
-
-            arModels.add(arModel)
         }
+
+        return arModel
     }
 
     private fun anchorOrMove(anchor: Anchor) {
         arModels.forEach { arModel ->
-            if (!sceneView.children.contains(arModel)) {
-                sceneView.addChild(arModel)
-            }
+            if (!sceneView.children.contains(arModel)) sceneView.addChild(arModel)
             arModel.anchor = anchor
         }
 
-        if(tModel != null) {
-            if (!sceneView.children.contains(tModel!!)) {
-                sceneView.addChild(tModel!!)
-            }
+        if (tModel != null) {
+            if (!sceneView.children.contains(tModel!!)) sceneView.addChild(tModel!!)
             tModel!!.anchor = anchor
         }
     }
@@ -166,10 +163,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     @SuppressLint("SetTextI18n")
     private fun whenLoaded(callBack: () -> Unit) {
         loadedModels.value = loadedModels.value + 1
-        actionButton.text = getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
+        actionButton.text =
+            getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
 
-        if(loadedModels.value == models.size) {
-            callBack()
-        }
+        if (loadedModels.value == models.size) callBack()
     }
 }
