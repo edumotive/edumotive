@@ -137,11 +137,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
             onTouched = { _, _ ->
-                if (tModel != null) tModel!!.isVisible = true
-                arModels.forEach { model ->
-                    if (model != arModel) model.isVisible = !model.isVisible
-                    else model.children.forEach { child -> child.isVisible = !child.isVisible }
-                }
+                selectModelVisibility(arModel)
             }
         }
 
@@ -167,5 +163,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
 
         if (loadedModels.value == models.size) callBack()
+    }
+
+    private fun selectModelVisibility(arModel: ArModelNode) {
+        if (tModel != null) tModel!!.isVisible = !tModel!!.isVisible
+        arModels.forEach { model ->
+            if (model != arModel) model.isVisible = !model.isVisible
+            else model.children.forEach { child -> child.isVisible = !child.isVisible }
+        }
     }
 }
