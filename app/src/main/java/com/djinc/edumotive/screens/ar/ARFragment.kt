@@ -22,7 +22,9 @@ import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.utils.doOnApplyWindowInsets
+
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
@@ -33,6 +35,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private var models = mutableListOf<ContentfulModel>()
     private var tModel: ArModelNode? = null
+    private var selectedModelIndex = mutableStateOf(0)
+    private var modelSelected = mutableStateOf(false)
 
     private var loadedModels = mutableStateOf(0)
 
@@ -71,6 +75,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     // visible anymore.
                     tArModel.apply {
                         onTouched = { _, _ ->
+                            modelSelected.value = false
                             tArModel.isVisible = false
                             models.forEach { model ->
                                 if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
@@ -114,6 +119,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             onTouchAr = { _, _ ->
                 if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
             }
+
+            onFrame = { _ ->
+
+                // Rotate card
+                if(modelSelected.value) {
+                    models[selectedModelIndex.value].arModel!!.children.forEach { child ->
+                        val cameraPosition = sceneView.camera.worldPosition
+                        val cardPosition = child.worldPosition
+                        val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
+
+                        child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
+                    }
+                }
+            }
         }
 
         cursorNode = CursorNode(context = requireContext(), coroutineScope = lifecycleScope)
@@ -126,6 +145,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 selectModelVisibility(it)
             }
         }
+    }
+
+    fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
+        var theta = Math.atan2((targetPt.z - centerPt.z).toDouble(),
+            (targetPt.x - centerPt.x).toDouble()
+        )
+        theta += Math.PI / 2.0
+        var angle = Math.toDegrees(theta)
+        if (angle < 0) {
+            angle += 360.0
+        }
+        return angle
     }
 
     private fun loadModels() {
@@ -145,6 +176,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
             onTouched = { _, _ ->
+                selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
                 selectModelVisibility(arModel)
             }
         }
@@ -174,6 +206,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun selectModelVisibility(arModel: ArModelNode) {
+        modelSelected.value = !modelSelected.value
         if (tModel != null) tModel!!.isVisible = !tModel!!.isVisible
         models.forEach { model ->
             if (model.arModel != arModel) model.arModel!!.isVisible = !model.arModel!!.isVisible
