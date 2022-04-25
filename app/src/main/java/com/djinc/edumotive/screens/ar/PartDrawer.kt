@@ -43,46 +43,48 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.CenterEnd
-    ) {
+    if (list.size > 1) {
         Box(
-            modifier = Modifier
-                .offset(x = drawerSize)
-                .fillMaxHeight()
-                .fillMaxWidth(.35f)
-                .background(Background)
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.CenterEnd
         ) {
-            VerticalLine(lineWidth = verticalLineWidth)
-            DrawerButton(buttonSize = drawerButtonSize, drawerState = isDrawerOpen.value) {
-                isDrawerOpen.value = it
-            }
-            LazyColumn(
-                contentPadding = PaddingValues(vertical = 24.dp, horizontal = 28.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            Box(
+                modifier = Modifier
+                    .offset(x = drawerSize)
+                    .fillMaxHeight()
+                    .fillMaxWidth(.35f)
+                    .background(Background)
             ) {
-                item {
-                    Text(
-                        text = "Bijbehorende onderdelen",
-                        fontFamily = fonts,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                VerticalLine(lineWidth = verticalLineWidth)
+                DrawerButton(buttonSize = drawerButtonSize, drawerState = isDrawerOpen.value) {
+                    isDrawerOpen.value = it
                 }
-                gridItems(
-                    data = list,
-                    columnCount = 2,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier
-                ) { item ->
-                    PartCard(
-                        partId = item.id,
-                        partType = item.type,
-                        partName = item.title,
-                        imageUrl = item.image
-                    ) {
-                        callback.invoke(item.arModel!!)
+                LazyColumn(
+                    contentPadding = PaddingValues(vertical = 24.dp, horizontal = 28.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    item {
+                        Text(
+                            text = "Bijbehorende onderdelen",
+                            fontFamily = fonts,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+                    gridItems(
+                        data = list,
+                        columnCount = 2,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                    ) { item ->
+                        PartCard(
+                            partId = item.id,
+                            partType = item.type,
+                            partName = item.title,
+                            imageUrl = item.image
+                        ) {
+                            callback.invoke(item.arModel!!)
+                        }
                     }
                 }
             }
