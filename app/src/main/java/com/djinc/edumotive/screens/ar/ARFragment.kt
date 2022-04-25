@@ -30,6 +30,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
+    private lateinit var drawerView: ComposeView
 
     private lateinit var cursorNode: CursorNode
 
@@ -79,7 +80,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                             tArModel.isVisible = false
                             models.forEach { model ->
                                 if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
-                                model.arModel!!.children.forEach { child -> child.isVisible = false }
+                                model.arModel!!.children.forEach { child ->
+                                    child.isVisible = false
+                                }
                             }
                         }
                     }
@@ -89,6 +92,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
         }
 
+        drawerView = view.findViewById<ComposeView>(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
@@ -139,12 +143,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
-
-        view.findViewById<ComposeView>(R.id.partDrawer).setContent {
-            PartDrawer(list = models) {
-                selectModelVisibility(it)
-            }
-        }
     }
 
     fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
@@ -161,13 +159,24 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun loadModels() {
         models.forEachIndexed { index, model ->
-            createModel(requireContext(), lifecycleScope, model.modelUrl, model.title, (models.size <= 1)) {
+            createModel(
+                requireContext(),
+                lifecycleScope,
+                model.modelUrl,
+                model.title,
+                (models.size <= 1)
+            ) {
                 models[index].arModel = addOnTouched(it)
 
                 whenLoaded {
                     isLoading = false
                     actionButton.text = getString(R.string.move_object)
                     actionButton.setIconResource(R.drawable.ic_target)
+                    drawerView.setContent {
+                        PartDrawer(list = models) { modelNode ->
+                            selectModelVisibility(modelNode)
+                        }
+                    }
                 }
             }
         }

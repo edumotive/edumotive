@@ -9,6 +9,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,11 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.ui.theme.Background
-import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.ui.theme.TextPrimary
-import com.djinc.edumotive.ui.theme.fonts
+import com.djinc.edumotive.ui.theme.*
 
 @Composable
 fun PartCard(
@@ -35,15 +34,20 @@ fun PartCard(
     windowSize: WindowSize? = null,
     callback: (() -> Unit)? = null
 ) {
+    var isCurrentlyActive = remember { mutableStateOf(false) }
     Card(
-        backgroundColor = Background,
+        backgroundColor = if (isCurrentlyActive.value) PinkSecondary else Background,
         elevation = 3.dp,
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .width(if (windowSize == WindowSize.Compact) 200.dp else 170.dp)
             .clickable {
                 nav?.navigate("part/$partId/$partType")
-                callback?.invoke()
+                if (callback != null) {
+                    callback.invoke()
+                    isCurrentlyActive.value = !isCurrentlyActive.value
+                }
+
             }
     ) {
         Column(
