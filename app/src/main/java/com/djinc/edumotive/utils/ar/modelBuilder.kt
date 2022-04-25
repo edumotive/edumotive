@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.djinc.edumotive.R
+import com.google.ar.sceneform.collision.Box
 import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.rendering.ViewRenderable
 import io.github.sceneview.ar.node.ArModelNode
@@ -74,8 +75,14 @@ fun createTextNode(
             callback(modelNode)
         }
 
-    textNode.position = Position(x = 0.0f, y = 1.0f, z = 0.0f)
+    val yModel =
+        if(modelNode.model != null) (modelNode.model!!.collisionShape as Box).size.y
+        else 0.5f
+
+    val zModel =
+        if(modelNode.model != null) (modelNode.model!!.collisionShape as Box).size.z
+        else 0.0f
+
+    textNode.position = Position(x = 0.0f, y = yModel + 0.5f, z = -zModel / 2)
     textNode.isVisible = false
 }
-
-

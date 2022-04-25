@@ -68,6 +68,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
                     tArModel.isVisible = false
 
+                    // When touching transparent model. Remove transparent model and make text not
+                    // visible anymore.
                     tArModel.apply {
                         onTouched = { _, _ ->
                             tArModel.isVisible = false
@@ -109,6 +111,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     arModel.scaleModel(units = 1.0f)
                     sceneView.addChild(arModel)
                 }
+            }
+            onTouchAr = { _, _ ->
+                cursorNode.createAnchor()?.let { anchorOrMove(it) }
             }
         }
 
