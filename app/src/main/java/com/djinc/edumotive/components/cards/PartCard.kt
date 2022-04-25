@@ -32,7 +32,8 @@ fun PartCard(
     partName: String = "",
     imageUrl: String,
     nav: NavController? = null,
-    windowSize: WindowSize? = null
+    windowSize: WindowSize? = null,
+    callback: (() -> Unit)? = null
 ) {
     Card(
         backgroundColor = Background,
@@ -42,6 +43,7 @@ fun PartCard(
             .width(if (windowSize == WindowSize.Compact) 200.dp else 170.dp)
             .clickable {
                 nav?.navigate("part/$partId/$partType")
+                callback?.invoke()
             }
     ) {
         Column(
