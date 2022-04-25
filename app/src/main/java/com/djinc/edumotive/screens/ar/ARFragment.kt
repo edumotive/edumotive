@@ -74,7 +74,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                             tArModel.isVisible = false
                             models.forEach { model ->
                                 if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
-                                model.arModel!!.children.forEach { child -> child.isVisible = false }
+                                model.arModel!!.children.forEach { child ->
+                                    child.isVisible = false
+                                }
                             }
                         }
                     }
@@ -130,7 +132,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun loadModels() {
         models.forEachIndexed { index, model ->
-            createModel(requireContext(), lifecycleScope, model.modelUrl, model.title, (models.size <= 1)) {
+            createModel(
+                requireContext(),
+                lifecycleScope,
+                model.modelUrl,
+                model.title,
+                (models.size <= 1)
+            ) {
                 models[index].arModel = addOnTouched(it)
 
                 whenLoaded {
