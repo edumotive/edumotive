@@ -30,8 +30,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private lateinit var cursorNode: CursorNode
 
-    private val arModels = mutableListOf<ArModelNode>()
-
     private var models = mutableListOf<ContentfulModel>()
     private var tModel: ArModelNode? = null
 
@@ -73,9 +71,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     tArModel.apply {
                         onTouched = { _, _ ->
                             tArModel.isVisible = false
-                            arModels.forEach { model ->
-                                if (!model.isVisible) model.isVisible = true
-                                model.children.forEach { child -> child.isVisible = false }
+                            models.forEach { model ->
+                                if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
+                                model.arModel!!.children.forEach { child -> child.isVisible = false }
                             }
                         }
                     }
@@ -106,14 +104,14 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             onArSessionFailed = { _: Exception ->
                 // If AR is not available or the camara permission has been denied, we add the model
                 // directly to the scene for a fallback 3D only usage
-                arModels.forEach { arModel ->
-                    arModel.centerModel(origin = Position(x = 0.0f, y = 0.0f, z = 0.0f))
-                    arModel.scaleModel(units = 1.0f)
-                    sceneView.addChild(arModel)
+                models.forEach { model ->
+                    model.arModel!!.centerModel(origin = Position(x = 0.0f, y = 0.0f, z = 0.0f))
+                    model.arModel!!.scaleModel(units = 1.0f)
+                    sceneView.addChild(model.arModel!!)
                 }
             }
             onTouchAr = { _, _ ->
-                cursorNode.createAnchor()?.let { anchorOrMove(it) }
+                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
             }
         }
 
@@ -124,11 +122,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun loadModels() {
-        models.forEach { model ->
-            createModel(requireContext(), lifecycleScope, model.modelUrl, model.title) {
-                if (models.size <= 1) it.centerModel(origin = Position(x = 0.0f, y = -1f, z = 0.0f))
-
-                arModels.add(addOnTouched(it))
+        models.forEachIndexed { index, model ->
+            createModel(requireContext(), lifecycleScope, model.modelUrl, model.title, (models.size <= 1)) {
+                models[index].arModel = addOnTouched(it)
 
                 whenLoaded {
                     isLoading = false
@@ -150,9 +146,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun anchorOrMove(anchor: Anchor) {
-        arModels.forEach { arModel ->
-            if (!sceneView.children.contains(arModel)) sceneView.addChild(arModel)
-            arModel.anchor = anchor
+        models.forEach { model ->
+            if (!sceneView.children.contains(model.arModel!!)) sceneView.addChild(model.arModel!!)
+            model.arModel!!.anchor = anchor
         }
 
         if (tModel != null) {
@@ -172,9 +168,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun selectModelVisibility(arModel: ArModelNode) {
         if (tModel != null) tModel!!.isVisible = !tModel!!.isVisible
-        arModels.forEach { model ->
-            if (model != arModel) model.isVisible = !model.isVisible
-            else model.children.forEach { child -> child.isVisible = !child.isVisible }
+        models.forEach { model ->
+            if (model.arModel != arModel) model.arModel!!.isVisible = !model.arModel!!.isVisible
+            else model.arModel!!.children.forEach { child -> child.isVisible = !child.isVisible }
         }
     }
 }

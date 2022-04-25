@@ -1,5 +1,7 @@
 package com.djinc.edumotive.models
 
+import io.github.sceneview.ar.node.ArModelNode
+
 data class ContentfulModel(
     val id: String = "",
     val type: String = "",
@@ -7,6 +9,7 @@ data class ContentfulModel(
     val image: String = "",
     val description: String = "",
     val modelUrl: String = "",
+    var arModel: ArModelNode? = null
 ) {
     companion object
 }

@@ -16,7 +16,8 @@ fun createModel(
     lifecycle: LifecycleCoroutineScope,
     modelUrl: String,
     modelName: String,
-    callback: (ArModelNode) -> Unit
+    isSingular: Boolean,
+    callback: (ArModelNode) -> Unit,
 ): ArModelNode {
 
     val modelNode = ArModelNode()
@@ -24,7 +25,8 @@ fun createModel(
         coroutineScope = lifecycle,
         glbFileLocation = modelUrl,
         onLoaded = {
-            createTextNode(context, modelName, modelNode, callback)
+            if (isSingular) modelNode.centerModel(origin = Position(x = 0.0f, y = -1f, z = 0.0f))
+            createTextNode(context, modelName, modelNode, isSingular, callback)
         }
     )
     return modelNode
@@ -50,7 +52,8 @@ fun createTextNode(
     context: Context,
     text: String,
     modelNode: ArModelNode,
-    callback: (ArModelNode) -> Unit
+    isSingular: Boolean,
+    callback: (ArModelNode) -> Unit,
 ) {
     val textNode = ArModelNode()
     var textRenderable: Renderable
@@ -75,14 +78,21 @@ fun createTextNode(
             callback(modelNode)
         }
 
-    val yModel =
-        if(modelNode.model != null) (modelNode.model!!.collisionShape as Box).size.y
-        else 0.5f
+    val position =
+        if (isSingular) {
+            Position(
+                x = modelNode.position.x,
+                y = 0.8f,
+                z = modelNode.position.z + 1.3f + (modelNode.collisionShape as Box).size.z / 2
+            )
+        } else {
+            Position(
+                x = modelNode.position.x,
+                y = 1f,
+                z = 0.0f,
+            )
+        }
 
-    val zModel =
-        if(modelNode.model != null) (modelNode.model!!.collisionShape as Box).size.z
-        else 0.0f
-
-    textNode.position = Position(x = 0.0f, y = yModel + 0.5f, z = -zModel / 2)
+    textNode.position = position
     textNode.isVisible = false
 }
