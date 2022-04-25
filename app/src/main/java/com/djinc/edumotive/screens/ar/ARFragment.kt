@@ -28,6 +28,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
+    private lateinit var drawerView: ComposeView
 
     private lateinit var cursorNode: CursorNode
 
@@ -86,6 +87,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
         }
 
+        drawerView = view.findViewById<ComposeView>(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
@@ -122,12 +124,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
-
-        view.findViewById<ComposeView>(R.id.partDrawer).setContent {
-            PartDrawer(list = models) {
-                selectModelVisibility(it)
-            }
-        }
     }
 
     private fun loadModels() {
@@ -145,6 +141,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     isLoading = false
                     actionButton.text = getString(R.string.move_object)
                     actionButton.setIconResource(R.drawable.ic_target)
+                    drawerView.setContent {
+                        PartDrawer(list = models) { modelNode ->
+                            selectModelVisibility(modelNode)
+                        }
+                    }
                 }
             }
         }
