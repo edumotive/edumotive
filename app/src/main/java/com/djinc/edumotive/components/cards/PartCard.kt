@@ -13,14 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.constants.WindowSize
+import com.djinc.edumotive.ui.theme.TextPrimary
+import com.djinc.edumotive.ui.theme.fonts
 
 @Composable
 fun PartCard(
@@ -28,8 +31,8 @@ fun PartCard(
     partType: String,
     partName: String = "",
     imageUrl: String,
-    nav: NavController,
-    windowSize: WindowSize
+    nav: NavController? = null,
+    windowSize: WindowSize? = null
 ) {
     Card(
         backgroundColor = Background,
@@ -38,7 +41,7 @@ fun PartCard(
         modifier = Modifier
             .width(if (windowSize == WindowSize.Compact) 200.dp else 170.dp)
             .clickable {
-                nav.navigate("part/$partId/$partType")
+                nav?.navigate("part/$partId/$partType")
             }
     ) {
         Column(
@@ -61,7 +64,10 @@ fun PartCard(
 fun PartName(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.h3,
+        fontFamily = fonts,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        color = TextPrimary,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(start = 12.dp, end = 30.dp)
