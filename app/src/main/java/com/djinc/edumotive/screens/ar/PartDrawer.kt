@@ -1,6 +1,7 @@
 package com.djinc.edumotive.screens.ar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -45,6 +47,7 @@ fun PartDrawer(list: List<ContentfulModel>) {
                 .background(Background)
         ) {
             VerticalLine(lineWidth = verticalLineWidth)
+            DrawerButton(buttonSize = drawerButtonSize)
             LazyColumn(
                 contentPadding = PaddingValues(vertical = 24.dp, horizontal = 28.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -71,7 +74,6 @@ fun PartDrawer(list: List<ContentfulModel>) {
                     )
                 }
             }
-            DrawerButton(buttonSize = drawerButtonSize)
         }
     }
 }
@@ -127,6 +129,15 @@ fun DrawerButton(buttonSize: Dp) {
             .fillMaxHeight()
             .offset(x = -buttonSize)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_drawer_curve_top),
+            contentDescription = "Iets",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .width(27.dp)
+                .height(45.dp)
+                .offset(x = 12.dp, y = -buttonSize + 8.dp)
+        )
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
@@ -152,5 +163,15 @@ fun DrawerButton(buttonSize: Dp) {
                 )
             }
         }
+        Image(
+            painter = painterResource(id = R.drawable.ic_drawer_curve_bottom),
+            contentDescription = "Iets",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .width(27.dp)
+                .height(45.dp)
+                .offset(x = 12.dp, y = buttonSize - 8.dp)
+
+        )
     }
 }
