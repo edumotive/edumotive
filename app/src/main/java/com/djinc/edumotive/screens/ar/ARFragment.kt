@@ -122,7 +122,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
 
         view.findViewById<ComposeView>(R.id.partDrawer).setContent {
-            PartDrawer(list = models)
+            PartDrawer(list = models) {
+                selectModelVisibility(it)
+            }
         }
     }
 

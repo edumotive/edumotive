@@ -28,10 +28,11 @@ import com.djinc.edumotive.screens.gridItems
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
+import io.github.sceneview.ar.node.ArModelNode
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PartDrawer(list: List<ContentfulModel>) {
+fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
 
@@ -71,7 +72,9 @@ fun PartDrawer(list: List<ContentfulModel>) {
                         partType = item.type,
                         partName = item.title,
                         imageUrl = item.image
-                    )
+                    ) {
+                        callback.invoke(item.arModel!!)
+                    }
                 }
             }
         }
