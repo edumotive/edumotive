@@ -20,12 +20,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.screens.gridItems
 import com.djinc.edumotive.ui.theme.Background
@@ -39,7 +41,11 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
     val isDrawerOpen = remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp + 1
-    val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * 0.35).dp else 0.dp)
+    val windowSize =
+        if (screenWidth < 600) WindowSize.Compact else if (screenWidth < 840) WindowSize.Medium else WindowSize.Expanded
+    val allowedSpace =
+        if (windowSize == WindowSize.Expanded) 0.35f else 0.5f
+    val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
 
@@ -52,7 +58,7 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
                 modifier = Modifier
                     .offset(x = drawerSize)
                     .fillMaxHeight()
-                    .fillMaxWidth(.35f)
+                    .fillMaxWidth(allowedSpace)
                     .background(Background)
             ) {
                 VerticalLine(lineWidth = verticalLineWidth)
@@ -60,12 +66,17 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
                     isDrawerOpen.value = it
                 }
                 LazyColumn(
-                    contentPadding = PaddingValues(vertical = 24.dp, horizontal = 28.dp),
+                    contentPadding = PaddingValues(
+                        vertical = if (windowSize == WindowSize.Compact) 12.dp else 24.dp,
+                        horizontal = if (windowSize == WindowSize.Compact) 12.dp else 28.dp
+                    ),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
                         Text(
-                            text = "Bijbehorende onderdelen",
+                            text = if (windowSize == WindowSize.Compact) stringResource(R.string.parts_drawer_short) else stringResource(
+                                R.string.parts_drawer_long
+                            ),
                             fontFamily = fonts,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Medium
@@ -73,7 +84,7 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
                     }
                     gridItems(
                         data = list,
-                        columnCount = 2,
+                        columnCount = if (windowSize == WindowSize.Compact) 1 else 2,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
                     ) { item ->

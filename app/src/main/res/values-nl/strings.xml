@@ -22,4 +22,6 @@
     <string name="choose_language">Selecteer gewenste taal</string>
     <string name="loading">Laden</string>
     <string name="loading_models">Models laden</string>
+    <string name="parts_drawer_long">Bijbehorende onderdelen</string>
+    <string name="parts_drawer_short">Onderdelen</string>
 </resources>

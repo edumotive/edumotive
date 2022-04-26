@@ -23,4 +23,6 @@
     <string name="choose_language">Choose preferred language</string>
     <string name="loading">Loading</string>
     <string name="loading_models">Loading models</string>
+    <string name="parts_drawer_long">Corresponding parts</string>
+    <string name="parts_drawer_short">Parts</string>
 </resources>
