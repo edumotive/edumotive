@@ -22,13 +22,6 @@ class ARActivity : AppCompatActivity(R.layout.activity_ar) {
             rootView = findViewById(R.id.rootView)
         )
 
-        setSupportActionBar(findViewById<Toolbar>(R.id.toolbar)?.apply {
-            doOnApplyWindowInsets { systemBarsInsets ->
-                (layoutParams as ViewGroup.MarginLayoutParams).topMargin = systemBarsInsets.top
-            }
-            title = ""
-        })
-
         if (params != null) {
             val arguments = Bundle()
             arguments.putString("type", params.getString("type"))

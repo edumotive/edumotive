@@ -34,7 +34,7 @@ fun PartCard(
     windowSize: WindowSize? = null,
     callback: (() -> Unit)? = null
 ) {
-    var isCurrentlyActive = remember { mutableStateOf(false) }
+    val isCurrentlyActive = remember { mutableStateOf(false) }
     Card(
         backgroundColor = if (isCurrentlyActive.value) PinkSecondary else Background,
         elevation = 3.dp,
