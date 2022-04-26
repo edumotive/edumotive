@@ -37,7 +37,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                             EntryType.Exercises
                         )
                     ) {
-                        isRefreshing = it
+                        isRefreshing = !it
                     }
                 }
             }
@@ -52,7 +52,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
                     viewModels.refresh(listOf(EntryType.Models, EntryType.ModelGroups)) {
-                        isRefreshing = it
+                        isRefreshing = !it
                     }
                 }
             }
@@ -84,7 +84,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
                     viewModels.refresh(listOf(EntryType.Exercises)) {
-                        isRefreshing = it
+                        isRefreshing = !it
                     }
                 }
             }
