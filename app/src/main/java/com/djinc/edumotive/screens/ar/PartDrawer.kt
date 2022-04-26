@@ -44,7 +44,7 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
     val windowSize =
         if (screenWidth < 600) WindowSize.Compact else if (screenWidth < 840) WindowSize.Medium else WindowSize.Expanded
     val allowedSpace =
-        if (windowSize == WindowSize.Compact) 0.6f else if (windowSize == WindowSize.Medium) 0.5f else 0.35f
+        if (windowSize == WindowSize.Expanded) 0.35f else 0.5f
     val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
