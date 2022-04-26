@@ -33,6 +33,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
     private lateinit var drawerView: ComposeView
+    private lateinit var backButton: ComposeView
 
     private lateinit var cursorNode: CursorNode
 
@@ -58,7 +59,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             fetchContentful(params)
         }
 
-        drawerView = view.findViewById<ComposeView>(R.id.partDrawer)
+        backButton = view.findViewById(R.id.backButton)
+        drawerView = view.findViewById(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
@@ -99,6 +101,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
+      
+        backButton.setContent {
+            BackButton() {
+                activity?.finish()
+            }
+        }
     }
 
     private fun transformCard() {
@@ -110,8 +118,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 // Rotate card
                 val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
                 child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
-
-
             }
         }
     }

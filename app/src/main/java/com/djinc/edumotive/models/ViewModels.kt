@@ -63,9 +63,9 @@ class ViewModels : ViewModel() {
                 }
                 EntryType.ModelGroups -> {
                     isModelGroupsLoaded = false
-                    Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-                        models = it
-                        isModelsLoaded = true
+                    Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+                        modelGroups = it
+                        isModelGroupsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                 }
@@ -89,9 +89,9 @@ class ViewModels : ViewModel() {
             isModelsLoaded = true
         }
         isModelGroupsLoaded = false
-        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-            models = it
-            isModelsLoaded = true
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+            modelGroups = it
+            isModelGroupsLoaded = true
         }
         isExercisesLoaded = false
         Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
