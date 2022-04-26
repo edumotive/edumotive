@@ -56,6 +56,13 @@
     </FrameLayout>
 
     <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.compose.ui.platform.ComposeView
         android:id="@+id/partDrawer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

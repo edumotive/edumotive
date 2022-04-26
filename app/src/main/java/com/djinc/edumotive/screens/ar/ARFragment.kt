@@ -31,6 +31,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
     private lateinit var drawerView: ComposeView
+    private lateinit var backButton: ComposeView
 
     private lateinit var cursorNode: CursorNode
 
@@ -92,7 +93,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
         }
 
-        drawerView = view.findViewById<ComposeView>(R.id.partDrawer)
+        backButton = view.findViewById(R.id.backButton)
+        drawerView = view.findViewById(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
@@ -127,13 +129,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             onFrame = { _ ->
 
                 // Rotate card
-                if(modelSelected.value) {
+                if (modelSelected.value) {
                     models[selectedModelIndex.value].arModel!!.children.forEach { child ->
                         val cameraPosition = sceneView.camera.worldPosition
                         val cardPosition = child.worldPosition
-                        val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
+                        val angle =
+                            calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
 
-                        child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
+                        child.rotation = Rotation(
+                            0.0f,
+                            -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y,
+                            0.0f
+                        )
                     }
                 }
             }
@@ -143,10 +150,17 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
+
+        backButton.setContent {
+            BackButton() {
+                activity?.finish()
+            }
+        }
     }
 
     fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
-        var theta = Math.atan2((targetPt.z - centerPt.z).toDouble(),
+        var theta = Math.atan2(
+            (targetPt.z - centerPt.z).toDouble(),
             (targetPt.x - centerPt.x).toDouble()
         )
         theta += Math.PI / 2.0
