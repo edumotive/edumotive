@@ -91,17 +91,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
 
             onFrame = { _ ->
-
-                // Rotate card
-                if(modelSelected.value) {
-                    models[selectedModelIndex.value].arModel!!.children.forEach { child ->
-                        val cameraPosition = sceneView.camera.worldPosition
-                        val cardPosition = child.worldPosition
-                        val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
-
-                        child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
-                    }
-                }
+                transformCard()
             }
         }
 
@@ -111,6 +101,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
     }
 
+    private fun transformCard() {
+        if(modelSelected.value) {
+            models[selectedModelIndex.value].arModel!!.children.forEach { child ->
+                val cameraPosition = sceneView.camera.worldPosition
+                val cardPosition = child.worldPosition
+
+                // Rotate card
+                val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
+                child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
+
+
+            }
+        }
+    }
 
     private fun fetchContentful(params: Bundle) {
         if (params.getString("type") == "model") {
