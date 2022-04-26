@@ -14,6 +14,7 @@ import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
+import com.djinc.edumotive.utils.ar.math.calcDistance
 import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
@@ -25,6 +26,7 @@ import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
+import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
 
 
@@ -118,6 +120,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 // Rotate card
                 val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
                 child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
+
+                // Scale card
+                val distance = calcDistance(cameraPosition, cardPosition).toFloat()
+                child.scale = Scale(distance / 3)
             }
         }
     }

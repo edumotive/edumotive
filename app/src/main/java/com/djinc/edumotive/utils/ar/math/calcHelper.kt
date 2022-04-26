@@ -2,6 +2,8 @@ package com.djinc.edumotive.utils.ar.math
 
 import io.github.sceneview.math.Position
 import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
@@ -14,4 +16,12 @@ fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
         angle += 360.0
     }
     return angle
+}
+
+fun calcDistance(p1: Position, p2: Position): Double{
+    return sqrt(
+        (p1.x - p2.x).toDouble().pow(2) +
+        (p1.y - p2.y).toDouble().pow(2) +
+        (p1.z - p2.z).toDouble().pow(2)
+    )
 }
