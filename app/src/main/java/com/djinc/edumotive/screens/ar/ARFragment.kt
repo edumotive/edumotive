@@ -14,8 +14,10 @@ import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
+import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import com.djinc.edumotive.utils.loadHelper
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -53,43 +55,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         val params = this.arguments
 
         if (params != null) {
-            if (params.getString("type") == "model") {
-                Contentful().fetchModelByID(
-                    id = params.getString("id")!!,
-                    errorCallBack = ::errorCatch
-                ) { model: ContentfulModel ->
-                    models.add(model)
-                    loadModels()
-                }
-            } else {
-                Contentful().fetchModelGroupById(
-                    id = params.getString("id")!!,
-                    errorCallBack = ::errorCatch
-                ) { modelGroup: ContentfulModelGroup ->
-                    models.addAll(modelGroup.models)
-                    val tArModel =
-                        createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
-
-                    tArModel.isVisible = false
-
-                    // When touching transparent model. Remove transparent model and make text not
-                    // visible anymore.
-                    tArModel.apply {
-                        onTouched = { _, _ ->
-                            modelSelected.value = false
-                            tArModel.isVisible = false
-                            models.forEach { model ->
-                                if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
-                                model.arModel!!.children.forEach { child ->
-                                    child.isVisible = false
-                                }
-                            }
-                        }
-                    }
-                    tModel = tArModel
-                    loadModels()
-                }
-            }
+            fetchContentful(params)
         }
 
         drawerView = view.findViewById<ComposeView>(R.id.partDrawer)
@@ -145,19 +111,32 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
     }
 
-    fun calcRotationAngleInDegrees(centerPt: Position, targetPt: Position): Double {
-        var theta = Math.atan2((targetPt.z - centerPt.z).toDouble(),
-            (targetPt.x - centerPt.x).toDouble()
-        )
-        theta += Math.PI / 2.0
-        var angle = Math.toDegrees(theta)
-        if (angle < 0) {
-            angle += 360.0
+
+    private fun fetchContentful(params: Bundle) {
+        if (params.getString("type") == "model") {
+            Contentful().fetchModelByID(
+                id = params.getString("id")!!,
+                errorCallBack = ::errorCatch
+            ) { model: ContentfulModel ->
+                models.add(model)
+                loadModels()
+            }
+        } else {
+            Contentful().fetchModelGroupById(
+                id = params.getString("id")!!,
+                errorCallBack = ::errorCatch
+            ) { modelGroup: ContentfulModelGroup ->
+                models.addAll(modelGroup.models)
+                loadTModel(modelGroup)
+                loadModels()
+            }
         }
-        return angle
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadModels() {
+        val loadHelper = loadHelper()
+
         models.forEachIndexed { index, model ->
             createModel(
                 requireContext(),
@@ -168,7 +147,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             ) {
                 models[index].arModel = addOnTouched(it)
 
-                whenLoaded {
+                loadHelper.whenLoaded(models.size, updateLoading = { amount ->
+                    actionButton.text =
+                        getString(R.string.loading_models) + " " + amount + "/" + models.size
+                } ) {
                     isLoading = false
                     actionButton.text = getString(R.string.move_object)
                     actionButton.setIconResource(R.drawable.ic_target)
@@ -182,10 +164,32 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
+    private fun loadTModel(modelGroup: ContentfulModelGroup) {
+        val tArModel =
+            createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
+
+        tArModel.isVisible = false
+
+        // When touching transparent model. Remove transparent model and make text not
+        // visible anymore.
+        tArModel.apply {
+            onTouched = { _, _ ->
+                modelSelected.value = false
+                tArModel.isVisible = false
+                models.forEach { model ->
+                    if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
+                    model.arModel!!.children.forEach { child ->
+                        child.isVisible = false
+                    }
+                }
+            }
+        }
+        tModel = tArModel
+    }
+
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
             onTouched = { _, _ ->
-                selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
                 selectModelVisibility(arModel)
             }
         }
@@ -205,21 +209,45 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun whenLoaded(callBack: () -> Unit) {
-        loadedModels.value = loadedModels.value + 1
-        actionButton.text =
-            getString(R.string.loading_models) + " " + loadedModels.value + "/" + models.size
-
-        if (loadedModels.value == models.size) callBack()
-    }
-
     private fun selectModelVisibility(arModel: ArModelNode) {
-        modelSelected.value = !modelSelected.value
-        if (tModel != null) tModel!!.isVisible = !tModel!!.isVisible
-        models.forEach { model ->
-            if (model.arModel != arModel) model.arModel!!.isVisible = !model.arModel!!.isVisible
-            else model.arModel!!.children.forEach { child -> child.isVisible = !child.isVisible }
+        // Select model to turn on
+        // Select same model to turn off OR Select other model
+
+        if(!modelSelected.value) {
+            selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
+
+            modelSelected.value = true
+
+            if (tModel != null) tModel!!.isVisible = true
+            models.forEach { model ->
+                if (model.arModel != arModel) model.arModel!!.isVisible = false
+                else model.arModel!!.children.forEach { child -> child.isVisible = true }
+            }
+        } else {
+            if(models.indexOfFirst { it.arModel == arModel } != selectedModelIndex.value) {
+                // Select other model
+                selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
+
+                models.forEach { model ->
+                    if (model.arModel != arModel) {
+                        model.arModel!!.isVisible = false
+                        model.arModel!!.children.forEach { child -> child.isVisible = false }
+                    }
+                    else {
+                        model.arModel!!.isVisible = true
+                        model.arModel!!.children.forEach { child -> child.isVisible = true }
+                    }
+                }
+            } else {
+                // Select same model
+                modelSelected.value = false
+
+                if (tModel != null) tModel!!.isVisible = false
+                models.forEach { model ->
+                    if (model.arModel != arModel) model.arModel!!.isVisible = true
+                    else model.arModel!!.children.forEach { child -> child.isVisible = false }
+                }
+            }
         }
     }
 }
