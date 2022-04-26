@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -24,7 +26,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.ui.theme.*
 
@@ -75,6 +79,7 @@ fun ScreenTitle(
             }
             // SEARCH BUTTON
             if (searchButton) {
+
                 if (windowSize == WindowSize.Compact) {
                     MobileSearchButton(
                         iconId = R.drawable.ic_search,
@@ -130,6 +135,8 @@ fun MobileSearchButton(
 ) {
     val configuration = LocalConfiguration.current
     val maxTextFieldLength = configuration.screenWidthDp - 84
+    val focusManager = LocalFocusManager.current
+
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
         BasicTextField(
             value = searchValue,
@@ -139,6 +146,10 @@ fun MobileSearchButton(
             textStyle = TextStyle(color = BluePrimary, fontFamily = fonts, fontSize = 16.sp),
             singleLine = true,
             maxLines = 1,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = { focusManager.clearFocus() }
+            ),
             cursorBrush = SolidColor(PinkPrimary),
             decorationBox = { innerTextField ->
                 Row(
