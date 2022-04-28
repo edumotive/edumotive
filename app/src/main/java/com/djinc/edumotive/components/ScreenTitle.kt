@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +25,8 @@ import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.constants.WindowSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -79,11 +82,8 @@ fun ScreenTitle(
             }
             // SEARCH BUTTON
             if (searchButton) {
-
                 if (windowSize == WindowSize.Compact) {
                     MobileSearchButton(
-                        iconId = R.drawable.ic_search,
-                        imageDescription = "Search button",
                         isSearchingState = isSearching.value,
                         searchValue = searchValue,
                         searchClicked = {
@@ -94,7 +94,12 @@ fun ScreenTitle(
                         }
                     )
                 } else {
-                    // TODO TABLET SEARCH
+                    TabletSearchBox(
+                        searchValue = searchValue,
+                        searchValueChanged = {
+                            searchValue = it
+                        }
+                    )
                 }
             }
         }
@@ -126,8 +131,6 @@ fun CustomIconButton(iconId: Int, imageDescription: String, callback: () -> Unit
 
 @Composable
 fun MobileSearchButton(
-    iconId: Int,
-    imageDescription: String,
     isSearchingState: Boolean,
     searchClicked: () -> Unit,
     searchValue: String,
@@ -195,13 +198,73 @@ fun MobileSearchButton(
                 .padding(10.dp)
         ) {
             Icon(
-                painter = painterResource(id = iconId),
+                painter = painterResource(id = R.drawable.ic_search),
                 tint = PinkPrimary,
-                contentDescription = imageDescription,
+                contentDescription = "Search button",
                 modifier = Modifier
                     .width(25.dp)
                     .height(25.dp)
             )
         }
     }
+}
+
+@Composable
+fun TabletSearchBox(
+    searchValue: String,
+    searchValueChanged: (String) -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
+    BasicTextField(
+        modifier = Modifier
+            .width(400.dp)
+            .height(45.dp)
+            .background(Background)
+            .drawBehind {
+                val strokeWidth = 2 * density
+                val y = size.height - strokeWidth / 2
+
+                drawLine(
+                    PinkPrimary,
+                    Offset(0f, y),
+                    Offset(size.width, y),
+                    strokeWidth
+                )
+            },
+        value = searchValue,
+        onValueChange = {
+            searchValueChanged.invoke(it)
+        },
+        singleLine = true,
+        cursorBrush = SolidColor(PinkPrimary),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = { focusManager.clearFocus() }
+        ),
+        textStyle = TextStyle(color = BluePrimary, fontFamily = fonts, fontSize = 16.sp),
+        decorationBox = { innerTextField ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(Modifier.weight(1f)) {
+                    if (searchValue.isEmpty()) Text(
+                        text = "Motorblok, Bougie...",
+                        color = BlueSecondary,
+                        fontSize = 16.sp,
+                        fontFamily = fonts
+                    )
+                    innerTextField()
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search),
+                    tint = PinkPrimary,
+                    contentDescription = "Search button",
+                    modifier = Modifier
+                        .width(25.dp)
+                        .height(25.dp)
+                )
+            }
+        }
+    )
 }
