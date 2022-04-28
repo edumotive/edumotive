@@ -87,9 +87,7 @@ fun ScreenTitle(
                         },
                         searchValueChanged = {
                             searchValue = it
-                            if (searchCallback != null) {
-                                searchCallback(it)
-                            }
+                            searchCallback?.invoke(it)
                         }
                     )
                 } else {
