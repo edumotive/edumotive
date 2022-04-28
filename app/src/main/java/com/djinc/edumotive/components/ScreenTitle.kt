@@ -95,9 +95,7 @@ fun ScreenTitle(
                         searchValue = searchValue,
                         searchValueChanged = {
                             searchValue = it
-                            if (searchCallback != null) {
-                                searchCallback(it)
-                            }
+                           searchCallback?.invoke(it)
                         }
                     )
                 }
