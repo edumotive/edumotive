@@ -48,6 +48,7 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
     val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
+    val activePart = remember { mutableStateOf("") }
 
     if (list.size > 1) {
         Box(
@@ -92,8 +93,10 @@ fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
                             partId = item.id,
                             partType = item.type,
                             partName = item.title,
-                            imageUrl = item.image
-                        ) {
+                            imageUrl = item.image,
+                            activePart = activePart.value
+                        ) { partId ->
+                            activePart.value = if (activePart.value != partId) partId else ""
                             callback.invoke(item.arModel!!)
                         }
                     }
