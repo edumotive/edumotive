@@ -7,12 +7,13 @@ import kotlinx.coroutines.*
 private var debounceJobModel: Job? = null
 private var debounceJobModelGroup: Job? = null
 
-private const val charMinimum = 2
+private const val charMinimum = 3
+private const val delay = 300L
 
 fun filterModelList(
     listModel: List<ContentfulModel>,
     filter: String,
-    debounceDelay: Long = 300L,
+    debounceDelay: Long = delay,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     callback: (List<ContentfulModel>) -> Unit
 ) {
@@ -20,7 +21,7 @@ fun filterModelList(
     debounceJobModel = coroutineScope.launch {
         delay(debounceDelay)
         val value = if (filter.chars()
-                .count() > charMinimum
+                .count() >= charMinimum
         ) listModel.filter { model -> model.title.lowercase().contains(filter.lowercase()) } else listModel
         callback(value)
     }
@@ -29,7 +30,7 @@ fun filterModelList(
 fun filterModelGroupList(
     listModelGroup: List<ContentfulModelGroup>,
     filter: String,
-    debounceDelay: Long = 300L,
+    debounceDelay: Long = delay,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     callback: (List<ContentfulModelGroup>) -> Unit
 ) {
@@ -37,7 +38,7 @@ fun filterModelGroupList(
     debounceJobModelGroup = coroutineScope.launch {
         delay(debounceDelay)
         val value = if (filter.chars()
-                .count() > charMinimum
+                .count() >= charMinimum
         ) listModelGroup.filter { model -> model.title.lowercase().contains(filter.lowercase()) } else listModelGroup
         callback(value)
     }
