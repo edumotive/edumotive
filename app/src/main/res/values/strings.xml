@@ -26,4 +26,5 @@
     <string name="parts_drawer_long">Corresponding parts</string>
     <string name="parts_drawer_short">Parts</string>
     <string name="search_placeholder">Engine, sparkplug...</string>
+    <string name="search_no_results">Sorry, we could not find what you were looking for</string>
 </resources>
