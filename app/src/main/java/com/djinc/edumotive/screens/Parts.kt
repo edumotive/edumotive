@@ -23,9 +23,6 @@ import com.djinc.edumotive.utils.contentful.filterModelList
 @ExperimentalFoundationApi
 @Composable
 fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
-    var listModel by remember { mutableStateOf(viewModels.models) }
-    var listModelGroup by remember { mutableStateOf(viewModels.modelGroups) }
-
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle(
@@ -35,14 +32,16 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
             windowSize = windowSize,
             viewModels = viewModels
         ) { filter ->
-            filterModelList(viewModels.models, filter) { listModel = it }
-            filterModelGroupList(viewModels.modelGroups, filter) { listModelGroup = it }
+            filterModelList(viewModels.models, filter) { viewModels.filteredModels = it }
+            filterModelGroupList(viewModels.modelGroups, filter) {
+                viewModels.filteredModelGroups = it
+            }
         }
 
         LazySlider(
             direction = SliderDirection.Vertical,
-            list = listModelGroup,
-            list2 = listModel,
+            list = viewModels.filteredModelGroups,
+            list2 = viewModels.filteredModels,
             component = SliderComponent.PartCard,
             nav = nav,
             windowSize = windowSize,

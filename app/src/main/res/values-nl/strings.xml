@@ -24,4 +24,5 @@
     <string name="loading_models">Models laden</string>
     <string name="parts_drawer_long">Bijbehorende onderdelen</string>
     <string name="parts_drawer_short">Onderdelen</string>
+    <string name="search_placeholder">Motorblok, bougie...</string>
 </resources>

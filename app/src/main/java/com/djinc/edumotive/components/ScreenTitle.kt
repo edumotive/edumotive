@@ -16,13 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.R
@@ -137,6 +141,7 @@ fun MobileSearchButton(
     val configuration = LocalConfiguration.current
     val maxTextFieldLength = configuration.screenWidthDp - 84
     val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
 
     Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
         BasicTextField(
@@ -147,9 +152,9 @@ fun MobileSearchButton(
             textStyle = TextStyle(color = BluePrimary, fontFamily = fonts, fontSize = 16.sp),
             singleLine = true,
             maxLines = 1,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
-                onDone = { focusManager.clearFocus() }
+                onSearch = { focusManager.clearFocus() }
             ),
             cursorBrush = SolidColor(PinkPrimary),
             decorationBox = { innerTextField ->
@@ -159,7 +164,7 @@ fun MobileSearchButton(
                 ) {
                     Box(Modifier.weight(1f)) {
                         if (searchValue.isEmpty()) Text(
-                            text = "Motorblok, Bougie...",
+                            text = stringResource(R.string.search_placeholder),
                             color = BlueSecondary,
                             fontSize = 16.sp,
                             fontFamily = fonts
@@ -173,6 +178,7 @@ fun MobileSearchButton(
                 .height(45.dp)
                 .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
                 .background(PinkSecondary)
+                .focusRequester(focusRequester = focusRequester)
         )
         Box(
             contentAlignment = Alignment.Center,
@@ -203,6 +209,10 @@ fun MobileSearchButton(
                     .width(25.dp)
                     .height(25.dp)
             )
+        }
+        DisposableEffect(isSearchingState) {
+            if (isSearchingState) focusRequester.requestFocus() else focusManager.clearFocus()
+            onDispose {}
         }
     }
 }
@@ -236,9 +246,9 @@ fun TabletSearchBox(
         },
         singleLine = true,
         cursorBrush = SolidColor(PinkPrimary),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }
+            onSearch = { focusManager.clearFocus() }
         ),
         textStyle = TextStyle(color = BluePrimary, fontFamily = fonts, fontSize = 16.sp),
         decorationBox = { innerTextField ->
@@ -247,7 +257,7 @@ fun TabletSearchBox(
             ) {
                 Box(Modifier.weight(1f)) {
                     if (searchValue.isEmpty()) Text(
-                        text = "Motorblok, Bougie...",
+                        text = stringResource(R.string.search_placeholder),
                         color = BlueSecondary,
                         fontSize = 16.sp,
                         fontFamily = fonts
