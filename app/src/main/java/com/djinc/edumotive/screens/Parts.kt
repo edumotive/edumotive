@@ -48,17 +48,7 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
             }
         }
 
-        if (viewModels.filteredModelGroups.isNotEmpty() && viewModels.filteredModels.isNotEmpty()) {
-            LazySlider(
-                direction = SliderDirection.Vertical,
-                list = viewModels.filteredModelGroups,
-                list2 = viewModels.filteredModels,
-                component = SliderComponent.PartCard,
-                nav = nav,
-                windowSize = windowSize,
-                viewModels = viewModels
-            )
-        } else {
+        if (viewModels.filteredModelGroups.isEmpty() && viewModels.filteredModels.isEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -87,6 +77,25 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
                         .padding(top = 20.dp)
                 )
             }
+            LazySlider(
+                direction = SliderDirection.Vertical,
+                list = viewModels.filteredModelGroups,
+                list2 = viewModels.filteredModels,
+                component = SliderComponent.PartCard,
+                nav = nav,
+                windowSize = windowSize,
+                viewModels = viewModels
+            )
+        } else {
+            LazySlider(
+                direction = SliderDirection.Vertical,
+                list = viewModels.filteredModelGroups,
+                list2 = viewModels.filteredModels,
+                component = SliderComponent.PartCard,
+                nav = nav,
+                windowSize = windowSize,
+                viewModels = viewModels
+            )
         }
     }
 }
