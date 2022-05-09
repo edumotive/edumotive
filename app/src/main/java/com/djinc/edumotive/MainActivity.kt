@@ -11,11 +11,11 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.djinc.edumotive.constants.Common
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.App
 import com.djinc.edumotive.ui.theme.EdumotiveTheme
 import com.djinc.edumotive.utils.SplitTag
-import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.utils.changeLocale
 import com.djinc.edumotive.utils.rememberWindowSizeClass
 import java.util.*
@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
                             Locale(SplitTag(currentLocale).language, SplitTag(currentLocale).country)
                         )
                         viewModel.currentLocale = currentLocale
+                        MainEdumotive.contentfulCachedContent!!.locale = currentLocale
                     }
                     App(windowSize, viewModel)
                 }

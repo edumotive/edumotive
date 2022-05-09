@@ -57,7 +57,6 @@ fun PartDetails(
                     viewModels.linkedModelGroup[0].models.find { model -> model.id == partId }!!
                 viewModels.activeModel = activeModel
                 viewModels.isActiveModelLoaded = true
-                viewModels.linkedModelGroup[0].models.remove(activeModel)
             }
         }
         if (viewModels.isActiveModelAndLinkedModelGroupLoaded()) Details(
@@ -106,7 +105,7 @@ fun Details(
         title = model.title
         imageUrl = model.image
         description = model.description
-        models = viewModels.linkedModelGroup[0].models
+        models = viewModels.linkedModelGroup[0].models.filterNot { lModel -> lModel.id == model.id}
     } else {
         model as ContentfulModelGroup
         title = model.title

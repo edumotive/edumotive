@@ -1,5 +1,6 @@
 package com.djinc.edumotive.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
@@ -13,7 +14,7 @@ import coil.request.ImageRequest
 @Composable
 fun AsyncImage(imageUrl: String, imageName: String) {
     val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+        ImageRequest.Builder(LocalContext.current).data(data = Uri.parse(imageUrl))
             .apply(block = fun ImageRequest.Builder.() {}).build()
     )
     val painterState = painter.state

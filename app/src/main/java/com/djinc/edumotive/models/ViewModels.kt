@@ -1,10 +1,14 @@
 package com.djinc.edumotive.models
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.constants.EntryType
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import java.time.LocalDate
 
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
@@ -48,6 +52,8 @@ class ViewModels : ViewModel() {
             isExercisesLoaded = true
             isInitialLoaded = entriesLoaded()
         }
+
+        MainEdumotive.contentfulCachedContent!!.date = LocalDate.now().toString()
     }
 
     fun refresh(entryTypes: List<EntryType>, callback: (result: Boolean) -> Unit) {
@@ -80,6 +86,7 @@ class ViewModels : ViewModel() {
                 }
             }
         }
+        MainEdumotive.contentfulCachedContent!!.locale = currentLocale
     }
 
     fun refreshAll() {
@@ -98,6 +105,7 @@ class ViewModels : ViewModel() {
             exercises = it
             isExercisesLoaded = true
         }
+        MainEdumotive.contentfulCachedContent!!.locale = currentLocale
     }
 
     fun isActiveModelAndLinkedModelGroupLoaded(): Boolean {

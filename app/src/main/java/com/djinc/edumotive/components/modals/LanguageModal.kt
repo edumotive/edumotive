@@ -101,8 +101,8 @@ fun AddLanguageRow(
             .fillMaxWidth()
             .clickable {
                 changeLocale(context, Locale(locale[0], locale[1]))
-                viewModels.refreshAll()
                 viewModels.currentLocale = localeString
+                viewModels.refreshAll()
                 viewModels.isLanguageModalOpen = false
             }
     ) {
