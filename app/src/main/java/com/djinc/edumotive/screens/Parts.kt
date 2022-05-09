@@ -42,8 +42,8 @@ fun Parts(nav: NavController, windowSize: WindowSize, viewModels: ViewModels) {
             windowSize = windowSize,
             viewModels = viewModels
         ) { filter ->
-            filterModelList(viewModels.models, filter) { viewModels.filteredModels = it }
-            filterModelGroupList(viewModels.modelGroups, filter) {
+            filterModelList(viewModels.models, filter.trim()) { viewModels.filteredModels = it }
+            filterModelGroupList(viewModels.modelGroups, filter.trim()) {
                 viewModels.filteredModelGroups = it
             }
         }
