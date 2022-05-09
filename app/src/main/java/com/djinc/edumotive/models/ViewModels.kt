@@ -9,8 +9,10 @@ import com.djinc.edumotive.utils.contentful.errorCatch
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
         private set
+    var filteredModelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
     var models by mutableStateOf(listOf<ContentfulModel>())
         private set
+    var filteredModels by mutableStateOf(listOf<ContentfulModel>())
     var exercises by mutableStateOf(listOf<ContentfulExercise>())
         private set
     var linkedModelGroup by mutableStateOf(listOf<ContentfulModelGroup>())
@@ -35,11 +37,13 @@ class ViewModels : ViewModel() {
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
+            filteredModelGroups = it
             isModelGroupsLoaded = true
             isInitialLoaded = entriesLoaded()
         }
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            filteredModels = it
             isModelsLoaded = true
             isInitialLoaded = entriesLoaded()
         }
@@ -57,6 +61,7 @@ class ViewModels : ViewModel() {
                     isModelsLoaded = false
                     Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                         models = it
+                        filteredModels = it
                         isModelsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
@@ -65,6 +70,7 @@ class ViewModels : ViewModel() {
                     isModelGroupsLoaded = false
                     Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                         modelGroups = it
+                        filteredModelGroups = it
                         isModelGroupsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
@@ -76,7 +82,6 @@ class ViewModels : ViewModel() {
                         isExercisesLoaded = true
                         callback.invoke(entriesLoaded())
                     }
-                    callback.invoke(entriesLoaded())
                 }
             }
         }
@@ -86,11 +91,13 @@ class ViewModels : ViewModel() {
         isModelsLoaded = false
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            filteredModels = it
             isModelsLoaded = true
         }
         isModelGroupsLoaded = false
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
+            filteredModelGroups = it
             isModelGroupsLoaded = true
         }
         isExercisesLoaded = false

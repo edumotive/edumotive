@@ -51,7 +51,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(listOf(EntryType.Models, EntryType.ModelGroups)) {
+                    viewModels.refresh(listOf(EntryType.ModelGroups, EntryType.Models)) {
                         isRefreshing = !it
                     }
                 }
