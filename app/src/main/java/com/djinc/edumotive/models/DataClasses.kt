@@ -39,3 +39,11 @@ data class ContentfulExercise(
 ) {
     companion object
 }
+
+data class ContentfulCachedContent(
+    var date: String = "",
+    var locale: String = "",
+    var models: List<ContentfulModel> = emptyList(),
+    var modelGroups: List<ContentfulModelGroup> = emptyList(),
+    var exercises: List<ContentfulExercise> = emptyList()
+)
