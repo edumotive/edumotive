@@ -34,6 +34,20 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/planeSelectorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="@color/translucent"
+        android:gravity="center_vertical|start"
+        android:text="@string/cannot_find_plane"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
     <FrameLayout
         android:id="@+id/loadingView"
         android:layout_width="0dp"
