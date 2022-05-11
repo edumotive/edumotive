@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -106,6 +107,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
       
         backButton.setContent {
             BackButton() {
+                MainEdumotive.contentfulCachedContent!!.modelGroups.forEach { modelGroup ->
+                    modelGroup.models.forEach { model -> model.arModel = null }
+                }
                 activity?.finish()
             }
         }
