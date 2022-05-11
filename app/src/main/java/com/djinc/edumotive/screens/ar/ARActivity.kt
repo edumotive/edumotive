@@ -1,12 +1,11 @@
 package com.djinc.edumotive.screens.ar
 
 import android.os.Bundle
-import android.view.ViewGroup
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.commit
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
-import io.github.sceneview.utils.doOnApplyWindowInsets
 import io.github.sceneview.utils.setFullScreen
 
 class ARActivity : AppCompatActivity(R.layout.activity_ar) {
@@ -30,5 +29,15 @@ class ARActivity : AppCompatActivity(R.layout.activity_ar) {
                 add(R.id.containerFragment, ARFragment::class.java, arguments)
             }
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK ->
+                MainEdumotive.contentfulCachedContent!!.modelGroups.forEach { modelGroup ->
+                    modelGroup.models.forEach { model -> model.arModel = null }
+                }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
