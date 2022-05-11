@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -96,9 +97,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     sceneView.addChild(model.arModel!!)
                 }
             }
-            onTouchAr = { _, _ ->
-                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
-            }
+
+//            onTouchAr = { _, _ ->
+//                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+//            }
 
             onFrame = { _ ->
                 transformCard()
@@ -229,11 +231,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
-            onTouched = { _, _ ->
-                selectModelVisibility(arModel)
+            onTouchEvent = { _, motionEvent ->
+                if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+                    selectModelVisibility(arModel)
+                }
+                true
             }
         }
-
         return arModel
     }
 

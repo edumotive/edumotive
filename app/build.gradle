@@ -109,7 +109,7 @@ dependencies {
 
     // ARCore
     implementation 'com.google.ar:core:1.30.0'
-    implementation 'io.github.sceneview:arsceneview:0.2.0'
+    implementation 'io.github.sceneview:arsceneview:0.3.0'
 
     // Coil - image loading library
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
