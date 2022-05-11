@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
@@ -13,13 +14,13 @@ import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.utils.LoadHelper
 import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
 import com.djinc.edumotive.utils.ar.math.calcDistance
 import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
-import com.djinc.edumotive.utils.loadHelper
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
@@ -35,6 +36,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
+    private lateinit var planeSelectorTextView: TextView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
 
@@ -65,6 +67,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
+        planeSelectorTextView = view.findViewById<TextView>(R.id.planeSelectorTextView).apply {
+            isGone = false
+        }
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
             val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
             doOnApplyWindowInsets { systemBarsInsets ->
@@ -97,6 +102,21 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
             onFrame = { _ ->
                 transformCard()
+            }
+
+            onArFrame = { arFrame ->
+                if(arFrame.session.planeFindingEnabled && arFrame.session.hasTrackedPlane && !planeSelectorTextView.isGone) {
+                    planeSelectorTextView.isGone = true
+                }
+
+                if(arFrame.session.planeFindingEnabled && !arFrame.session.hasTrackedPlane) {
+                    sceneView.instructions.searchPlaneInfoNode.textView?.setTextColor(resources.getColor(
+                        io.github.sceneview.R.color.mtrl_btn_transparent_bg_color, context.theme))
+                }
+            }
+
+            instructions.searchPlaneInfoNode.onViewLoaded = {_, viewScene ->
+                viewScene.setBackgroundResource(io.github.sceneview.R.color.mtrl_btn_transparent_bg_color)
             }
         }
 
@@ -155,7 +175,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     @SuppressLint("SetTextI18n")
     private fun loadModels() {
-        val loadHelper = loadHelper()
+        val loadHelper = LoadHelper()
 
         models.forEachIndexed { index, model ->
             createModel(
