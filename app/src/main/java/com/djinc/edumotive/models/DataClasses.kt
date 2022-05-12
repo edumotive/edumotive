@@ -20,8 +20,7 @@ data class ContentfulModelGroup(
     val title: String = "",
     val image: String = "",
     val description: String = "",
-    val models: MutableList<ContentfulModel> = mutableListOf(),
-    val modelUrl: String = "",
+    val models: MutableList<ContentfulModel> = mutableListOf()
 ) {
     companion object
 }
