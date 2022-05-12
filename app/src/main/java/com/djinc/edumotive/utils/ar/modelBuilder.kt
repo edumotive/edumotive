@@ -32,22 +32,6 @@ fun createModel(
     return modelNode
 }
 
-fun createEmptyModel(
-    context: Context,
-    lifecycle: LifecycleCoroutineScope,
-    modelUrl: String
-): ArModelNode {
-
-    val modelNode = ArModelNode()
-    modelNode.loadModelAsync(
-        context = context,
-        coroutineScope = lifecycle,
-        glbFileLocation = modelUrl
-    )
-
-    return modelNode
-}
-
 fun createTextNode(
     context: Context,
     text: String,
