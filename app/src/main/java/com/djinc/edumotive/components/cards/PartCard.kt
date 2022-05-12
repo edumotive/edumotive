@@ -3,7 +3,10 @@ package com.djinc.edumotive.components.cards
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.ui.theme.*
 
@@ -22,7 +26,7 @@ import com.djinc.edumotive.ui.theme.*
 @Composable
 fun PartCard(
     partId: String,
-    partType: String,
+    partType: ContentfulContentModel,
     partName: String = "",
     imageUrl: String,
     nav: NavController? = null,
@@ -35,7 +39,7 @@ fun PartCard(
         elevation = 3.dp,
         shape = RoundedCornerShape(8.dp),
         onClick = {
-            nav?.navigate("part/$partId/$partType")
+            nav?.navigate("part/$partId/${partType.stringValue}")
             callback?.invoke(partId)
         },
         modifier = Modifier
