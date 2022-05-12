@@ -171,7 +171,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     @SuppressLint("SetTextI18n")
     private fun loadModels() {
-        val loadHelper = LoadHelper()
+        val loadHelper = LoadHelper(amountNeeded = models.size)
 
         models.forEachIndexed { index, model ->
             createModel(
@@ -183,7 +183,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             ) {
                 models[index].arModel = addOnTouched(it)
 
-                loadHelper.whenLoaded(models.size, updateLoading = { amount ->
+                loadHelper.whenLoaded(updateLoading = { amount ->
                     actionButton.text =
                         getString(R.string.loading_models) + " " + amount + "/" + models.size
                 } ) {
