@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
@@ -35,7 +36,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
-    private lateinit var planeSelectorTextView: TextView
+    private lateinit var planeSelectorTextView: ComposeView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
 
@@ -59,7 +60,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
         loadingView = view.findViewById(R.id.loadingView)
-        planeSelectorTextView = view.findViewById<TextView>(R.id.planeSelectorTextView).apply {
+        planeSelectorTextView = view.findViewById<ComposeView>(R.id.planeSelectorTextView).apply {
             isGone = false
         }
         actionButton = view.findViewById<ExtendedFloatingActionButton>(R.id.actionButton).apply {
@@ -74,6 +75,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             isGone = false
         }
         actionButton.text = getString(R.string.loading)
+        planeSelectorTextView.setContent {
+            PlaneDetectionError()
+        }
 
         sceneView = view.findViewById<ArSceneView?>(R.id.sceneView).apply {
             planeRenderer.isVisible = false
@@ -98,17 +102,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
 
             onArFrame = { arFrame ->
-                if(arFrame.session.planeFindingEnabled && arFrame.session.hasTrackedPlane && !planeSelectorTextView.isGone) {
+                if (arFrame.session.planeFindingEnabled && arFrame.session.hasTrackedPlane && !planeSelectorTextView.isGone) {
                     planeSelectorTextView.isGone = true
                 }
 
-                if(arFrame.session.planeFindingEnabled && !arFrame.session.hasTrackedPlane) {
-                    sceneView.instructions.searchPlaneInfoNode.textView?.setTextColor(resources.getColor(
-                        io.github.sceneview.R.color.mtrl_btn_transparent_bg_color, context.theme))
+                if (arFrame.session.planeFindingEnabled && !arFrame.session.hasTrackedPlane) {
+                    sceneView.instructions.searchPlaneInfoNode.textView?.setTextColor(
+                        resources.getColor(
+                            io.github.sceneview.R.color.mtrl_btn_transparent_bg_color, context.theme
+                        )
+                    )
                 }
             }
 
-            instructions.searchPlaneInfoNode.onViewLoaded = {_, viewScene ->
+            instructions.searchPlaneInfoNode.onViewLoaded = { _, viewScene ->
                 viewScene.setBackgroundResource(io.github.sceneview.R.color.mtrl_btn_transparent_bg_color)
 
                 if (params != null) {
@@ -121,7 +128,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         sceneView.addChild(cursorNode)
 
         isLoading = true
-      
+
         backButton.setContent {
             BackButton() {
                 activity?.finish()
@@ -130,14 +137,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun transformCard() {
-        if(isModelSelected.value) {
+        if (isModelSelected.value) {
             models[selectedModelIndex.value].arModel!!.children.forEach { child ->
                 val cameraPosition = sceneView.camera.worldPosition
                 val cardPosition = child.worldPosition
 
                 // Rotate card
                 val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
-                child.rotation = Rotation(0.0f, -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y, 0.0f)
+                child.rotation = Rotation(
+                    0.0f,
+                    -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y,
+                    0.0f
+                )
 
                 // Scale card
                 val distance = calcDistance(cameraPosition, cardPosition).toFloat()
@@ -170,7 +181,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         val loadHelper = LoadHelper(amountNeeded = models.size)
 
         models.forEachIndexed { index, model ->
-            if(models[index].arModel != null) {
+            if (models[index].arModel != null) {
                 loadedModel(loadHelper)
             } else {
                 createModel(
@@ -193,7 +204,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         loadHelper.whenLoaded(updateLoading = { amount ->
             actionButton.text =
                 getString(R.string.loading_models) + " " + amount + "/" + models.size
-        } ) {
+        }) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
@@ -208,7 +219,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
             onTouchEvent = { _, motionEvent ->
-                if(motionEvent.action == MotionEvent.ACTION_DOWN) {
+                if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                     selectModelVisibility(arModel)
                 }
                 true
@@ -228,7 +239,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         // Select model to turn on
         // Select same model to turn off OR Select other model
 
-        if(!isModelSelected.value) {
+        if (!isModelSelected.value) {
             selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
 
             isModelSelected.value = true
@@ -238,7 +249,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 else model.arModel!!.children.forEach { child -> child.isVisible = true }
             }
         } else {
-            if(models.indexOfFirst { it.arModel == arModel } != selectedModelIndex.value) {
+            if (models.indexOfFirst { it.arModel == arModel } != selectedModelIndex.value) {
                 // Select other model
                 selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
 
@@ -246,8 +257,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (model.arModel != arModel) {
                         model.arModel!!.isVisible = false
                         model.arModel!!.children.forEach { child -> child.isVisible = false }
-                    }
-                    else {
+                    } else {
                         model.arModel!!.isVisible = true
                         model.arModel!!.children.forEach { child -> child.isVisible = true }
                     }
