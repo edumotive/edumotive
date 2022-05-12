@@ -260,9 +260,7 @@ open class Contentful(
         } else {
             val list = MainEdumotive.contentfulCachedContent!!.modelGroups
             val res = list.filter {
-                modelGroup -> modelGroup.models.contains(
-                    MainEdumotive.contentfulCachedContent!!.models.find { model -> model.id == id }
-                )
+                modelGroup -> modelGroup.models.any { model -> model.id == id }
             }
             successCallBack(res)
         }

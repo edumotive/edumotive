@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.ContentfulModel
@@ -56,10 +55,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         super.onViewCreated(view, savedInstanceState)
 
         val params = this.arguments
-
-        if (params != null) {
-            fetchContentful(params)
-        }
 
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
@@ -115,6 +110,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
             instructions.searchPlaneInfoNode.onViewLoaded = {_, viewScene ->
                 viewScene.setBackgroundResource(io.github.sceneview.R.color.mtrl_btn_transparent_bg_color)
+
+                if (params != null) {
+                    fetchContentful(params)
+                }
             }
         }
 
@@ -125,9 +124,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
       
         backButton.setContent {
             BackButton() {
-                MainEdumotive.contentfulCachedContent!!.modelGroups.forEach { modelGroup ->
-                    modelGroup.models.forEach { model -> model.arModel = null }
-                }
                 activity?.finish()
             }
         }
@@ -170,32 +166,40 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun loadModels() {
         val loadHelper = LoadHelper(amountNeeded = models.size)
 
         models.forEachIndexed { index, model ->
-            createModel(
-                requireContext(),
-                lifecycleScope,
-                model.modelUrl,
-                model.title,
-                (models.size <= 1)
-            ) {
-                models[index].arModel = addOnTouched(it)
+            if(models[index].arModel != null) {
+                loadedModel(loadHelper)
+            } else {
+                createModel(
+                    requireContext(),
+                    lifecycleScope,
+                    model.modelUrl,
+                    model.title,
+                    (models.size <= 1)
+                ) {
+                    models[index].arModel = addOnTouched(it)
 
-                loadHelper.whenLoaded(updateLoading = { amount ->
-                    actionButton.text =
-                        getString(R.string.loading_models) + " " + amount + "/" + models.size
-                } ) {
-                    isLoading = false
-                    actionButton.text = getString(R.string.move_object)
-                    actionButton.setIconResource(R.drawable.ic_target)
-                    drawerView.setContent {
-                        PartDrawer(list = models) { modelNode ->
-                            selectModelVisibility(modelNode)
-                        }
-                    }
+                    loadedModel(loadHelper)
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun loadedModel(loadHelper: LoadHelper) {
+        loadHelper.whenLoaded(updateLoading = { amount ->
+            actionButton.text =
+                getString(R.string.loading_models) + " " + amount + "/" + models.size
+        } ) {
+            isLoading = false
+            actionButton.text = getString(R.string.move_object)
+            actionButton.setIconResource(R.drawable.ic_target)
+            drawerView.setContent {
+                PartDrawer(list = models) { modelNode ->
+                    selectModelVisibility(modelNode)
                 }
             }
         }
