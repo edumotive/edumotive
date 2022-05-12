@@ -21,10 +21,10 @@
     <string name="choose_language_en">Kies Engels als taal</string>
     <string name="choose_language">Selecteer gewenste taal</string>
     <string name="loading">Laden</string>
-    <string name="loading_models">Models laden</string>
+    <string name="loading_models">Modellen laden</string>
     <string name="parts_drawer_long">Bijbehorende onderdelen</string>
     <string name="parts_drawer_short">Onderdelen</string>
     <string name="search_placeholder">Motorblok, bougie...</string>
     <string name="search_no_results">Sorry, we konden niet vinden waar u naar op zoek was</string>
-    <string name="cannot_find_plane">Beweeg met de camera om een vlak te vinden</string>
+    <string name="cannot_find_plane">Beweeg om een vlak te vinden</string>
 </resources>
