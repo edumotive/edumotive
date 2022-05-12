@@ -16,7 +16,6 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.utils.LoadHelper
-import com.djinc.edumotive.utils.ar.createEmptyModel
 import com.djinc.edumotive.utils.ar.createModel
 import com.djinc.edumotive.utils.ar.math.calcDistance
 import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
@@ -32,7 +31,6 @@ import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
 
-
 class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
@@ -44,11 +42,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var cursorNode: CursorNode
 
     private var models = mutableListOf<ContentfulModel>()
-    private var tModel: ArModelNode? = null
     private var selectedModelIndex = mutableStateOf(0)
-    private var modelSelected = mutableStateOf(false)
-
-    private var loadedModels = mutableStateOf(0)
+    private var isModelSelected = mutableStateOf(false)
 
     private var isLoading = true
         set(value) {
@@ -98,9 +93,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 }
             }
 
-//            onTouchAr = { _, _ ->
-//                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
-//            }
+            onTouchAr = { _, _ ->
+                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+            }
 
             onFrame = { _ ->
                 transformCard()
@@ -138,7 +133,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun transformCard() {
-        if(modelSelected.value) {
+        if(isModelSelected.value) {
             models[selectedModelIndex.value].arModel!!.children.forEach { child ->
                 val cameraPosition = sceneView.camera.worldPosition
                 val cardPosition = child.worldPosition
@@ -169,7 +164,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 errorCallBack = ::errorCatch
             ) { modelGroup: ContentfulModelGroup ->
                 models.addAll(modelGroup.models)
-                loadTModel(modelGroup)
                 loadModels()
             }
         }
@@ -206,29 +200,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun loadTModel(modelGroup: ContentfulModelGroup) {
-        val tArModel =
-            createEmptyModel(requireContext(), lifecycleScope, modelGroup.modelUrl)
-
-        tArModel.isVisible = false
-
-        // When touching transparent model. Remove transparent model and make text not
-        // visible anymore.
-        tArModel.apply {
-            onTouched = { _, _ ->
-                modelSelected.value = false
-                tArModel.isVisible = false
-                models.forEach { model ->
-                    if (!model.arModel!!.isVisible) model.arModel!!.isVisible = true
-                    model.arModel!!.children.forEach { child ->
-                        child.isVisible = false
-                    }
-                }
-            }
-        }
-        tModel = tArModel
-    }
-
     private fun addOnTouched(arModel: ArModelNode): ArModelNode {
         arModel.apply {
             onTouchEvent = { _, motionEvent ->
@@ -246,23 +217,17 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             if (!sceneView.children.contains(model.arModel!!)) sceneView.addChild(model.arModel!!)
             model.arModel!!.anchor = anchor
         }
-
-        if (tModel != null) {
-            if (!sceneView.children.contains(tModel!!)) sceneView.addChild(tModel!!)
-            tModel!!.anchor = anchor
-        }
     }
 
     private fun selectModelVisibility(arModel: ArModelNode) {
         // Select model to turn on
         // Select same model to turn off OR Select other model
 
-        if(!modelSelected.value) {
+        if(!isModelSelected.value) {
             selectedModelIndex.value = models.indexOfFirst { it.arModel == arModel }
 
-            modelSelected.value = true
+            isModelSelected.value = true
 
-            if (tModel != null) tModel!!.isVisible = true
             models.forEach { model ->
                 if (model.arModel != arModel) model.arModel!!.isVisible = false
                 else model.arModel!!.children.forEach { child -> child.isVisible = true }
@@ -284,9 +249,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 }
             } else {
                 // Select same model
-                modelSelected.value = false
+                isModelSelected.value = false
 
-                if (tModel != null) tModel!!.isVisible = false
                 models.forEach { model ->
                     if (model.arModel != arModel) model.arModel!!.isVisible = true
                     else model.arModel!!.children.forEach { child -> child.isVisible = false }
