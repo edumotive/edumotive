@@ -3,6 +3,7 @@ package com.djinc.edumotive.utils.contentful
 import com.contentful.java.cda.CDAAsset
 import com.contentful.java.cda.CDAEntry
 import com.contentful.java.cda.image.ImageOption
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -13,7 +14,7 @@ fun ContentfulModel.Companion.fromRestEntry(
     entry: CDAEntry
 ): ContentfulModel = ContentfulModel(
     entry.id(),
-    entry.contentType().id(),
+    ContentfulContentModel.valueOf(entry.contentType().id().uppercase()),
     entry.getField<String?>("title").orEmpty(),
     try {
         entry.getField<CDAAsset?>("image")
@@ -38,7 +39,7 @@ fun ContentfulModelGroup.Companion.fromRestEntry(
     entry: CDAEntry
 ): ContentfulModelGroup = ContentfulModelGroup(
     entry.id(),
-    entry.contentType().id(),
+    ContentfulContentModel.valueOf(entry.contentType().id().uppercase()),
     entry.getField<String?>("title").orEmpty(),
     try {
         entry.getField<CDAAsset?>("image")

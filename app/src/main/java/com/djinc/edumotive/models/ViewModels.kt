@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.djinc.edumotive.MainEdumotive
-import com.djinc.edumotive.constants.EntryType
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import java.time.LocalDate
@@ -60,10 +60,10 @@ class ViewModels : ViewModel() {
         MainEdumotive.contentfulCachedContent!!.date = LocalDate.now().toString()
     }
 
-    fun refresh(entryTypes: List<EntryType>, callback: (result: Boolean) -> Unit) {
-        entryTypes.forEach { entryType ->
+    fun refresh(contentfulContentModels: List<ContentfulContentModel>, callback: (result: Boolean) -> Unit) {
+        contentfulContentModels.forEach { entryType ->
             when (entryType) {
-                EntryType.Models -> {
+                ContentfulContentModel.MODEL -> {
                     isModelsLoaded = false
                     Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                         models = it
@@ -72,7 +72,7 @@ class ViewModels : ViewModel() {
                         callback.invoke(entriesLoaded())
                     }
                 }
-                EntryType.ModelGroups -> {
+                ContentfulContentModel.MODELGROUP -> {
                     isModelGroupsLoaded = false
                     Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                         modelGroups = it
@@ -81,7 +81,7 @@ class ViewModels : ViewModel() {
                         callback.invoke(entriesLoaded())
                     }
                 }
-                EntryType.Exercises -> {
+                ContentfulContentModel.EXERCISE -> {
                     isExercisesLoaded = false
                     Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                         exercises = it

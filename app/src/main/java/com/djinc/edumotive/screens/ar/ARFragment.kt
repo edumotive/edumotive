@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
 import com.djinc.edumotive.utils.LoadHelper
@@ -150,7 +151,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun fetchContentful(params: Bundle) {
-        if (params.getString("type") == "model") {
+        if (params.getString("type") == ContentfulContentModel.MODEL.stringValue) {
             Contentful().fetchModelByID(
                 id = params.getString("id")!!,
                 errorCallBack = ::errorCatch

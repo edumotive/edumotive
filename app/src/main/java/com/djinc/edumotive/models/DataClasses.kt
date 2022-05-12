@@ -1,10 +1,11 @@
 package com.djinc.edumotive.models
 
+import com.djinc.edumotive.constants.ContentfulContentModel
 import io.github.sceneview.ar.node.ArModelNode
 
 data class ContentfulModel(
     val id: String = "",
-    val type: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.MODEL,
     val title: String = "",
     val image: String = "",
     val description: String = "",
@@ -16,7 +17,7 @@ data class ContentfulModel(
 
 data class ContentfulModelGroup(
     val id: String = "",
-    val type: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.MODELGROUP,
     val title: String = "",
     val image: String = "",
     val description: String = "",
