@@ -2,16 +2,12 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
@@ -33,7 +29,7 @@ import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
-import kotlin.math.abs
+
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
@@ -48,7 +44,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var models = mutableListOf<ContentfulModel>()
     private var selectedModelIndex = mutableStateOf(0)
     private var isModelSelected = mutableStateOf(false)
-    private var isDrawerOpen = mutableStateOf(false)
 
     private var isLoading = true
         set(value) {
@@ -100,6 +95,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 transformCard()
             }
 
+            onTouchAr = {_, _ ->
+                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+            }
+
             onArFrame = { arFrame ->
                 if (arFrame.session.planeFindingEnabled && arFrame.session.hasTrackedPlane && !planeSelectorTextView.isGone) {
                     planeSelectorTextView.isGone = true
@@ -122,45 +121,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 }
             }
         }
-        val gesture = GestureDetector(
-            activity,
-            object : GestureDetector.SimpleOnGestureListener() {
-                override fun onDown(e: MotionEvent?): Boolean {
-                    return true
-                }
-
-                override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                    if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
-                    return true
-                }
-
-                override fun onFling(
-                    e1: MotionEvent, e2: MotionEvent, velocityX: Float,
-                    velocityY: Float
-                ): Boolean {
-                    val minDistance = 120
-                    val maxOffPath = 250
-                    val velocity = 200
-                    try {
-                        if (abs(e1.y - e2.y) > maxOffPath) return false
-                        if (e1.x - e2.x > minDistance
-                            && abs(velocityX) > velocity
-                        ) {
-                            isDrawerOpen.value = true
-                            Log.i("Iets", "Open")
-                        } else if (e2.x - e1.x > minDistance
-                            && abs(velocityX) > velocity
-                        ) {
-                            isDrawerOpen.value = false
-                            Log.i("Iets", "Close")
-                        }
-                    } catch (e: java.lang.Exception) {
-                    }
-                    return super.onFling(e1, e2, velocityX, velocityY)
-                }
-            }
-        )
-        sceneView.setOnTouchListener({ v, event -> gesture.onTouchEvent(event) })
 
         cursorNode = CursorNode(context = requireContext(), coroutineScope = lifecycleScope)
         sceneView.addChild(cursorNode)
@@ -247,7 +207,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
             drawerView.setContent {
-                PartDrawer(list = models, isDrawerOpen = isDrawerOpen) { modelNode ->
+                PartDrawer(list = models) { modelNode ->
                     selectModelVisibility(modelNode)
                 }
             }
