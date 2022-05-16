@@ -12,19 +12,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.constants.WindowSize
+import com.djinc.edumotive.ui.theme.fonts
 
 @Composable
 fun ExerciseCard(
     exerciseId: String,
     exerciseName: String = "",
-    chapter: String = "",
+    exerciseType: String = stringResource(R.string.exercise_type),
     imageUrl: String,
     description: String = "",
     fullWidth: Boolean,
@@ -41,16 +45,30 @@ fun ExerciseCard(
                 nav.navigate("exercise/$exerciseId")
             }
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             CardImage(
                 url = imageUrl,
                 name = exerciseName,
                 aspectRatio = 2f
             )
+            ExerciseTitle(text = exerciseName)
             ExerciseDescription(text = description)
-            ChapterWithButton(chapter = chapter)
+            TypeWithButton(type = exerciseType)
         }
     }
+}
+
+@Composable
+fun ExerciseTitle(text: String) {
+    Text(
+        text = text,
+        fontSize = 16.sp,
+        fontFamily = fonts,
+        fontWeight = FontWeight.Medium,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.padding(start = 12.dp, top = 2.dp, end = 12.dp)
+    )
 }
 
 @Composable
@@ -63,14 +81,14 @@ fun ExerciseDescription(text: String) {
 }
 
 @Composable
-fun ChapterWithButton(chapter: String) {
+fun TypeWithButton(type: String) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(1f),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = chapter,
+            text = type,
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 12.dp)
         )

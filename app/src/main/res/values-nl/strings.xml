@@ -27,4 +27,5 @@
     <string name="search_placeholder">Motorblok, bougie...</string>
     <string name="search_no_results">Sorry, we konden niet vinden waar u naar op zoek was</string>
     <string name="cannot_find_plane">Beweeg om een vlak te vinden</string>
+    <string name="exercise_type">Montage</string>
 </resources>
