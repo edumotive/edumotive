@@ -64,6 +64,7 @@ class ViewModels : ViewModel() {
         contentfulContentModels.forEach { entryType ->
             when (entryType) {
                 ContentfulContentModel.MODEL -> {
+                    MainEdumotive.contentfulCachedContent!!.models = emptyList()
                     isModelsLoaded = false
                     Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                         models = it
@@ -73,6 +74,7 @@ class ViewModels : ViewModel() {
                     }
                 }
                 ContentfulContentModel.MODELGROUP -> {
+                    MainEdumotive.contentfulCachedContent!!.modelGroups = emptyList()
                     isModelGroupsLoaded = false
                     Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                         modelGroups = it
@@ -82,6 +84,7 @@ class ViewModels : ViewModel() {
                     }
                 }
                 ContentfulContentModel.EXERCISE -> {
+                    MainEdumotive.contentfulCachedContent!!.exercises = emptyList()
                     isExercisesLoaded = false
                     Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                         exercises = it
