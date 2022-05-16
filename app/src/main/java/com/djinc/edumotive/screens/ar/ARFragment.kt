@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
@@ -31,6 +29,7 @@ import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
+
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var sceneView: ArSceneView
@@ -54,7 +53,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val params = this.arguments
 
         backButton = view.findViewById(R.id.backButton)
@@ -93,12 +91,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 }
             }
 
-            onTouchAr = { _, _ ->
-                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
-            }
-
             onFrame = { _ ->
                 transformCard()
+            }
+
+            onTouchAr = {_, _ ->
+                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
             }
 
             onArFrame = { arFrame ->

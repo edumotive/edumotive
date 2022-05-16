@@ -5,18 +5,24 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -37,14 +43,17 @@ import io.github.sceneview.ar.node.ArModelNode
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
-    val isDrawerOpen = remember { mutableStateOf(false) }
+fun PartDrawer(
+    list: List<ContentfulModel>,
+    callback: (ArModelNode) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp + 1
     val windowSize =
         if (screenWidth < 600) WindowSize.Compact else if (screenWidth < 840) WindowSize.Medium else WindowSize.Expanded
     val allowedSpace =
         if (windowSize == WindowSize.Expanded) 0.35f else 0.5f
+    val isDrawerOpen = remember { mutableStateOf(false) }
     val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
@@ -156,6 +165,12 @@ fun DrawerButton(buttonSize: Dp, drawerState: Boolean, callback: (Boolean) -> Un
         modifier = Modifier
             .fillMaxHeight()
             .offset(x = -buttonSize)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consumeAllChanges()
+                    if(dragAmount.x < 0) callback(true) else callback(false)
+                }
+            }
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_drawer_curve_top),
