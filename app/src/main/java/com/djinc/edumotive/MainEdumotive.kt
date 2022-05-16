@@ -4,10 +4,13 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.djinc.edumotive.constants.Common
+import com.djinc.edumotive.models.ContentfulCachedContent
 
 class MainEdumotive : Application() {
     override fun onCreate() {
         super.onCreate()
+        contentfulCachedContent = ContentfulCachedContent()
+
         appContext = applicationContext
 
         val context = applicationContext
@@ -31,5 +34,6 @@ class MainEdumotive : Application() {
             private set
         var sharedPref: SharedPreferences? = null
             private set
+        var contentfulCachedContent: ContentfulCachedContent? = null
     }
 }

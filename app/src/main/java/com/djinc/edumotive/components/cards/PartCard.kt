@@ -1,45 +1,49 @@
 package com.djinc.edumotive.components.cards
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.AsyncImage
-import com.djinc.edumotive.ui.theme.Background
-import com.djinc.edumotive.ui.theme.PinkPrimary
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
+import com.djinc.edumotive.ui.theme.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PartCard(
     partId: String,
-    partType: String,
+    partType: ContentfulContentModel,
     partName: String = "",
     imageUrl: String,
-    nav: NavController,
-    windowSize: WindowSize
+    nav: NavController? = null,
+    windowSize: WindowSize? = null,
+    activePart: String? = null,
+    callback: ((String) -> Unit)? = null
 ) {
     Card(
-        backgroundColor = Background,
+        backgroundColor = if (activePart == partId) PinkSecondary else Background,
         elevation = 3.dp,
         shape = RoundedCornerShape(8.dp),
+        onClick = {
+            nav?.navigate("part/$partId/${partType.stringValue}")
+            callback?.invoke(partId)
+        },
         modifier = Modifier
             .width(if (windowSize == WindowSize.Compact) 200.dp else 170.dp)
-            .clickable {
-                nav.navigate("part/$partId/$partType")
-            }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -61,7 +65,10 @@ fun PartCard(
 fun PartName(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.h3,
+        fontFamily = fonts,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        color = TextPrimary,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(start = 12.dp, end = 30.dp)

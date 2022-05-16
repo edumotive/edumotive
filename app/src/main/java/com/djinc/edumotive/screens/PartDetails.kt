@@ -27,6 +27,7 @@ import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
@@ -43,12 +44,12 @@ import com.djinc.edumotive.utils.contentful.errorCatch
 @Composable
 fun PartDetails(
     partId: String = "",
-    modelType: String,
+    modelType: ContentfulContentModel,
     nav: NavController,
     windowSize: WindowSize,
     viewModels: ViewModels
 ) {
-    if (modelType == "model") {
+    if (modelType == ContentfulContentModel.MODEL) {
         LaunchedEffect(key1 = partId) {
             Contentful().fetchLinkedModelGroupById(partId, errorCallBack = ::errorCatch) {
                 viewModels.linkedModelGroup = it
@@ -57,7 +58,6 @@ fun PartDetails(
                     viewModels.linkedModelGroup[0].models.find { model -> model.id == partId }!!
                 viewModels.activeModel = activeModel
                 viewModels.isActiveModelLoaded = true
-                viewModels.linkedModelGroup[0].models.remove(activeModel)
             }
         }
         if (viewModels.isActiveModelAndLinkedModelGroupLoaded()) Details(
@@ -89,7 +89,7 @@ fun PartDetails(
 @Composable
 fun Details(
     model: Any,
-    modelType: String,
+    modelType: ContentfulContentModel,
     modelId: String,
     nav: NavController,
     windowSize: WindowSize,
@@ -101,12 +101,12 @@ fun Details(
     val description: String
     val models: List<ContentfulModel>
 
-    if (modelType == "model") {
+    if (modelType == ContentfulContentModel.MODEL) {
         model as ContentfulModel
         title = model.title
         imageUrl = model.image
         description = model.description
-        models = viewModels.linkedModelGroup[0].models
+        models = viewModels.linkedModelGroup[0].models.filterNot { lModel -> lModel.id == model.id}
     } else {
         model as ContentfulModelGroup
         title = model.title
@@ -218,7 +218,7 @@ fun <T> LazyListScope.gridItems(
 }
 
 @Composable
-fun OpenInArButton(modelId: String, modelType: String, context: Context, windowSize: WindowSize) {
+fun OpenInArButton(modelId: String, modelType: ContentfulContentModel, context: Context, windowSize: WindowSize) {
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier
@@ -241,7 +241,7 @@ fun OpenInArButton(modelId: String, modelType: String, context: Context, windowS
             onClick = {
                 val intent = Intent(context, ARActivity::class.java)
                 val params = Bundle()
-                params.putString("type", modelType)
+                params.putString("type", modelType.stringValue)
                 params.putString("id", modelId)
                 intent.putExtras(params)
                 context.startActivity(intent)

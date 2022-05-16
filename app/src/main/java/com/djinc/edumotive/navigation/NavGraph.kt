@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.djinc.edumotive.constants.EntryType
+import com.djinc.edumotive.constants.ContentfulContentModel
+import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.*
-import com.djinc.edumotive.constants.WindowSize
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -32,12 +32,12 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 if (isRefreshing) {
                     viewModels.refresh(
                         listOf(
-                            EntryType.ModelGroups,
-                            EntryType.Models,
-                            EntryType.Exercises
+                            ContentfulContentModel.MODELGROUP,
+                            ContentfulContentModel.MODEL,
+                            ContentfulContentModel.EXERCISE
                         )
                     ) {
-                        isRefreshing = it
+                        isRefreshing = !it
                     }
                 }
             }
@@ -51,8 +51,8 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(listOf(EntryType.Models, EntryType.ModelGroups)) {
-                        isRefreshing = it
+                    viewModels.refresh(listOf(ContentfulContentModel.MODELGROUP, ContentfulContentModel.MODEL)) {
+                        isRefreshing = !it
                     }
                 }
             }
@@ -68,7 +68,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             val modelType = backStackEntry.arguments?.getString("modelType")
             PartDetails(
                 partId = partId!!,
-                modelType = modelType!!,
+                modelType = ContentfulContentModel.valueOf(modelType!!),
                 nav = navController,
                 windowSize = windowSize,
                 viewModels = viewModels
@@ -83,8 +83,8 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(listOf(EntryType.Exercises)) {
-                        isRefreshing = it
+                    viewModels.refresh(listOf(ContentfulContentModel.EXERCISE)) {
+                        isRefreshing = !it
                     }
                 }
             }

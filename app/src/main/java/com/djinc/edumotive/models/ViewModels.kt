@@ -1,16 +1,22 @@
 package com.djinc.edumotive.models
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.djinc.edumotive.constants.EntryType
+import com.djinc.edumotive.MainEdumotive
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import java.time.LocalDate
 
 class ViewModels : ViewModel() {
     var modelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
         private set
+    var filteredModelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
     var models by mutableStateOf(listOf<ContentfulModel>())
         private set
+    var filteredModels by mutableStateOf(listOf<ContentfulModel>())
     var exercises by mutableStateOf(listOf<ContentfulExercise>())
         private set
     var linkedModelGroup by mutableStateOf(listOf<ContentfulModelGroup>())
@@ -35,11 +41,13 @@ class ViewModels : ViewModel() {
     init {
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
+            filteredModelGroups = it
             isModelGroupsLoaded = true
             isInitialLoaded = entriesLoaded()
         }
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            filteredModels = it
             isModelsLoaded = true
             isInitialLoaded = entriesLoaded()
         }
@@ -48,56 +56,66 @@ class ViewModels : ViewModel() {
             isExercisesLoaded = true
             isInitialLoaded = entriesLoaded()
         }
+
+        MainEdumotive.contentfulCachedContent!!.date = LocalDate.now().toString()
     }
 
-    fun refresh(entryTypes: List<EntryType>, callback: (result: Boolean) -> Unit) {
-        entryTypes.forEach { entryType ->
+    fun refresh(contentfulContentModels: List<ContentfulContentModel>, callback: (result: Boolean) -> Unit) {
+        contentfulContentModels.forEach { entryType ->
             when (entryType) {
-                EntryType.Models -> {
+                ContentfulContentModel.MODEL -> {
+                    MainEdumotive.contentfulCachedContent!!.models = emptyList()
                     isModelsLoaded = false
                     Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                         models = it
+                        filteredModels = it
                         isModelsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                 }
-                EntryType.ModelGroups -> {
+                ContentfulContentModel.MODELGROUP -> {
+                    MainEdumotive.contentfulCachedContent!!.modelGroups = emptyList()
                     isModelGroupsLoaded = false
-                    Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-                        models = it
-                        isModelsLoaded = true
+                    Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+                        modelGroups = it
+                        filteredModelGroups = it
+                        isModelGroupsLoaded = true
                         callback.invoke(entriesLoaded())
                     }
                 }
-                EntryType.Exercises -> {
+                ContentfulContentModel.EXERCISE -> {
+                    MainEdumotive.contentfulCachedContent!!.exercises = emptyList()
                     isExercisesLoaded = false
                     Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                         exercises = it
                         isExercisesLoaded = true
                         callback.invoke(entriesLoaded())
                     }
-                    callback.invoke(entriesLoaded())
                 }
             }
         }
+        MainEdumotive.contentfulCachedContent!!.locale = currentLocale
     }
 
     fun refreshAll() {
         isModelsLoaded = false
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            filteredModels = it
             isModelsLoaded = true
         }
         isModelGroupsLoaded = false
-        Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
-            models = it
-            isModelsLoaded = true
+        Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
+            modelGroups = it
+            filteredModelGroups = it
+            isModelGroupsLoaded = true
         }
         isExercisesLoaded = false
         Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
             exercises = it
             isExercisesLoaded = true
         }
+        MainEdumotive.contentfulCachedContent!!.locale = currentLocale
     }
 
     fun isActiveModelAndLinkedModelGroupLoaded(): Boolean {

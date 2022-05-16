@@ -1,24 +1,27 @@
 package com.djinc.edumotive.models
 
+import com.djinc.edumotive.constants.ContentfulContentModel
+import io.github.sceneview.ar.node.ArModelNode
+
 data class ContentfulModel(
     val id: String = "",
-    val type: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.MODEL,
     val title: String = "",
     val image: String = "",
     val description: String = "",
     val modelUrl: String = "",
+    var arModel: ArModelNode? = null
 ) {
     companion object
 }
 
 data class ContentfulModelGroup(
     val id: String = "",
-    val type: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.MODELGROUP,
     val title: String = "",
     val image: String = "",
     val description: String = "",
-    val models: MutableList<ContentfulModel> = mutableListOf(),
-    val modelUrl: String = "",
+    val models: MutableList<ContentfulModel> = mutableListOf()
 ) {
     companion object
 }
@@ -36,3 +39,11 @@ data class ContentfulExercise(
 ) {
     companion object
 }
+
+data class ContentfulCachedContent(
+    var date: String = "",
+    var locale: String = "",
+    var models: List<ContentfulModel> = emptyList(),
+    var modelGroups: List<ContentfulModelGroup> = emptyList(),
+    var exercises: List<ContentfulExercise> = emptyList()
+)
