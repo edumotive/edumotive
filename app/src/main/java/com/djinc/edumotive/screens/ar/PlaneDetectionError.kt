@@ -32,7 +32,7 @@ fun PlaneDetectionError() {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
         ) {
             Icon(
                 Icons.Rounded.Warning,
