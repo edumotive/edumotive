@@ -37,8 +37,11 @@ import io.github.sceneview.ar.node.ArModelNode
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PartDrawer(list: List<ContentfulModel>, callback: (ArModelNode) -> Unit) {
-    val isDrawerOpen = remember { mutableStateOf(false) }
+fun PartDrawer(
+    list: List<ContentfulModel>,
+    isDrawerOpen: MutableState<Boolean>,
+    callback: (ArModelNode) -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp + 1
     val windowSize =
