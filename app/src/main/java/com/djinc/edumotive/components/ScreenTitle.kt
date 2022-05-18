@@ -26,12 +26,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.*
 
 @Composable
@@ -43,7 +42,6 @@ fun ScreenTitle(
     spacerHeight: Int = 12,
     manualPadding: Boolean = false,
     windowSize: WindowSize,
-    viewModels: ViewModels,
     searchCallback: ((String) -> Unit)? = null
 ) {
     val isSearching = remember { mutableStateOf(false) }
@@ -77,7 +75,7 @@ fun ScreenTitle(
                     iconId = R.drawable.ic_language,
                     imageDescription = "Change language button"
                 ) {
-                    viewModels.isLanguageModalOpen = true
+                    MainEdumotive.isLanguageModalOpen = true
                 }
             }
             // SEARCH BUTTON

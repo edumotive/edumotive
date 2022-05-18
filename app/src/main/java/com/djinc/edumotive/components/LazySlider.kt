@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.constants.SliderComponent
@@ -22,7 +23,6 @@ import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulExercise
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
-import com.djinc.edumotive.models.ViewModels
 
 @ExperimentalFoundationApi
 @Composable
@@ -34,8 +34,7 @@ fun <T> LazySlider(
     list2: List<T> = emptyList(),
     component: SliderComponent,
     nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
     if (title.isNotEmpty()) {
         Text(
@@ -45,7 +44,7 @@ fun <T> LazySlider(
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
-    if (viewModels.isInitialLoaded) {
+    if (MainEdumotive.isInitialLoaded) {
         when (direction) {
             SliderDirection.Horizontal -> {
                 when (component) {
