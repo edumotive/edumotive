@@ -120,7 +120,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [edumotive/edumotive](https://github.com/edumotive/edumotive)
+Developers:
+ - Danny: [403221@student.fontys.nl](mailto:403221@student.fontys.nl)
+ - Jorrit: [390898@student.fontys.nl](mailto:390898@student.fontys.nl)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
