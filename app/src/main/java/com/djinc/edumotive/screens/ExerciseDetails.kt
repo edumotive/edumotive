@@ -10,19 +10,20 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.*
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ViewModels
-import com.djinc.edumotive.ui.theme.TextSecondary
+import com.djinc.edumotive.components.ExerciseStep
+import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.constants.WindowSize
+import com.djinc.edumotive.models.ContentfulExercise
+import com.djinc.edumotive.ui.theme.TextSecondary
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 
@@ -30,30 +31,27 @@ import com.djinc.edumotive.utils.contentful.errorCatch
 @Composable
 fun ExerciseDetails(
     exerciseId: String = "",
-    nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
+    val activeExercise = remember { mutableStateOf(ContentfulExercise()) }
+    val isActiveExerciseLoaded = remember { mutableStateOf(false) }
     LaunchedEffect(key1 = exerciseId) {
+        isActiveExerciseLoaded.value = false
         Contentful().fetchExercisesById(exerciseId, errorCallBack = ::errorCatch) {
-            viewModels.activeExercise = it
-            viewModels.isActiveExerciseLoaded = true
+            activeExercise.value = it
+            isActiveExerciseLoaded.value = true
         }
     }
-    if (viewModels.isActiveExerciseLoaded) Details(
-        exercise = viewModels.activeExercise,
-        nav = nav,
-        windowSize = windowSize,
-        viewModels = viewModels
+    if (isActiveExerciseLoaded.value) Details(
+        exercise = activeExercise.value,
+        windowSize = windowSize
     )
 }
 
 @Composable
 fun Details(
     exercise: ContentfulExercise,
-    nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth(1f)) {
         LazyColumn(
@@ -68,8 +66,7 @@ fun Details(
                 ScreenTitle(
                     title = exercise.title,
                     spacerHeight = 0,
-                    windowSize = windowSize,
-                    viewModels = viewModels
+                    windowSize = windowSize
                 )
                 ChapterWithTime(exercise = exercise)
             }

@@ -20,10 +20,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.TextPrimary
@@ -32,7 +32,7 @@ import com.djinc.edumotive.utils.changeLocale
 import java.util.*
 
 @Composable
-fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
+fun LanguageModal(windowSize: WindowSize) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     Column(
@@ -50,8 +50,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
             ScreenTitle(
                 title = stringResource(R.string.choose_language),
                 manualPadding = true,
-                windowSize = windowSize,
-                viewModels = viewModels
+                windowSize = windowSize
             )
             AddLanguageRow(
                 locale = listOf("nl", "NL"),
@@ -59,8 +58,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                 contentDescription = stringResource(R.string.choose_language_nl),
                 flagId = R.drawable.ic_dutch_flag,
                 context = context,
-                windowSize = windowSize,
-                viewModels = viewModels
+                windowSize = windowSize
             )
             AddLanguageRow(
                 locale = listOf("en", "US"),
@@ -68,8 +66,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                 contentDescription = stringResource(R.string.choose_language_en),
                 flagId = R.drawable.ic_american_flag,
                 context = context,
-                windowSize = windowSize,
-                viewModels = viewModels
+                windowSize = windowSize
             )
         }
         Box(
@@ -78,7 +75,7 @@ fun LanguageModal(windowSize: WindowSize, viewModels: ViewModels) {
                 .fillMaxWidth()
                 .background(Color(0x66000000))
                 .clickable {
-                    viewModels.isLanguageModalOpen = false
+                    MainEdumotive.isLanguageModalOpen = false
                 }
         )
     }
@@ -91,19 +88,18 @@ fun AddLanguageRow(
     contentDescription: String,
     flagId: Int,
     context: Context,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
     val localeString = locale.joinToString(separator = "-")
     Box(
         modifier = Modifier
-            .background(if (viewModels.currentLocale == localeString) PinkSecondary else Background)
+            .background(if (MainEdumotive.currentLocale == localeString) PinkSecondary else Background)
             .fillMaxWidth()
             .clickable {
                 changeLocale(context, Locale(locale[0], locale[1]))
-                viewModels.currentLocale = localeString
-                viewModels.refreshAll()
-                viewModels.isLanguageModalOpen = false
+                MainEdumotive.currentLocale = localeString
+                MainEdumotive.refreshAll()
+                MainEdumotive.isLanguageModalOpen = false
             }
     ) {
         Row(

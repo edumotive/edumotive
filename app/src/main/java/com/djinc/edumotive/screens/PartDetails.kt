@@ -13,8 +13,7 @@ import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +30,6 @@ import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelGroup
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.ar.ARActivity
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
@@ -46,42 +44,49 @@ fun PartDetails(
     partId: String = "",
     modelType: ContentfulContentModel,
     nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
+    val isActiveModelLoaded = remember { mutableStateOf(false) }
+    val isLinkedModelGroupLoaded = remember { mutableStateOf(false) }
+    val isActiveModelGroupLoaded = remember { mutableStateOf(false) }
+    val linkedModelGroup = remember { mutableStateOf(listOf<ContentfulModelGroup>()) }
+
     if (modelType == ContentfulContentModel.MODEL) {
+        val activeModel = remember { mutableStateOf(ContentfulModel()) }
         LaunchedEffect(key1 = partId) {
+            isLinkedModelGroupLoaded.value = false
+            isActiveModelLoaded.value = false
             Contentful().fetchLinkedModelGroupById(partId, errorCallBack = ::errorCatch) {
-                viewModels.linkedModelGroup = it
-                viewModels.isLinkedModelGroupLoaded = true
-                val activeModel =
-                    viewModels.linkedModelGroup[0].models.find { model -> model.id == partId }!!
-                viewModels.activeModel = activeModel
-                viewModels.isActiveModelLoaded = true
+                linkedModelGroup.value = it
+                isLinkedModelGroupLoaded.value = true
+                activeModel.value = it[0].models.find { model -> model.id == partId }!!
+                isActiveModelLoaded.value = true
             }
         }
-        if (viewModels.isActiveModelAndLinkedModelGroupLoaded()) Details(
-            model = viewModels.activeModel,
+        if (isLinkedModelGroupLoaded.value && isActiveModelLoaded.value) Details(
+            model = activeModel.value,
             modelType = modelType,
             modelId = partId,
             nav = nav,
             windowSize = windowSize,
-            viewModels = viewModels
+            linkedModelGroup = linkedModelGroup
         )
     } else {
+        val activeModelGroup = remember { mutableStateOf(ContentfulModelGroup()) }
         LaunchedEffect(key1 = partId) {
+            isActiveModelGroupLoaded.value = false
             Contentful().fetchModelGroupById(partId, errorCallBack = ::errorCatch) {
-                viewModels.activeModelGroup = it
-                viewModels.isActiveModelGroupLoaded = true
+                activeModelGroup.value = it
+                isActiveModelGroupLoaded.value = true
             }
         }
-        if (viewModels.isActiveModelGroupLoaded) Details(
-            model = viewModels.activeModelGroup,
+        if (isActiveModelGroupLoaded.value) Details(
+            model = activeModelGroup.value,
             modelType = modelType,
             modelId = partId,
             nav = nav,
             windowSize = windowSize,
-            viewModels = viewModels
+            linkedModelGroup = linkedModelGroup
         )
     }
 }
@@ -93,7 +98,7 @@ fun Details(
     modelId: String,
     nav: NavController,
     windowSize: WindowSize,
-    viewModels: ViewModels
+    linkedModelGroup: MutableState<List<ContentfulModelGroup>>
 ) {
     val context = LocalContext.current
     val title: String
@@ -106,7 +111,7 @@ fun Details(
         title = model.title
         imageUrl = model.image
         description = model.description
-        models = viewModels.linkedModelGroup[0].models.filterNot { lModel -> lModel.id == model.id}
+        models = linkedModelGroup.value[0].models.filterNot { lModel -> lModel.id == model.id}
     } else {
         model as ContentfulModelGroup
         title = model.title
@@ -125,7 +130,7 @@ fun Details(
                 Spacer(modifier = Modifier.height(12.dp))
             }
             item {
-                ScreenTitle(title = title, windowSize = windowSize, viewModels = viewModels)
+                ScreenTitle(title = title, windowSize = windowSize)
             }
             item {
                 Box(
@@ -152,8 +157,7 @@ fun Details(
                     ScreenTitle(
                         title = stringResource(R.string.corresponding_parts),
                         spacerHeight = 0,
-                        windowSize = windowSize,
-                        viewModels = viewModels
+                        windowSize = windowSize
                     )
                 }
                 gridItems(
@@ -182,7 +186,7 @@ fun Details(
     }
 
     if (windowSize == WindowSize.Expanded) {
-        PartsSplitScreen(models, nav, windowSize, viewModels)
+        PartsSplitScreen(models, nav, windowSize)
     }
 }
 
@@ -264,8 +268,7 @@ fun OpenInArButton(modelId: String, modelType: ContentfulContentModel, context: 
 fun PartsSplitScreen(
     models: List<ContentfulModel>,
     nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
     Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
         LazyColumn(
@@ -280,8 +283,7 @@ fun PartsSplitScreen(
                 ScreenTitle(
                     title = stringResource(R.string.corresponding_parts),
                     spacerHeight = 0,
-                    windowSize = windowSize,
-                    viewModels = viewModels
+                    windowSize = windowSize
                 )
             }
             if (models.isNotEmpty()) {
