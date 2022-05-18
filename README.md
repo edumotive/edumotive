@@ -52,7 +52,7 @@
 ## About The Project
 
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/DannyPX/edumotive)
+[![Product Name Screen Shot][product-screenshot]](https://github.com/edumotive/edumotive)
 
 The idea of this project is to create an application that helps automotive students learn their profession in an innovative way that could help them learn from home as well instead of only at the workshop(s) on campus.The way we want to innovate the learning experience is by using tools like augmented reality so we can visualise what should be learnt and broaden the view a student would get from just a textbook.
 
@@ -93,7 +93,7 @@ To get a local copy up and running follow these simple example steps.
 2. When using an USB cable, enable USB debugging in Developer options on your device
 3. Run the application
 
-You can also download the APK from the [Releases](https://github.com/DannyPX/edumotive/releases)
+You can also download the APK from the [Releases](https://github.com/edumotive/edumotive/releases)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -120,10 +120,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [edumotive/edumotive](https://github.com/DannyPX/edumotive)
+Project Link: [edumotive/edumotive](https://github.com/edumotive/edumotive)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/screenshot.jpg
