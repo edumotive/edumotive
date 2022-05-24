@@ -47,7 +47,7 @@ class MainEdumotive : Application() {
     }
 
     private fun init() {
-        val loadHelper = LoadHelper(amountNeeded = 6)
+        val loadHelper = LoadHelper(amountNeeded = ContentfulContentModel.values().size)
 
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
