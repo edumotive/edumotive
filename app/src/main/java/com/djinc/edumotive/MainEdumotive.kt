@@ -181,6 +181,15 @@ class MainEdumotive : Application() {
             Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                 exercises = it
             }
+            Contentful().fetchAllExercisesManual(errorCallBack = ::errorCatch) {
+                exercisesManual = it
+            }
+            Contentful().fetchAllExercisesAssemble(errorCallBack = ::errorCatch) {
+                exerciseAssemble = it
+            }
+            Contentful().fetchAllExercisesRecognition(errorCallBack = ::errorCatch) {
+                exerciseRecognition = it
+            }
             contentfulCachedContent!!.locale = currentLocale
         }
 
