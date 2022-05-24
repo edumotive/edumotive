@@ -32,9 +32,6 @@ import com.djinc.edumotive.utils.contentful.filterModelList
 @ExperimentalFoundationApi
 @Composable
 fun Parts(nav: NavController, windowSize: WindowSize) {
-    val filteredModelGroups = remember { mutableStateOf(MainEdumotive.modelGroups) }
-    val filteredModels = remember { mutableStateOf(MainEdumotive.models) }
-
     Column(modifier = Modifier.padding(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp)) {
         Spacer(modifier = Modifier.height(32.dp))
         ScreenTitle(
@@ -43,13 +40,15 @@ fun Parts(nav: NavController, windowSize: WindowSize) {
             buttonPadding = false,
             windowSize = windowSize
         ) { filter ->
-            filterModelList(MainEdumotive.models, filter.trim()) { filteredModels.value = it }
+            filterModelList(MainEdumotive.models, filter.trim()) {
+                MainEdumotive.filteredModels = it
+            }
             filterModelGroupList(MainEdumotive.modelGroups, filter.trim()) {
-                filteredModelGroups.value = it
+                MainEdumotive.filteredModelGroups = it
             }
         }
 
-        if (filteredModelGroups.value.isEmpty() && filteredModels.value.isEmpty()) {
+        if (MainEdumotive.filteredModelGroups.isEmpty() && MainEdumotive.filteredModels.isEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -80,8 +79,8 @@ fun Parts(nav: NavController, windowSize: WindowSize) {
             }
             LazySlider(
                 direction = SliderDirection.Vertical,
-                list = filteredModelGroups.value,
-                list2 = filteredModels.value,
+                list = MainEdumotive.filteredModelGroups,
+                list2 = MainEdumotive.filteredModels,
                 component = SliderComponent.PartCard,
                 nav = nav,
                 windowSize = windowSize
@@ -89,8 +88,8 @@ fun Parts(nav: NavController, windowSize: WindowSize) {
         } else {
             LazySlider(
                 direction = SliderDirection.Vertical,
-                list = filteredModelGroups.value,
-                list2 = filteredModels.value,
+                list = MainEdumotive.filteredModelGroups,
+                list2 = MainEdumotive.filteredModels,
                 component = SliderComponent.PartCard,
                 nav = nav,
                 windowSize = windowSize

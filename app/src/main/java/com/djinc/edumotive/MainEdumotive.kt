@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.djinc.edumotive.constants.Common
 import com.djinc.edumotive.constants.ContentfulContentModel
@@ -26,15 +27,22 @@ class MainEdumotive : Application() {
 
         val context = applicationContext
         var currentLocale = context.resources.configuration.locales[0].toLanguageTag()
-        sharedPref = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        if(currentLocale !in Common.allLanguages) {
-            currentLocale = if(sharedPref!!.getString(getString(R.string.locale), Common.defaultLanguage) !in Common.allLanguages) {
+        sharedPref = context.getSharedPreferences(
+            getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
+        if (currentLocale !in Common.allLanguages) {
+            currentLocale = if (sharedPref!!.getString(
+                    getString(R.string.locale),
+                    Common.defaultLanguage
+                ) !in Common.allLanguages
+            ) {
                 Common.defaultLanguage
             } else {
                 sharedPref!!.getString(getString(R.string.locale), Common.defaultLanguage)!!
             }
         }
-        with (sharedPref!!.edit()) {
+        with(sharedPref!!.edit()) {
             putString(getString(R.string.locale), currentLocale)
             apply()
         }
@@ -47,10 +55,12 @@ class MainEdumotive : Application() {
 
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
+            filteredModelGroups = it
             loadedContent(loadHelper)
         }
         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
             models = it
+            filteredModels = it
             loadedContent(loadHelper)
         }
         Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
@@ -60,7 +70,6 @@ class MainEdumotive : Application() {
 
         contentfulCachedContent!!.date = LocalDate.now().toString()
     }
-
 
 
     companion object {
@@ -77,6 +86,10 @@ class MainEdumotive : Application() {
         var exercises by mutableStateOf(listOf<ContentfulExercise>())
             private set
 
+        // FILTERED MODELS & MODELGROUPS
+        var filteredModelGroups by mutableStateOf(listOf<ContentfulModelGroup>())
+        var filteredModels by mutableStateOf(listOf<ContentfulModel>())
+
         // LOADING STATES
         var isInitialLoaded by mutableStateOf(false)
             private set
@@ -85,7 +98,10 @@ class MainEdumotive : Application() {
         var currentLocale by mutableStateOf("")
         var isLanguageModalOpen by mutableStateOf(false)
 
-        fun refresh(contentfulContentModels: List<ContentfulContentModel>, callback: (result: Boolean) -> Unit) {
+        fun refresh(
+            contentfulContentModels: List<ContentfulContentModel>,
+            callback: (result: Boolean) -> Unit
+        ) {
             val loadHelper = LoadHelper(amountNeeded = contentfulContentModels.size)
 
             contentfulContentModels.forEach { entryType ->
@@ -94,6 +110,7 @@ class MainEdumotive : Application() {
                         contentfulCachedContent!!.models = emptyList()
                         Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                             models = it
+                            filteredModels = it
                             loadedContent(loadHelper, callback)
                         }
                     }
@@ -101,6 +118,7 @@ class MainEdumotive : Application() {
                         contentfulCachedContent!!.modelGroups = emptyList()
                         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                             modelGroups = it
+                            filteredModelGroups = it
                             loadedContent(loadHelper, callback)
                         }
                     }
@@ -119,9 +137,11 @@ class MainEdumotive : Application() {
         fun refreshAll() {
             Contentful().fetchAllModels(errorCallBack = ::errorCatch) {
                 models = it
+                filteredModels = it
             }
             Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
                 modelGroups = it
+                filteredModelGroups = it
             }
             Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                 exercises = it
@@ -129,7 +149,10 @@ class MainEdumotive : Application() {
             contentfulCachedContent!!.locale = currentLocale
         }
 
-        private fun loadedContent(loadHelper: LoadHelper, callback: ((result: Boolean) -> Unit)? = null) {
+        private fun loadedContent(
+            loadHelper: LoadHelper,
+            callback: ((result: Boolean) -> Unit)? = null
+        ) {
             loadHelper.whenLoaded {
                 isInitialLoaded = true
                 callback?.invoke(true)
