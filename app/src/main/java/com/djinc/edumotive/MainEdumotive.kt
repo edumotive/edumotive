@@ -5,14 +5,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.djinc.edumotive.constants.Common
 import com.djinc.edumotive.constants.ContentfulContentModel
-import com.djinc.edumotive.models.ContentfulCachedContent
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.LoadHelper
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
@@ -51,7 +47,7 @@ class MainEdumotive : Application() {
     }
 
     private fun init() {
-        val loadHelper = LoadHelper(amountNeeded = 3)
+        val loadHelper = LoadHelper(amountNeeded = ContentfulContentModel.values().size)
 
         Contentful().fetchAllModelGroups(errorCallBack = ::errorCatch) {
             modelGroups = it
@@ -65,6 +61,18 @@ class MainEdumotive : Application() {
         }
         Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
             exercises = it
+            loadedContent(loadHelper)
+        }
+        Contentful().fetchAllExercisesManual(errorCallBack = ::errorCatch) {
+            exercisesManual = it
+            loadedContent(loadHelper)
+        }
+        Contentful().fetchAllExercisesAssemble(errorCallBack = ::errorCatch) {
+            exerciseAssemble = it
+            loadedContent(loadHelper)
+        }
+        Contentful().fetchAllExercisesRecognition(errorCallBack = ::errorCatch) {
+            exerciseRecognition = it
             loadedContent(loadHelper)
         }
 
@@ -84,6 +92,12 @@ class MainEdumotive : Application() {
         var models by mutableStateOf(listOf<ContentfulModel>())
             private set
         var exercises by mutableStateOf(listOf<ContentfulExercise>())
+            private set
+        var exercisesManual by mutableStateOf(listOf<ContentfulExerciseManual>())
+            private set
+        var exerciseAssemble by mutableStateOf(listOf<ContentfulExerciseAssemble>())
+            private set
+        var exerciseRecognition by mutableStateOf(listOf<ContentfulExerciseRecognition>())
             private set
 
         // FILTERED MODELS & MODELGROUPS
@@ -129,6 +143,27 @@ class MainEdumotive : Application() {
                             loadedContent(loadHelper, callback)
                         }
                     }
+                    ContentfulContentModel.EXERCISEMANUAL -> {
+                        contentfulCachedContent!!.exercisesManual = emptyList()
+                        Contentful().fetchAllExercisesManual(errorCallBack = ::errorCatch) {
+                            exercisesManual = it
+                            loadedContent(loadHelper, callback)
+                        }
+                    }
+                    ContentfulContentModel.EXERCISEASSEMBLE -> {
+                        contentfulCachedContent!!.exerciseAssemble = emptyList()
+                        Contentful().fetchAllExercisesAssemble(errorCallBack = ::errorCatch) {
+                            exerciseAssemble = it
+                            loadedContent(loadHelper, callback)
+                        }
+                    }
+                    ContentfulContentModel.EXERCISERECOGNITION -> {
+                        contentfulCachedContent!!.exerciseRecognition = emptyList()
+                        Contentful().fetchAllExercisesRecognition(errorCallBack = ::errorCatch) {
+                            exerciseRecognition = it
+                            loadedContent(loadHelper, callback)
+                        }
+                    }
                 }
             }
             contentfulCachedContent!!.locale = currentLocale
@@ -145,6 +180,15 @@ class MainEdumotive : Application() {
             }
             Contentful().fetchAllExercises(errorCallBack = ::errorCatch) {
                 exercises = it
+            }
+            Contentful().fetchAllExercisesManual(errorCallBack = ::errorCatch) {
+                exercisesManual = it
+            }
+            Contentful().fetchAllExercisesAssemble(errorCallBack = ::errorCatch) {
+                exerciseAssemble = it
+            }
+            Contentful().fetchAllExercisesRecognition(errorCallBack = ::errorCatch) {
+                exerciseRecognition = it
             }
             contentfulCachedContent!!.locale = currentLocale
         }
