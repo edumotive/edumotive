@@ -1,8 +1,6 @@
 package com.djinc.edumotive.utils.contentful
 
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.*
 
 interface ContentfulInfrastructure {
     val parameter: ContentfulParams
@@ -20,6 +18,21 @@ interface ContentfulInfrastructure {
     fun fetchAllExercises(
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (List<ContentfulExercise>) -> Unit
+    )
+
+    fun fetchAllExercisesManual(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExerciseManual>) -> Unit
+    )
+
+    fun fetchAllExercisesAssemble(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExerciseAssemble>) -> Unit
+    )
+
+    fun fetchAllExercisesRecognition(
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (List<ContentfulExerciseRecognition>) -> Unit
     )
 
     fun fetchModelByID(
@@ -44,5 +57,23 @@ interface ContentfulInfrastructure {
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (List<ContentfulModelGroup>) -> Unit
+    )
+
+    fun fetchAllExercisesManualById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExerciseManual) -> Unit
+    )
+
+    fun fetchAllExercisesAssembleById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExerciseAssemble) -> Unit
+    )
+
+    fun fetchAllExercisesRecognitionById(
+        id: String,
+        errorCallBack: (Throwable) -> Unit,
+        successCallBack: (ContentfulExerciseRecognition) -> Unit
     )
 }

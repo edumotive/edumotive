@@ -40,10 +40,64 @@ data class ContentfulExercise(
     companion object
 }
 
+data class ContentfulExerciseManual(
+    val id: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.EXERCISEMANUAL,
+    val title: String = "",
+    val image: String = "",
+    val info: String = "",
+    val minTime: Int = 0,
+    val maxTime: Int = 0,
+    val steps: List<ContentfulModelStep> = emptyList()
+) {
+    companion object
+}
+
+data class ContentfulExerciseAssemble(
+    val id: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.EXERCISEASSEMBLE,
+    val title: String = "",
+    val image: String = "",
+    val info: String = "",
+    val minTime: Int = 0,
+    val maxTime: Int = 0,
+    val steps: List<ContentfulModelStep> = emptyList()
+) {
+    companion object
+}
+
+data class ContentfulExerciseRecognition(
+    val id: String = "",
+    val type: ContentfulContentModel = ContentfulContentModel.EXERCISERECOGNITION,
+    val title: String = "",
+    val image: String = "",
+    val info: String = "",
+    val minTime: Int = 0,
+    val maxTime: Int = 0,
+    val modelGroup: ContentfulModelGroup? = null,
+    val models: List<ContentfulModel> = emptyList(),
+) {
+    companion object
+}
+
+data class ContentfulModelStep(
+    val id: String = "",
+    val title: String = "",
+    val modelGroup: ContentfulModelGroup? = null,
+    val models: List<ContentfulModel> = emptyList(),
+    val stepInfo: String = "",
+    val stepIndex: Int = 0
+) {
+    companion object
+}
+
 data class ContentfulCachedContent(
     var date: String = "",
     var locale: String = "",
     var models: List<ContentfulModel> = emptyList(),
     var modelGroups: List<ContentfulModelGroup> = emptyList(),
-    var exercises: List<ContentfulExercise> = emptyList()
+    var exercises: List<ContentfulExercise> = emptyList(),
+    var exercisesManual: List<ContentfulExerciseManual> = emptyList(),
+    var exerciseAssemble: List<ContentfulExerciseAssemble> = emptyList(),
+    var exerciseRecognition: List<ContentfulExerciseRecognition> = emptyList()
 )

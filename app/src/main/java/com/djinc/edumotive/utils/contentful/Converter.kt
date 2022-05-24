@@ -4,9 +4,7 @@ import com.contentful.java.cda.CDAAsset
 import com.contentful.java.cda.CDAEntry
 import com.contentful.java.cda.image.ImageOption
 import com.djinc.edumotive.constants.ContentfulContentModel
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.*
 
 
 /// Model
@@ -76,4 +74,85 @@ fun ContentfulExercise.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()
         .map { ContentfulModel.fromRestEntry(it) }
+)
+
+fun ContentfulExerciseManual.Companion.fromRestEntry(
+    entry: CDAEntry
+): ContentfulExerciseManual = ContentfulExerciseManual(
+    entry.id(),
+    ContentfulContentModel.valueOf(entry.contentType().id().uppercase()),
+    entry.getField<String?>("title").orEmpty(),
+    try {
+        entry.getField<CDAAsset?>("image")
+            ?.urlForImageWith(ImageOption.https(), ImageOption.formatOf(ImageOption.Format.webp))
+            .orEmpty()
+    } catch (_: Throwable) {
+        ""
+    },
+    entry.getField<String?>("info").orEmpty(),
+    entry.getField("minimalTime"),
+    entry.getField("maximumTime"),
+    entry.getField<List<CDAEntry>?>("steps")
+        .orEmpty()
+        .map { ContentfulModelStep.fromRestEntry(it) }
+)
+
+fun ContentfulExerciseAssemble.Companion.fromRestEntry(
+    entry: CDAEntry
+): ContentfulExerciseAssemble = ContentfulExerciseAssemble(
+    entry.id(),
+    ContentfulContentModel.valueOf(entry.contentType().id().uppercase()),
+    entry.getField<String?>("title").orEmpty(),
+    try {
+        entry.getField<CDAAsset?>("image")
+            ?.urlForImageWith(ImageOption.https(), ImageOption.formatOf(ImageOption.Format.webp))
+            .orEmpty()
+    } catch (_: Throwable) {
+        ""
+    },
+    entry.getField<String?>("info").orEmpty(),
+    entry.getField("minimalTime"),
+    entry.getField("maximumTime"),
+    entry.getField<List<CDAEntry>?>("steps")
+        .orEmpty()
+        .map { ContentfulModelStep.fromRestEntry(it) }
+)
+
+fun ContentfulExerciseRecognition.Companion.fromRestEntry(
+    entry: CDAEntry
+): ContentfulExerciseRecognition = ContentfulExerciseRecognition(
+    entry.id(),
+    ContentfulContentModel.valueOf(entry.contentType().id().uppercase()),
+    entry.getField<String?>("title").orEmpty(),
+    try {
+        entry.getField<CDAAsset?>("image")
+            ?.urlForImageWith(ImageOption.https(), ImageOption.formatOf(ImageOption.Format.webp))
+            .orEmpty()
+    } catch (_: Throwable) {
+        ""
+    },
+    entry.getField<String?>("info").orEmpty(),
+    entry.getField("minimalTime"),
+    entry.getField("maximumTime"),
+    if (entry.getField<CDAEntry?>("modelGroup") != null)
+        ContentfulModelGroup.fromRestEntry(entry.getField("modelGroup"))
+    else null,
+    entry.getField<List<CDAEntry>?>("models")
+        .orEmpty()
+        .map { ContentfulModel.fromRestEntry(it) },
+)
+
+fun ContentfulModelStep.Companion.fromRestEntry(
+    entry: CDAEntry
+): ContentfulModelStep = ContentfulModelStep(
+    entry.id(),
+    entry.getField<String?>("title").orEmpty(),
+    if (entry.getField<CDAEntry?>("modelGroup") != null)
+        ContentfulModelGroup.fromRestEntry(entry.getField("modelGroup"))
+    else null,
+    entry.getField<List<CDAEntry>?>("models")
+        .orEmpty()
+        .map { ContentfulModel.fromRestEntry(it) },
+    entry.getField<String?>("stepInfo").orEmpty(),
+    entry.getField("stepIndex"),
 )
