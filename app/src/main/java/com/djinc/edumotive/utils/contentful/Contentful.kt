@@ -365,7 +365,7 @@ open class Contentful(
         }
     }
 
-    override fun fetchAllExercisesManualById(
+    override fun fetchExercisesManualById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseManual) -> Unit
@@ -399,7 +399,7 @@ open class Contentful(
         }
     }
 
-    override fun fetchAllExercisesAssembleById(
+    override fun fetchExercisesAssembleById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseAssemble) -> Unit
@@ -433,7 +433,7 @@ open class Contentful(
         }
     }
 
-    override fun fetchAllExercisesRecognitionById(
+    override fun fetchExercisesRecognitionById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseRecognition) -> Unit

@@ -74,8 +74,7 @@ data class ContentfulExerciseRecognition(
     val info: String = "",
     val minTime: Int = 0,
     val maxTime: Int = 0,
-    val modelGroup: ContentfulModelGroup? = null,
-    val models: List<ContentfulModel> = emptyList(),
+    val steps: List<ContentfulModelStep> = emptyList()
 ) {
     companion object
 }

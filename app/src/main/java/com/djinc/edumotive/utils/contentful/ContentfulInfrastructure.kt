@@ -59,19 +59,19 @@ interface ContentfulInfrastructure {
         successCallBack: (List<ContentfulModelGroup>) -> Unit
     )
 
-    fun fetchAllExercisesManualById(
+    fun fetchExercisesManualById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseManual) -> Unit
     )
 
-    fun fetchAllExercisesAssembleById(
+    fun fetchExercisesAssembleById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseAssemble) -> Unit
     )
 
-    fun fetchAllExercisesRecognitionById(
+    fun fetchExercisesRecognitionById(
         id: String,
         errorCallBack: (Throwable) -> Unit,
         successCallBack: (ContentfulExerciseRecognition) -> Unit
