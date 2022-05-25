@@ -244,6 +244,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 val isSingular = step.models.size == 1
                 step.models.forEach { model ->
                     if (model.arModel != null) {
+                        models.add(model)
                         loadedModel(loadHelper)
                     } else {
                         createAndLoadModel(
@@ -258,13 +259,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 }
             } else if (step.modelGroup != null) {
                 step.modelGroup.models.forEach { model ->
-                    createAndLoadModel(
-                        model,
-                        false
-                    ) {
-                        model.arModel = it
+                    if (model.arModel != null) {
                         models.add(model)
                         loadedModel(loadHelper)
+                    } else {
+                        createAndLoadModel(
+                            model,
+                            false
+                        ) {
+                            model.arModel = it
+                            models.add(model)
+                            loadedModel(loadHelper)
+                        }
                     }
                 }
             }
@@ -287,7 +293,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun loadedModel(loadHelper: LoadHelper) {
         loadHelper.whenLoaded(updateLoading = { amount ->
             actionButton.text =
-                getString(R.string.loading_models) + " " + amount + "/" + models.size
+                getString(R.string.loading_models) + " " + amount + "/" + loadHelper.maxAmount.value
         }) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
@@ -317,10 +323,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             if (!sceneView.children.contains(model.arModel!!)) sceneView.addChild(model.arModel!!)
             model.arModel!!.anchor = anchor
         }
-    }
-
-    private fun exerciseRecognition() {
-
     }
 
     private fun selectModelVisibility(arModel: ArModelNode) {

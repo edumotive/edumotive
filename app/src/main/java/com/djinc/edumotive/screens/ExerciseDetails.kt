@@ -5,9 +5,6 @@ import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,16 +16,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
-import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.ScreenTitle
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.*
+import com.djinc.edumotive.models.ContentfulExerciseAssemble
+import com.djinc.edumotive.models.ContentfulExerciseManual
+import com.djinc.edumotive.models.ContentfulExerciseRecognition
+import com.djinc.edumotive.models.ContentfulModelStep
 import com.djinc.edumotive.screens.ar.ARActivity
 import com.djinc.edumotive.ui.theme.*
 import com.djinc.edumotive.utils.contentful.Contentful
@@ -221,7 +219,14 @@ fun Details(
                         .fillMaxWidth()
                 ) {
                     Button(
-                        onClick = {},
+                        onClick = {
+                            val intent = Intent(context, ARActivity::class.java)
+                            val params = Bundle()
+                            params.putString("type", exerciseType.stringValue)
+                            params.putString("id", exerciseId)
+                            intent.putExtras(params)
+                            context.startActivity(intent)
+                        },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = PinkPrimary
                         ),
