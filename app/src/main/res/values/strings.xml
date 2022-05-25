@@ -5,7 +5,7 @@
     <string name="welcome">Welcome!</string>
     <string name="recent_updated">Recent updated parts</string>
     <string name="exercises_this_chapter">Exercises for this chapter</string>
-    <string name="exercise_info">What you will learn in this chapter</string>
+    <string name="exercise_info">What you learn in this exercise</string>
     <string name="exercises">Exercises</string>
     <string name="information">Information</string>
     <string name="corresponding_parts">Corresponding parts</string>
@@ -28,5 +28,15 @@
     <string name="search_placeholder">Engine, sparkplug...</string>
     <string name="search_no_results">Sorry, we could not find what you were looking for</string>
     <string name="cannot_find_plane">Move around to find a plane</string>
-    <string name="exercise_type">Assemble</string>
+    <string name="exercise_type_assemble">Assemble</string>
+    <string name="exercise_type_assemble_info">In this type of exercise you will work on assembling and disassembling a part. The idea is to put the given list of parts in the right order so that it is assembled in the correct way.</string>
+    <string name="exercise_type_manual">Manual</string>
+    <string name="exercise_type_manual_info">This type of exercise involves explaining how a component works. This is done on a step by step basis allowing you to set your own pace.</string>
+    <string name="exercise_type_recognition">Recognition</string>
+    <string name="exercise_type_recognition_info">In this type of exercise, as the name implies, you are going to try to recognize what a part looks like. You will be shown a model or image and need to give the correct naming.</string>
+    <string name="exercise_start_title">Starting the exercise</string>
+    <string name="exercise_start_only_ar">This exercise can only be performed with Augmented Reality.</string>
+    <string name="exercise_start_both">This exercise can be performed with or without the use of Augmented Reality.</string>
+    <string name="exercise_start_btn_with_ar">Start with AR</string>
+    <string name="exercise_start_btn_without_ar">Start without AR</string>
 </resources>

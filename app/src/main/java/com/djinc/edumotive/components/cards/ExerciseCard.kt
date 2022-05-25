@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.AsyncImage
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.constants.WindowSize
@@ -28,9 +29,8 @@ import com.djinc.edumotive.ui.theme.fonts
 fun ExerciseCard(
     exerciseId: String,
     exerciseName: String = "",
-    exerciseType: String = stringResource(R.string.exercise_type),
+    exerciseType: ContentfulContentModel,
     imageUrl: String,
-    description: String = "",
     fullWidth: Boolean,
     nav: NavController,
     windowSize: WindowSize
@@ -42,7 +42,7 @@ fun ExerciseCard(
         modifier = Modifier
             .then(if (fullWidth) Modifier.fillMaxWidth(1f) else Modifier.width(if (windowSize == WindowSize.Compact) 260.dp else 240.dp))
             .clickable {
-                nav.navigate("exercise/$exerciseId")
+                nav.navigate("exercise/$exerciseId/${exerciseType.stringValue}")
             }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -52,7 +52,6 @@ fun ExerciseCard(
                 aspectRatio = 2f
             )
             ExerciseTitle(text = exerciseName)
-            ExerciseDescription(text = description)
             TypeWithButton(type = exerciseType)
         }
     }
@@ -72,23 +71,16 @@ fun ExerciseTitle(text: String) {
 }
 
 @Composable
-fun ExerciseDescription(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.body1,
-        modifier = Modifier.padding(start = 12.dp, end = 12.dp)
-    )
-}
-
-@Composable
-fun TypeWithButton(type: String) {
+fun TypeWithButton(type: ContentfulContentModel) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(1f),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = type,
+            text = if (type == ContentfulContentModel.EXERCISEASSEMBLE) stringResource(id = R.string.exercise_type_assemble) else if (type == ContentfulContentModel.EXERCISEMANUAL) stringResource(
+                R.string.exercise_type_manual
+            ) else stringResource(R.string.exercise_type_recognition),
             style = MaterialTheme.typography.caption,
             modifier = Modifier.padding(start = 12.dp)
         )

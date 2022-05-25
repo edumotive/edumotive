@@ -1,29 +1,36 @@
 package com.djinc.edumotive.screens
 
+import android.content.Intent
+import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.djinc.edumotive.R
 import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.ScreenTitle
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.ui.theme.TextSecondary
+import com.djinc.edumotive.models.*
+import com.djinc.edumotive.screens.ar.ARActivity
+import com.djinc.edumotive.ui.theme.*
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 
@@ -31,28 +38,136 @@ import com.djinc.edumotive.utils.contentful.errorCatch
 @Composable
 fun ExerciseDetails(
     exerciseId: String = "",
+    exerciseType: ContentfulContentModel,
+    nav: NavController,
     windowSize: WindowSize
 ) {
-    val activeExercise = remember { mutableStateOf(ContentfulExercise()) }
     val isActiveExerciseLoaded = remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = exerciseId) {
-        isActiveExerciseLoaded.value = false
-        Contentful().fetchExercisesById(exerciseId, errorCallBack = ::errorCatch) {
-            activeExercise.value = it
-            isActiveExerciseLoaded.value = true
+
+    when (exerciseType) {
+        ContentfulContentModel.EXERCISEASSEMBLE -> {
+            val activeExercise = remember { mutableStateOf(ContentfulExerciseAssemble()) }
+            LaunchedEffect(key1 = exerciseId) {
+                isActiveExerciseLoaded.value = false
+                Contentful().fetchExercisesAssembleById(
+                    exerciseId,
+                    errorCallBack = ::errorCatch
+                ) {
+                    activeExercise.value = it
+                    isActiveExerciseLoaded.value = true
+                }
+            }
+            if (isActiveExerciseLoaded.value) Details(
+                exercise = activeExercise.value,
+                exerciseType = exerciseType,
+                exerciseId = exerciseId,
+                nav = nav,
+                windowSize = windowSize
+            )
         }
+        ContentfulContentModel.EXERCISEMANUAL -> {
+            val activeExercise = remember { mutableStateOf(ContentfulExerciseManual()) }
+            LaunchedEffect(key1 = exerciseId) {
+                isActiveExerciseLoaded.value = false
+                Contentful().fetchExercisesManualById(exerciseId, errorCallBack = ::errorCatch) {
+                    activeExercise.value = it
+                    isActiveExerciseLoaded.value = true
+                }
+            }
+            if (isActiveExerciseLoaded.value) Details(
+                exercise = activeExercise.value,
+                exerciseType = exerciseType,
+                exerciseId = exerciseId,
+                nav = nav,
+                windowSize = windowSize
+            )
+        }
+        ContentfulContentModel.EXERCISERECOGNITION -> {
+            val activeExercise = remember { mutableStateOf(ContentfulExerciseRecognition()) }
+            LaunchedEffect(key1 = exerciseId) {
+                isActiveExerciseLoaded.value = false
+                Contentful().fetchExercisesRecognitionById(
+                    exerciseId,
+                    errorCallBack = ::errorCatch
+                ) {
+                    activeExercise.value = it
+                    isActiveExerciseLoaded.value = true
+                }
+            }
+            if (isActiveExerciseLoaded.value) Details(
+                exercise = activeExercise.value,
+                exerciseType = exerciseType,
+                exerciseId = exerciseId,
+                nav = nav,
+                windowSize = windowSize
+            )
+        }
+        else -> {}
     }
-    if (isActiveExerciseLoaded.value) Details(
-        exercise = activeExercise.value,
-        windowSize = windowSize
-    )
 }
 
 @Composable
 fun Details(
-    exercise: ContentfulExercise,
+    exercise: Any,
+    exerciseType: ContentfulContentModel,
+    exerciseId: String,
+    nav: NavController,
     windowSize: WindowSize
 ) {
+    val context = LocalContext.current
+    val title: String
+    val minTime: Int
+    val maxTime: Int
+    val typeTitle: String
+    val typeInfo: String
+    val info: String
+    val modelsteps: List<ContentfulModelStep>
+
+    when (exerciseType) {
+        ContentfulContentModel.EXERCISEASSEMBLE -> {
+            exercise as ContentfulExerciseAssemble
+            title = exercise.title
+            minTime = exercise.minTime
+            maxTime = exercise.maxTime
+            typeTitle =
+                "${stringResource(id = R.string.exercise_type_assemble)} ${stringResource(id = R.string.exercise).lowercase()}"
+            typeInfo = stringResource(id = R.string.exercise_type_assemble_info)
+            info = exercise.info
+            modelsteps = exercise.steps
+        }
+        ContentfulContentModel.EXERCISEMANUAL -> {
+            exercise as ContentfulExerciseManual
+            title = exercise.title
+            minTime = exercise.minTime
+            maxTime = exercise.maxTime
+            typeTitle =
+                "${stringResource(id = R.string.exercise_type_manual)} ${stringResource(id = R.string.exercise).lowercase()}"
+            typeInfo = stringResource(id = R.string.exercise_type_manual_info)
+            info = exercise.info
+            modelsteps = exercise.steps
+        }
+        ContentfulContentModel.EXERCISERECOGNITION -> {
+            exercise as ContentfulExerciseRecognition
+            title = exercise.title
+            minTime = exercise.minTime
+            maxTime = exercise.maxTime
+            typeTitle =
+                "${stringResource(id = R.string.exercise_type_recognition)} ${stringResource(id = R.string.exercise).lowercase()}"
+            typeInfo = stringResource(id = R.string.exercise_type_recognition_info)
+            info = exercise.info
+            modelsteps = exercise.steps
+        }
+        else -> {
+            title = ""
+            minTime = 0
+            maxTime = 0
+            typeTitle = ""
+            typeInfo = ""
+            info = ""
+            modelsteps = emptyList()
+        }
+    }
+
     Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth(1f)) {
         LazyColumn(
             contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
@@ -64,55 +179,97 @@ fun Details(
             }
             item {
                 ScreenTitle(
-                    title = exercise.title,
+                    title = title,
                     spacerHeight = 0,
                     windowSize = windowSize
                 )
-                ChapterWithTime(exercise = exercise)
+                Time(minTime = minTime, maxTime = maxTime)
             }
             item {
                 Text(
-                    text = stringResource(R.string.exercise_info),
+                    text = typeTitle,
                     style = MaterialTheme.typography.h4
                 )
                 Text(
-                    text = exercise.description,
+                    text = typeInfo,
                     style = MaterialTheme.typography.body2,
                 )
             }
-            if (windowSize != WindowSize.Expanded) {
-                generateSteps(exercise = exercise)
+            item {
+                Text(
+                    text = stringResource(id = R.string.exercise_info),
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    text = info,
+                    style = MaterialTheme.typography.body2,
+                )
             }
+            item {
+                Text(
+                    text = stringResource(id = R.string.exercise_start_title),
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    text = stringResource(id = R.string.exercise_start_both),
+                    style = MaterialTheme.typography.body2,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = PinkPrimary
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.exercise_start_btn_with_ar),
+                            color = Background,
+                            fontSize = 16.sp,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(top = 3.dp)
+                        )
+                    }
+                    Button(
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = PinkSecondary
+                        ),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.exercise_start_btn_without_ar),
+                            color = PinkPrimary,
+                            fontSize = 16.sp,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(top = 3.dp)
+                        )
+                    }
+                }
+            }
+//            if (windowSize != WindowSize.Expanded) {
+//
+//            }
         }
     }
     if (windowSize == WindowSize.Expanded) {
         Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
-            LazyColumn(
-                contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(top = 120.dp)
-            ) {
-                generateSteps(exercise = exercise)
-            }
+            // Add here images of models
         }
     }
 }
 
-fun LazyListScope.generateSteps(exercise: ContentfulExercise) {
-    itemsIndexed(exercise.steps) { index, item ->
-        ExerciseStep(exerciseStepName = item, stepIndex = index + 1)
-    }
-}
-
 @Composable
-fun ChapterWithTime(exercise: ContentfulExercise) {
+fun Time(minTime: Int, maxTime: Int) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = exercise.chapter, color = TextSecondary, fontSize = 16.sp)
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -124,7 +281,7 @@ fun ChapterWithTime(exercise: ContentfulExercise) {
                 modifier = Modifier.padding(bottom = 3.dp)
             )
             Text(
-                text = "${exercise.minTime} - ${exercise.maxTime} min",
+                text = "$minTime - $maxTime min",
                 color = TextSecondary,
                 fontSize = 16.sp
             )

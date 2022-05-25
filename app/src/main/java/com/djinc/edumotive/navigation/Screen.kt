@@ -32,7 +32,7 @@ sealed class Screen(
     )
 
     object Exercise : Screen(
-        route = "exercise/{exerciseId}",
+        route = "exercise/{exerciseId}/{exerciseType}",
         title = "exercise",
         icon = null
     )
