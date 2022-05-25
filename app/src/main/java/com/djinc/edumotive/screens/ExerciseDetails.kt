@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -316,15 +316,12 @@ fun Details(
                     }
                 }
             }
-//            if (windowSize != WindowSize.Expanded) {
-//
-//            }
         }
     }
     if (windowSize == WindowSize.Expanded) {
         Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
             LazyVerticalGrid(
-                cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 128.dp else 180.dp),
+                cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 80.dp else 120.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(
@@ -333,39 +330,27 @@ fun Details(
                     bottom = 24.dp
                 ),
                 modifier = Modifier
-                    .fillMaxWidth(1f)
+                    .fillMaxWidth(.5f)
+                    .padding(top = 60.dp, end = 40.dp)
             ) {
-                itemsIndexed(modelsteps) { _, modelstep ->
-                    itemsIndexed(modelstep.models) { _, model ->
-                        PartCard(
-                            partId = model.id,
-                            partType = model.type,
-                            partName = model.title,
-                            imageUrl = model.image,
-                            nav = nav,
-                            windowSize = windowSize
-                        )
+                modelsteps.forEach { modelstep ->
+                    modelstep.models.forEach { model ->
+                        item {
+                            PartCard(
+                                partId = model.id,
+                                partType = model.type,
+                                partName = model.title,
+                                imageUrl = model.image,
+                                nav = nav,
+                                windowSize = windowSize
+                            )
+                        }
                     }
                 }
             }
-//            LazyColumn(
-//                contentPadding = PaddingValues(end = 40.dp, bottom = 40.dp),
-//                verticalArrangement = Arrangement.spacedBy(20.dp),
-//                modifier = Modifier
-//                    .fillMaxWidth(0.5f)
-//                    .padding(top = 120.dp)
-//            ) {
-//                generateSteps(modelsteps = modelsteps)
-//            }
         }
     }
 }
-
-//fun LazyListScope.generateSteps(modelsteps: List<ContentfulModelStep>) {
-//    itemsIndexed(modelsteps) { _, step ->
-//        ExerciseStep(exerciseStepName = step.title)
-//    }
-//}
 
 @Composable
 fun Time(minTime: Int, maxTime: Int) {
