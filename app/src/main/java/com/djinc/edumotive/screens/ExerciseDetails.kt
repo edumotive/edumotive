@@ -214,8 +214,17 @@ fun Details(
                     text = stringResource(id = R.string.exercise_start_both),
                     style = MaterialTheme.typography.body2,
                 )
+                if (exerciseType == ContentfulContentModel.EXERCISEASSEMBLE) {
+                    Text(
+                        text = stringResource(id = R.string.exercise_assemble_name),
+                        fontSize = 16.sp,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth()
@@ -249,6 +258,52 @@ fun Details(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(top = 3.dp)
                         )
+                    }
+                }
+                if (exerciseType == ContentfulContentModel.EXERCISEASSEMBLE) {
+                    Text(
+                        text = stringResource(id = R.string.exercise_disassemble_name),
+                        fontSize = 16.sp,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Button(
+                            onClick = {},
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = PinkPrimary
+                            ),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.exercise_start_btn_with_ar),
+                                color = Background,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(top = 3.dp)
+                            )
+                        }
+                        Button(
+                            onClick = {},
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = PinkSecondary
+                            ),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.exercise_start_btn_without_ar),
+                                color = PinkPrimary,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(top = 3.dp)
+                            )
+                        }
                     }
                 }
             }

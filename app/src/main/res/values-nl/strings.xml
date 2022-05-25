@@ -36,6 +36,8 @@
     <string name="exercise_start_title">De oefening starten</string>
     <string name="exercise_start_only_ar">Deze oefening kan alleen met Augmented Reality worden uitgevoerd.</string>
     <string name="exercise_start_both">Deze oefening kan uitgevoerd worden met of zonder het gebruik van Augmented Reality.</string>
+    <string name="exercise_assemble_name">Monteren</string>
+    <string name="exercise_disassemble_name">Demonteren</string>
     <string name="exercise_start_btn_with_ar">Start met AR</string>
     <string name="exercise_start_btn_without_ar">Start zonder AR</string>
 </resources>
