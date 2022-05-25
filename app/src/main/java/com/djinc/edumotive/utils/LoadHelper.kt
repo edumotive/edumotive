@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 open class LoadHelper(
     private var currentAmount: MutableState<Int> = mutableStateOf(0),
     amountNeeded: Int = 0,
-    private var maxAmount: MutableState<Int> = mutableStateOf(amountNeeded)
+    var maxAmount: MutableState<Int> = mutableStateOf(amountNeeded)
 ) {
     fun whenLoaded(updateLoading: (Int) -> Unit = {}, doneLoading: () -> Unit) {
         currentAmount.value = currentAmount.value + 1

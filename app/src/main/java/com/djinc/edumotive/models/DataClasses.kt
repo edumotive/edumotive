@@ -48,7 +48,7 @@ data class ContentfulExerciseManual(
     val info: String = "",
     val minTime: Int = 0,
     val maxTime: Int = 0,
-    val steps: List<ContentfulModelStep> = emptyList()
+    val steps: MutableList<ContentfulModelStep> = mutableListOf()
 ) {
     companion object
 }
@@ -61,7 +61,7 @@ data class ContentfulExerciseAssemble(
     val info: String = "",
     val minTime: Int = 0,
     val maxTime: Int = 0,
-    val steps: List<ContentfulModelStep> = emptyList()
+    val steps: MutableList<ContentfulModelStep> = mutableListOf()
 ) {
     companion object
 }
@@ -74,7 +74,7 @@ data class ContentfulExerciseRecognition(
     val info: String = "",
     val minTime: Int = 0,
     val maxTime: Int = 0,
-    val steps: List<ContentfulModelStep> = emptyList()
+    val steps: MutableList<ContentfulModelStep> = mutableListOf()
 ) {
     companion object
 }
@@ -83,7 +83,7 @@ data class ContentfulModelStep(
     val id: String = "",
     val title: String = "",
     val modelGroup: ContentfulModelGroup? = null,
-    val models: List<ContentfulModel> = emptyList(),
+    val models: MutableList<ContentfulModel> = mutableListOf(),
     val stepInfo: String = "",
     val stepIndex: Int = 0
 ) {

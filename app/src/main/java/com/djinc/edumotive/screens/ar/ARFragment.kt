@@ -12,12 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
 import com.djinc.edumotive.constants.ContentfulContentModel
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
+import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.LoadHelper
 import com.djinc.edumotive.utils.ar.createModel
 import com.djinc.edumotive.utils.ar.math.calcDistance
 import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
+import com.djinc.edumotive.utils.ar.math.countModelsInSteps
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -31,6 +31,7 @@ import io.github.sceneview.utils.doOnApplyWindowInsets
 
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
+    /// Views
     private lateinit var sceneView: ArSceneView
     private lateinit var loadingView: View
     private lateinit var actionButton: ExtendedFloatingActionButton
@@ -38,9 +39,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
 
+    /// Anchor Node
     private lateinit var cursorNode: CursorNode
 
+    /// AR Model data
     private var models = mutableListOf<ContentfulModel>()
+    private var steps = mutableListOf<ContentfulModelStep>()
     private var selectedModelIndex = mutableStateOf(0)
     private var isModelSelected = mutableStateOf(false)
 
@@ -67,7 +71,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     systemBarsInsets.bottom + bottomMargin
             }
             setOnClickListener {
-                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+                if (!isLoading) cursorNode.createAnchor()?.let {
+                    if (params != null) {
+                        anchorOrMove(it)
+                    }
+                }
             }
             isGone = false
         }
@@ -94,8 +102,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 transformCard()
             }
 
-            onTouchAr = {_, _ ->
-                if (!isLoading) cursorNode.createAnchor()?.let { anchorOrMove(it) }
+            onTouchAr = { _, _ ->
+                if (!isLoading) cursorNode.createAnchor()?.let {
+                    if (params != null) {
+                        anchorOrMove(it)
+                    }
+                }
             }
 
             onArFrame = { arFrame ->
@@ -155,24 +167,55 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun fetchContentful(params: Bundle) {
-        if (params.getString("type") == ContentfulContentModel.MODEL.stringValue) {
-            Contentful().fetchModelByID(
-                id = params.getString("id")!!,
-                errorCallBack = ::errorCatch
-            ) { model: ContentfulModel ->
-                models.add(model)
-                loadModels()
+        when (params.getString("type")) {
+            ContentfulContentModel.MODEL.stringValue -> {
+                Contentful().fetchModelByID(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { model: ContentfulModel ->
+                    models.add(model)
+                    loadModels()
+                }
             }
-        } else {
-            Contentful().fetchModelGroupById(
-                id = params.getString("id")!!,
-                errorCallBack = ::errorCatch
-            ) { modelGroup: ContentfulModelGroup ->
-                models.addAll(modelGroup.models)
-                loadModels()
+            ContentfulContentModel.MODELGROUP.stringValue -> {
+                Contentful().fetchModelGroupById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { modelGroup: ContentfulModelGroup ->
+                    models.addAll(modelGroup.models)
+                    loadModels()
+                }
+            }
+            ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
+                Contentful().fetchExercisesManualById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { exercisesManual: ContentfulExerciseManual ->
+                    steps.addAll(exercisesManual.steps)
+                    loadExerciseModels()
+                }
+            }
+            ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+                Contentful().fetchExercisesAssembleById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { exerciseAssemble: ContentfulExerciseAssemble ->
+                    steps.addAll(exerciseAssemble.steps)
+                    loadExerciseModels()
+                }
+            }
+            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+                Contentful().fetchExercisesRecognitionById(
+                    id = params.getString("id")!!,
+                    errorCallBack = ::errorCatch
+                ) { exerciseRecognition: ContentfulExerciseRecognition ->
+                    steps.addAll(exerciseRecognition.steps)
+                    loadExerciseModels()
+                }
             }
         }
     }
+
 
     private fun loadModels() {
         val loadHelper = LoadHelper(amountNeeded = models.size)
@@ -181,11 +224,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             if (models[index].arModel != null) {
                 loadedModel(loadHelper)
             } else {
-                createModel(
-                    requireContext(),
-                    lifecycleScope,
-                    model.modelUrl,
-                    model.title,
+                createAndLoadModel(
+                    model,
                     (models.size <= 1)
                 ) {
                     models[index].arModel = addOnTouched(it)
@@ -196,11 +236,64 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
+    private fun loadExerciseModels() {
+        val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
+
+        steps.forEach { step ->
+            if(step.models.isNotEmpty()) {
+                val isSingular = step.models.size == 1
+                step.models.forEach { model ->
+                    if (model.arModel != null) {
+                        models.add(model)
+                        loadedModel(loadHelper)
+                    } else {
+                        createAndLoadModel(
+                            model,
+                            isSingular
+                        ) {
+                            model.arModel = it
+                            models.add(model)
+                            loadedModel(loadHelper)
+                        }
+                    }
+                }
+            } else if (step.modelGroup != null) {
+                step.modelGroup.models.forEach { model ->
+                    if (model.arModel != null) {
+                        models.add(model)
+                        loadedModel(loadHelper)
+                    } else {
+                        createAndLoadModel(
+                            model,
+                            false
+                        ) {
+                            model.arModel = it
+                            models.add(model)
+                            loadedModel(loadHelper)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun createAndLoadModel(model: ContentfulModel, isSingular: Boolean, doneLoading: (ArModelNode) -> Unit) {
+        createModel(
+            requireContext(),
+            lifecycleScope,
+            model.modelUrl,
+            model.title,
+            isSingular
+        ) {
+            doneLoading(it)
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun loadedModel(loadHelper: LoadHelper) {
         loadHelper.whenLoaded(updateLoading = { amount ->
             actionButton.text =
-                getString(R.string.loading_models) + " " + amount + "/" + models.size
+                getString(R.string.loading_models) + " " + amount + "/" + loadHelper.maxAmount.value
         }) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
