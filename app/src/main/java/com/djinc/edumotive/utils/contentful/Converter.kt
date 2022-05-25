@@ -134,12 +134,9 @@ fun ContentfulExerciseRecognition.Companion.fromRestEntry(
     entry.getField<String?>("info").orEmpty(),
     entry.getField("minimalTime"),
     entry.getField("maximumTime"),
-    if (entry.getField<CDAEntry?>("modelGroup") != null)
-        ContentfulModelGroup.fromRestEntry(entry.getField("modelGroup"))
-    else null,
-    entry.getField<List<CDAEntry>?>("models")
+    entry.getField<List<CDAEntry>?>("steps")
         .orEmpty()
-        .map { ContentfulModel.fromRestEntry(it) },
+        .map { ContentfulModelStep.fromRestEntry(it) }
 )
 
 fun ContentfulModelStep.Companion.fromRestEntry(
