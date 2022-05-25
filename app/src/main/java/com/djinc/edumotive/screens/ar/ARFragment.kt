@@ -17,6 +17,7 @@ import com.djinc.edumotive.utils.LoadHelper
 import com.djinc.edumotive.utils.ar.createModel
 import com.djinc.edumotive.utils.ar.math.calcDistance
 import com.djinc.edumotive.utils.ar.math.calcRotationAngleInDegrees
+import com.djinc.edumotive.utils.ar.math.countModelsInSteps
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -72,7 +73,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             setOnClickListener {
                 if (!isLoading) cursorNode.createAnchor()?.let {
                     if (params != null) {
-                        anchorOrMove(it, params.getString("type"))
+                        anchorOrMove(it)
                     }
                 }
             }
@@ -104,7 +105,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             onTouchAr = { _, _ ->
                 if (!isLoading) cursorNode.createAnchor()?.let {
                     if (params != null) {
-                        anchorOrMove(it, params.getString("type"))
+                        anchorOrMove(it)
                     }
                 }
             }
@@ -190,15 +191,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     id = params.getString("id")!!,
                     errorCallBack = ::errorCatch
                 ) { exercisesManual: ContentfulExerciseManual ->
-                    exercisesManual.steps.forEach { steps ->
-                        if (steps.models.isNotEmpty()) {
-                            models.addAll(steps.models)
-                        } else if (steps.modelGroup != null) {
-                            models.addAll(steps.modelGroup.models)
-                        }
-                    }
                     steps.addAll(exercisesManual.steps)
-                    loadModels()
+                    loadExerciseModels()
                 }
             }
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
@@ -206,15 +200,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     id = params.getString("id")!!,
                     errorCallBack = ::errorCatch
                 ) { exerciseAssemble: ContentfulExerciseAssemble ->
-                    exerciseAssemble.steps.forEach { steps ->
-                        if (steps.models.isNotEmpty()) {
-                            models.addAll(steps.models)
-                        } else if (steps.modelGroup != null) {
-                            models.addAll(steps.modelGroup.models)
-                        }
-                    }
                     steps.addAll(exerciseAssemble.steps)
-                    loadModels()
+                    loadExerciseModels()
                 }
             }
             ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
@@ -222,13 +209,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     id = params.getString("id")!!,
                     errorCallBack = ::errorCatch
                 ) { exerciseRecognition: ContentfulExerciseRecognition ->
-                    if (exerciseRecognition.models.isNotEmpty()) {
-                        models.addAll(exerciseRecognition.models)
-                    }
-                    if (exerciseRecognition.modelGroup != null) {
-                        models.addAll(exerciseRecognition.modelGroup.models)
-                    }
-                    loadModels()
+                    steps.addAll(exerciseRecognition.steps)
+                    loadExerciseModels()
                 }
             }
         }
@@ -242,11 +224,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             if (models[index].arModel != null) {
                 loadedModel(loadHelper)
             } else {
-                createModel(
-                    requireContext(),
-                    lifecycleScope,
-                    model.modelUrl,
-                    model.title,
+                createAndLoadModel(
+                    model,
                     (models.size <= 1)
                 ) {
                     models[index].arModel = addOnTouched(it)
@@ -254,6 +233,53 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     loadedModel(loadHelper)
                 }
             }
+        }
+    }
+
+    private fun loadExerciseModels() {
+        val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
+
+        steps.forEach { step ->
+            if(step.models.isNotEmpty()) {
+                val isSingular = step.models.size == 1
+                step.models.forEach { model ->
+                    if (model.arModel != null) {
+                        loadedModel(loadHelper)
+                    } else {
+                        createAndLoadModel(
+                            model,
+                            isSingular
+                        ) {
+                            model.arModel = it
+                            models.add(model)
+                            loadedModel(loadHelper)
+                        }
+                    }
+                }
+            } else if (step.modelGroup != null) {
+                step.modelGroup.models.forEach { model ->
+                    createAndLoadModel(
+                        model,
+                        false
+                    ) {
+                        model.arModel = it
+                        models.add(model)
+                        loadedModel(loadHelper)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun createAndLoadModel(model: ContentfulModel, isSingular: Boolean, doneLoading: (ArModelNode) -> Unit) {
+        createModel(
+            requireContext(),
+            lifecycleScope,
+            model.modelUrl,
+            model.title,
+            isSingular
+        ) {
+            doneLoading(it)
         }
     }
 
@@ -286,24 +312,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         return arModel
     }
 
-    private fun anchorOrMove(anchor: Anchor, type: String?) {
-        when (type) {
-            ContentfulContentModel.MODEL.stringValue,
-            ContentfulContentModel.MODELGROUP.stringValue -> {
-                models.forEach { model ->
-                    if (!sceneView.children.contains(model.arModel!!)) sceneView.addChild(model.arModel!!)
-                    model.arModel!!.anchor = anchor
-                }
-            }
-            ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
-
-            }
-            ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
-
-            }
-            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
-
-            }
+    private fun anchorOrMove(anchor: Anchor) {
+        models.forEach { model ->
+            if (!sceneView.children.contains(model.arModel!!)) sceneView.addChild(model.arModel!!)
+            model.arModel!!.anchor = anchor
         }
     }
 
