@@ -74,6 +74,7 @@ fun ContentfulExercise.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()
         .map { ContentfulModel.fromRestEntry(it) }
+        .toMutableList()
 )
 
 fun ContentfulExerciseManual.Companion.fromRestEntry(
@@ -95,6 +96,7 @@ fun ContentfulExerciseManual.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("steps")
         .orEmpty()
         .map { ContentfulModelStep.fromRestEntry(it) }
+        .toMutableList()
 )
 
 fun ContentfulExerciseAssemble.Companion.fromRestEntry(
@@ -116,6 +118,7 @@ fun ContentfulExerciseAssemble.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("steps")
         .orEmpty()
         .map { ContentfulModelStep.fromRestEntry(it) }
+        .toMutableList()
 )
 
 fun ContentfulExerciseRecognition.Companion.fromRestEntry(
@@ -137,6 +140,7 @@ fun ContentfulExerciseRecognition.Companion.fromRestEntry(
     entry.getField<List<CDAEntry>?>("steps")
         .orEmpty()
         .map { ContentfulModelStep.fromRestEntry(it) }
+        .toMutableList()
 )
 
 fun ContentfulModelStep.Companion.fromRestEntry(
@@ -149,7 +153,8 @@ fun ContentfulModelStep.Companion.fromRestEntry(
     else null,
     entry.getField<List<CDAEntry>?>("models")
         .orEmpty()
-        .map { ContentfulModel.fromRestEntry(it) },
+        .map { ContentfulModel.fromRestEntry(it) }
+        .toMutableList(),
     entry.getField<String?>("stepInfo").orEmpty(),
     entry.getField("stepIndex"),
 )

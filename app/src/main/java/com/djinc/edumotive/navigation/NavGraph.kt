@@ -34,7 +34,9 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
                         listOf(
                             ContentfulContentModel.MODELGROUP,
                             ContentfulContentModel.MODEL,
-                            ContentfulContentModel.EXERCISE
+                            ContentfulContentModel.EXERCISEASSEMBLE,
+                            ContentfulContentModel.EXERCISEMANUAL,
+                            ContentfulContentModel.EXERCISERECOGNITION
                         )
                     ) {
                         isRefreshing = !it
@@ -51,7 +53,12 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    MainEdumotive.refresh(listOf(ContentfulContentModel.MODELGROUP, ContentfulContentModel.MODEL)) {
+                    MainEdumotive.refresh(
+                        listOf(
+                            ContentfulContentModel.MODELGROUP,
+                            ContentfulContentModel.MODEL
+                        )
+                    ) {
                         isRefreshing = !it
                     }
                 }
@@ -82,7 +89,13 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    MainEdumotive.refresh(listOf(ContentfulContentModel.EXERCISE)) {
+                    MainEdumotive.refresh(
+                        listOf(
+                            ContentfulContentModel.EXERCISEASSEMBLE,
+                            ContentfulContentModel.EXERCISEMANUAL,
+                            ContentfulContentModel.EXERCISERECOGNITION
+                        )
+                    ) {
                         isRefreshing = !it
                     }
                 }
@@ -90,14 +103,19 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
         }
         composable(
             route = Screen.Exercise.route,
-            arguments = listOf(navArgument("exerciseId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("exerciseId") { type = NavType.StringType },
+                navArgument("exerciseType") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getString("exerciseId")?.let {
-                ExerciseDetails(
-                    exerciseId = it,
-                    windowSize = windowSize
-                )
-            }
+            val exerciseId = backStackEntry.arguments?.getString("exerciseId")
+            val exerciseType = backStackEntry.arguments?.getString("exerciseType")
+            ExerciseDetails(
+                exerciseId = exerciseId!!,
+                exerciseType = ContentfulContentModel.valueOf(exerciseType!!),
+                nav = navController,
+                windowSize = windowSize
+            )
         }
     }
 }

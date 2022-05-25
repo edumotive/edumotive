@@ -29,7 +29,9 @@ fun Exercises(nav: NavController, windowSize: WindowSize) {
         )
         LazySlider(
             direction = SliderDirection.Vertical,
-            list = MainEdumotive.exercises,
+            list = MainEdumotive.exerciseAssemble,
+            list2 = MainEdumotive.exercisesManual,
+            list3 = MainEdumotive.exerciseRecognition,
             component = SliderComponent.ExerciseCard,
             nav = nav,
             windowSize = windowSize
