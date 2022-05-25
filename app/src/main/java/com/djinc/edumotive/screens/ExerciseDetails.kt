@@ -49,7 +49,7 @@ fun ExerciseDetails(
             val activeExercise = remember { mutableStateOf(ContentfulExerciseAssemble()) }
             LaunchedEffect(key1 = exerciseId) {
                 isActiveExerciseLoaded.value = false
-                Contentful().fetchAllExercisesAssembleById(
+                Contentful().fetchExercisesAssembleById(
                     exerciseId,
                     errorCallBack = ::errorCatch
                 ) {
@@ -69,7 +69,7 @@ fun ExerciseDetails(
             val activeExercise = remember { mutableStateOf(ContentfulExerciseManual()) }
             LaunchedEffect(key1 = exerciseId) {
                 isActiveExerciseLoaded.value = false
-                Contentful().fetchAllExercisesManualById(exerciseId, errorCallBack = ::errorCatch) {
+                Contentful().fetchExercisesManualById(exerciseId, errorCallBack = ::errorCatch) {
                     activeExercise.value = it
                     isActiveExerciseLoaded.value = true
                 }
@@ -86,7 +86,7 @@ fun ExerciseDetails(
             val activeExercise = remember { mutableStateOf(ContentfulExerciseRecognition()) }
             LaunchedEffect(key1 = exerciseId) {
                 isActiveExerciseLoaded.value = false
-                Contentful().fetchAllExercisesRecognitionById(
+                Contentful().fetchExercisesRecognitionById(
                     exerciseId,
                     errorCallBack = ::errorCatch
                 ) {
@@ -155,7 +155,7 @@ fun Details(
                 "${stringResource(id = R.string.exercise_type_recognition)} ${stringResource(id = R.string.exercise).lowercase()}"
             typeInfo = stringResource(id = R.string.exercise_type_recognition_info)
             info = exercise.info
-            modelsteps = emptyList()
+            modelsteps = exercise.steps
         }
         else -> {
             title = ""
