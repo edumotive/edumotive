@@ -2,7 +2,6 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,6 @@ import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
-import kotlin.random.Random
 
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
@@ -110,20 +108,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
 
             onTouchAr = { _, _ ->
-//                if (!isLoading) cursorNode.createAnchor()?.let {
-//                    if (params != null) {
-//                        anchorOrMove(it)
-//                    }
-//                }
-                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
-                    answerCallback = { isAnsweredCorrectly ->
-                        Log.i("TestAPI", isAnsweredCorrectly.toString())
-                    },
-                    finishCallback = {
-                        Log.i("TestAPI", "Exercise finished with " +
-                                falseAnswersRecognition.value + " mistakes")
+                if (!isLoading) cursorNode.createAnchor()?.let {
+                    if (params != null) {
+                        anchorOrMove(it)
                     }
-                )
+                }
+//                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
+//                    answerCallback = { isAnsweredCorrectly ->
+//                        Log.i("TestAPI", isAnsweredCorrectly.toString())
+//                    },
+//                    finishCallback = {
+//                        Log.i("TestAPI", "Exercise finished with " +
+//                                falseAnswersRecognition.value + " mistakes")
+//                    }
+//                )
             }
 
             onArFrame = { arFrame ->
