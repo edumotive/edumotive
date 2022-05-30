@@ -155,6 +155,5 @@ fun ContentfulModelStep.Companion.fromRestEntry(
         .orEmpty()
         .map { ContentfulModel.fromRestEntry(it) }
         .toMutableList(),
-    entry.getField<String?>("stepInfo").orEmpty(),
-    entry.getField("stepIndex"),
+    entry.getField<String?>("stepInfo").orEmpty()
 )

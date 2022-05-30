@@ -84,8 +84,7 @@ data class ContentfulModelStep(
     val title: String = "",
     val modelGroup: ContentfulModelGroup? = null,
     val models: MutableList<ContentfulModel> = mutableListOf(),
-    val stepInfo: String = "",
-    val stepIndex: Int = 0
+    val stepInfo: String = ""
 ) {
     fun getModelName() : String {
         return if (this.hasModel()) this.models.first().title else this.modelGroup!!.title
