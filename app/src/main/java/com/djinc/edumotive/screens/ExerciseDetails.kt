@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,11 +16,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.ScreenTitle
+import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulExerciseAssemble
@@ -104,6 +107,7 @@ fun ExerciseDetails(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Details(
     exercise: Any,
@@ -212,8 +216,17 @@ fun Details(
                     text = stringResource(id = R.string.exercise_start_both),
                     style = MaterialTheme.typography.body2,
                 )
+                if (exerciseType == ContentfulContentModel.EXERCISEASSEMBLE) {
+                    Text(
+                        text = stringResource(id = R.string.exercise_assemble_name),
+                        fontSize = 16.sp,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth()
@@ -256,15 +269,85 @@ fun Details(
                         )
                     }
                 }
+                if (exerciseType == ContentfulContentModel.EXERCISEASSEMBLE) {
+                    Text(
+                        text = stringResource(id = R.string.exercise_disassemble_name),
+                        fontSize = 16.sp,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        Button(
+                            onClick = {},
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = PinkPrimary
+                            ),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.exercise_start_btn_with_ar),
+                                color = Background,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(top = 3.dp)
+                            )
+                        }
+                        Button(
+                            onClick = {},
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = PinkSecondary
+                            ),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.exercise_start_btn_without_ar),
+                                color = PinkPrimary,
+                                fontSize = 16.sp,
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(top = 3.dp)
+                            )
+                        }
+                    }
+                }
             }
-//            if (windowSize != WindowSize.Expanded) {
-//
-//            }
         }
     }
     if (windowSize == WindowSize.Expanded) {
         Box(contentAlignment = Alignment.TopEnd, modifier = Modifier.fillMaxWidth(1f)) {
-            // Add here images of models
+            LazyVerticalGrid(
+                cells = GridCells.Adaptive(if (windowSize == WindowSize.Compact) 80.dp else 120.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = if (windowSize == WindowSize.Compact) PaddingValues(
+                    bottom = 100.dp
+                ) else PaddingValues(
+                    bottom = 24.dp
+                ),
+                modifier = Modifier
+                    .fillMaxWidth(.5f)
+                    .padding(top = 60.dp, end = 40.dp)
+            ) {
+                modelsteps.forEach { modelstep ->
+                    modelstep.models.forEach { model ->
+                        item {
+                            PartCard(
+                                partId = model.id,
+                                partType = model.type,
+                                partName = model.title,
+                                imageUrl = model.image,
+                                nav = nav,
+                                windowSize = windowSize
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
