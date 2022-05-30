@@ -48,6 +48,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var selectedModelIndex = mutableStateOf(0)
     private var isModelSelected = mutableStateOf(false)
 
+    /// Exercises
+    private var currentStep = mutableStateOf(0)
+    private var falseAnswersRecognition = mutableStateOf(0)
+
+
     private var isLoading = true
         set(value) {
             field = value
@@ -108,6 +113,15 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         anchorOrMove(it)
                     }
                 }
+//                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
+//                    answerCallback = { isAnsweredCorrectly ->
+//                        Log.i("TestAPI", isAnsweredCorrectly.toString())
+//                    },
+//                    finishCallback = {
+//                        Log.i("TestAPI", "Exercise finished with " +
+//                                falseAnswersRecognition.value + " mistakes")
+//                    }
+//                )
             }
 
             onArFrame = { arFrame ->
@@ -192,7 +206,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exercisesManual: ContentfulExerciseManual ->
                     steps.addAll(exercisesManual.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISEMANUAL)
                 }
             }
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
@@ -201,7 +215,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exerciseAssemble: ContentfulExerciseAssemble ->
                     steps.addAll(exerciseAssemble.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISEASSEMBLE)
                 }
             }
             ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
@@ -210,7 +224,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exerciseRecognition: ContentfulExerciseRecognition ->
                     steps.addAll(exerciseRecognition.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISERECOGNITION)
                 }
             }
         }
@@ -236,7 +250,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun loadExerciseModels() {
+    private fun loadExerciseModels(type: ContentfulContentModel) {
         val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
 
         steps.forEach { step ->
@@ -245,7 +259,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 step.models.forEach { model ->
                     if (model.arModel != null) {
                         models.add(model)
-                        loadedModel(loadHelper)
+                        model.arModel!!.isVisible = false
+                        loadedModel(loadHelper) { startExercise(type) }
                     } else {
                         createAndLoadModel(
                             model,
@@ -253,7 +268,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         ) {
                             model.arModel = it
                             models.add(model)
-                            loadedModel(loadHelper)
+                            model.arModel!!.isVisible = false
+                            loadedModel(loadHelper) { startExercise(type) }
                         }
                     }
                 }
@@ -261,7 +277,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 step.modelGroup.models.forEach { model ->
                     if (model.arModel != null) {
                         models.add(model)
-                        loadedModel(loadHelper)
+                        model.arModel!!.isVisible = false
+                        loadedModel(loadHelper) { startExercise(type) }
                     } else {
                         createAndLoadModel(
                             model,
@@ -269,8 +286,79 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         ) {
                             model.arModel = it
                             models.add(model)
-                            loadedModel(loadHelper)
+                            model.arModel!!.isVisible = false
+                            loadedModel(loadHelper) { startExercise(type) }
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun startExercise(type: ContentfulContentModel) {
+        when (type) {
+            ContentfulContentModel.EXERCISERECOGNITION ->
+                startExerciseRecognition()
+            ContentfulContentModel.EXERCISEMANUAL ->
+                startExerciseManual()
+            ContentfulContentModel.EXERCISEASSEMBLE ->
+                startExerciseAssemble()
+            else -> return
+        }
+    }
+
+    private fun startExerciseRecognition() {
+        steps.shuffle()
+        showStep(currentStep.value)
+    }
+
+    private fun answerStepExerciseRecognition(step: ContentfulModelStep, answerCallback: (Boolean) -> Unit, finishCallback: () -> Unit) {
+        if(step == steps[currentStep.value]) {
+            answerCallback(true)
+            nextStep() { finishCallback() }
+        } else {
+            answerCallback(false)
+            falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+        }
+    }
+
+    private fun startExerciseManual() {
+
+    }
+
+    private fun startExerciseAssemble() {
+
+    }
+
+    private fun nextStep(finishCallback: () -> Unit = {}) {
+        if(currentStep.value < steps.size - 1) {
+            currentStep.value = currentStep.value + 1
+            showStep(currentStep.value)
+        } else {
+            finishCallback()
+        }
+    }
+
+    private fun showStep(currentIndex: Int) {
+        steps.forEachIndexed { index, contentfulModelStep ->
+            if(index == currentIndex) {
+                if(contentfulModelStep.models.isNotEmpty()) {
+                    contentfulModelStep.models.forEach {
+                        it.arModel!!.isVisible = true
+                    }
+                } else if (contentfulModelStep.modelGroup != null) {
+                    contentfulModelStep.modelGroup.models.forEach {
+                        it.arModel!!.isVisible = true
+                    }
+                }
+            } else {
+                if(contentfulModelStep.models.isNotEmpty()) {
+                    contentfulModelStep.models.forEach {
+                        it.arModel!!.isVisible = false
+                    }
+                } else if (contentfulModelStep.modelGroup != null) {
+                    contentfulModelStep.modelGroup.models.forEach {
+                        it.arModel!!.isVisible = false
                     }
                 }
             }
@@ -290,7 +378,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadedModel(loadHelper: LoadHelper) {
+    private fun loadedModel(loadHelper: LoadHelper, callback: () -> Unit = {}) {
         loadHelper.whenLoaded(updateLoading = { amount ->
             actionButton.text =
                 getString(R.string.loading_models) + " " + amount + "/" + loadHelper.maxAmount.value
@@ -303,6 +391,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     selectModelVisibility(modelNode)
                 }
             }
+            callback()
         }
     }
 
