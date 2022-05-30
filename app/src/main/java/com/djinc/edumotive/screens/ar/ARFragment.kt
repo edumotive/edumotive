@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
+import kotlin.random.Random
 
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
@@ -108,20 +110,20 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
 
             onTouchAr = { _, _ ->
-                if (!isLoading) cursorNode.createAnchor()?.let {
-                    if (params != null) {
-                        anchorOrMove(it)
-                    }
-                }
-//                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
-//                    answerCallback = { isAnsweredCorrectly ->
-//                        Log.i("TestAPI", isAnsweredCorrectly.toString())
-//                    },
-//                    finishCallback = {
-//                        Log.i("TestAPI", "Exercise finished with " +
-//                                falseAnswersRecognition.value + " mistakes")
+//                if (!isLoading) cursorNode.createAnchor()?.let {
+//                    if (params != null) {
+//                        anchorOrMove(it)
 //                    }
-//                )
+//                }
+                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
+                    answerCallback = { isAnsweredCorrectly ->
+                        Log.i("TestAPI", isAnsweredCorrectly.toString())
+                    },
+                    finishCallback = {
+                        Log.i("TestAPI", "Exercise finished with " +
+                                falseAnswersRecognition.value + " mistakes")
+                    }
+                )
             }
 
             onArFrame = { arFrame ->
@@ -254,43 +256,33 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
 
         steps.forEach { step ->
-            if(step.models.isNotEmpty()) {
+            if(step.hasModel()) {
                 val isSingular = step.models.size == 1
                 step.models.forEach { model ->
-                    if (model.arModel != null) {
-                        models.add(model)
-                        model.arModel!!.isVisible = false
-                        loadedModel(loadHelper) { startExercise(type) }
-                    } else {
-                        createAndLoadModel(
-                            model,
-                            isSingular
-                        ) {
-                            model.arModel = it
-                            models.add(model)
-                            model.arModel!!.isVisible = false
-                            loadedModel(loadHelper) { startExercise(type) }
-                        }
-                    }
+                    createExerciseModel(model = model, isSingular = isSingular, loadHelper = loadHelper, type = type)
                 }
-            } else if (step.modelGroup != null) {
-                step.modelGroup.models.forEach { model ->
-                    if (model.arModel != null) {
-                        models.add(model)
-                        model.arModel!!.isVisible = false
-                        loadedModel(loadHelper) { startExercise(type) }
-                    } else {
-                        createAndLoadModel(
-                            model,
-                            false
-                        ) {
-                            model.arModel = it
-                            models.add(model)
-                            model.arModel!!.isVisible = false
-                            loadedModel(loadHelper) { startExercise(type) }
-                        }
-                    }
+            } else if (step.hasModelGroup()) {
+                step.modelGroup!!.models.forEach { model ->
+                    createExerciseModel(model = model, isSingular = false, loadHelper = loadHelper, type = type)
                 }
+            }
+        }
+    }
+
+    private fun createExerciseModel(model: ContentfulModel, isSingular: Boolean, loadHelper: LoadHelper, type: ContentfulContentModel) {
+        if (model.arModel != null) {
+            models.add(model)
+            model.arModel!!.isVisible = false
+            loadedModel(loadHelper) { startExercise(type) }
+        } else {
+            createAndLoadModel(
+                model,
+                isSingular
+            ) {
+                model.arModel = it
+                models.add(model)
+                model.arModel!!.isVisible = false
+                loadedModel(loadHelper) { startExercise(type) }
             }
         }
     }
@@ -342,25 +334,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun showStep(currentIndex: Int) {
         steps.forEachIndexed { index, contentfulModelStep ->
             if(index == currentIndex) {
-                if(contentfulModelStep.models.isNotEmpty()) {
-                    contentfulModelStep.models.forEach {
-                        it.arModel!!.isVisible = true
-                    }
-                } else if (contentfulModelStep.modelGroup != null) {
-                    contentfulModelStep.modelGroup.models.forEach {
-                        it.arModel!!.isVisible = true
-                    }
-                }
+                contentfulModelStep.setVisibility(true)
             } else {
-                if(contentfulModelStep.models.isNotEmpty()) {
-                    contentfulModelStep.models.forEach {
-                        it.arModel!!.isVisible = false
-                    }
-                } else if (contentfulModelStep.modelGroup != null) {
-                    contentfulModelStep.modelGroup.models.forEach {
-                        it.arModel!!.isVisible = false
-                    }
-                }
+                contentfulModelStep.setVisibility(false)
             }
         }
     }
