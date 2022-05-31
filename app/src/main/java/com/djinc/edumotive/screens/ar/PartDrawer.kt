@@ -9,14 +9,12 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,9 +30,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelStep
 import com.djinc.edumotive.screens.gridItems
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
@@ -45,7 +46,12 @@ import io.github.sceneview.ar.node.ArModelNode
 @Composable
 fun PartDrawer(
     list: List<ContentfulModel>,
-    callback: (ArModelNode) -> Unit
+    type: String? = "parts",
+    steps: MutableList<ContentfulModelStep>? = mutableListOf(),
+    shuffledSteps: MutableList<ContentfulModelStep>? = mutableListOf(),
+    currentStep: MutableState<Int>? = mutableStateOf(0),
+    callback: (ArModelNode) -> Unit,
+    answerCallback: (Boolean) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp + 1
@@ -83,35 +89,59 @@ fun PartDrawer(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        Text(
-                            text = if (windowSize == WindowSize.Compact) stringResource(R.string.parts_drawer_short) else stringResource(
-                                R.string.parts_drawer_long
-                            ),
-                            fontFamily = fonts,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        DrawerTitle(type = type!!, windowSize = windowSize)
                     }
-                    gridItems(
-                        data = list,
-                        columnCount = if (windowSize == WindowSize.Compact) 1 else 2,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                    ) { item ->
-                        PartCard(
-                            partId = item.id,
-                            partType = item.type,
-                            partName = item.title,
-                            imageUrl = item.image,
-                            activePart = activePart.value
-                        ) { partId ->
-                            activePart.value = if (activePart.value != partId) partId else ""
-                            callback.invoke(item.arModel!!)
+                    if (steps != null) {
+                        shuffledSteps!!.forEach { step ->
+                            item {
+                                Box(modifier = Modifier.clickable {
+                                    answerStepExerciseRecognition(
+                                        steps = steps,
+                                        currentStep = currentStep,
+                                        step = step
+                                    ) {
+                                        answerCallback.invoke(it)
+                                    }
+                                }) {
+                                    ExerciseStep(exerciseStepName = step.getModelName())
+                                }
+                            }
+                        }
+                    } else {
+                        gridItems(
+                            data = list,
+                            columnCount = if (windowSize == WindowSize.Compact) 1 else 2,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier
+                        ) { item ->
+                            PartCard(
+                                partId = item.id,
+                                partType = item.type,
+                                partName = item.title,
+                                imageUrl = item.image,
+                                activePart = activePart.value
+                            ) { partId ->
+                                activePart.value = if (activePart.value != partId) partId else ""
+                                callback.invoke(item.arModel!!)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+fun answerStepExerciseRecognition(
+    steps: MutableList<ContentfulModelStep>,
+    currentStep: MutableState<Int>?,
+    step: ContentfulModelStep,
+    answerCallback: (Boolean) -> Unit
+) {
+    if (step == steps!![currentStep!!.value]) {
+        answerCallback(true)
+    } else {
+        answerCallback(false)
     }
 }
 
@@ -168,7 +198,7 @@ fun DrawerButton(buttonSize: Dp, drawerState: Boolean, callback: (Boolean) -> Un
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
                     change.consumeAllChanges()
-                    if(dragAmount.x < 0) callback(true) else callback(false)
+                    if (dragAmount.x < 0) callback(true) else callback(false)
                 }
             }
     ) {
@@ -219,4 +249,42 @@ fun DrawerButton(buttonSize: Dp, drawerState: Boolean, callback: (Boolean) -> Un
             }
         }
     }
+}
+
+@Composable
+fun DrawerTitle(type: String, windowSize: WindowSize) {
+    val text: String
+
+    when (type) {
+        ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Juist volgorde"
+            else
+                "Plaats in juiste volgorde"
+        }
+        ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Handleiding oefening"
+            else
+                "Handleiding oefening"
+        }
+        ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Kies het juiste onderdeel"
+            else
+                "Kies het juiste onderdeel"
+        }
+        else -> {
+            text = if (windowSize == WindowSize.Compact)
+                stringResource(R.string.parts_drawer_short)
+            else
+                stringResource(R.string.parts_drawer_long)
+        }
+    }
+    Text(
+        text = text,
+        fontFamily = fonts,
+        fontSize = 22.sp,
+        fontWeight = FontWeight.Medium
+    )
 }

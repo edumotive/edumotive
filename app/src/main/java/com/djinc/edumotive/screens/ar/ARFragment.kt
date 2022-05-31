@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -254,20 +255,35 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
 
         steps.forEach { step ->
-            if(step.hasModel()) {
+            if (step.hasModel()) {
                 val isSingular = step.models.size == 1
                 step.models.forEach { model ->
-                    createExerciseModel(model = model, isSingular = isSingular, loadHelper = loadHelper, type = type)
+                    createExerciseModel(
+                        model = model,
+                        isSingular = isSingular,
+                        loadHelper = loadHelper,
+                        type = type
+                    )
                 }
             } else if (step.hasModelGroup()) {
                 step.modelGroup!!.models.forEach { model ->
-                    createExerciseModel(model = model, isSingular = false, loadHelper = loadHelper, type = type)
+                    createExerciseModel(
+                        model = model,
+                        isSingular = false,
+                        loadHelper = loadHelper,
+                        type = type
+                    )
                 }
             }
         }
     }
 
-    private fun createExerciseModel(model: ContentfulModel, isSingular: Boolean, loadHelper: LoadHelper, type: ContentfulContentModel) {
+    private fun createExerciseModel(
+        model: ContentfulModel,
+        isSingular: Boolean,
+        loadHelper: LoadHelper,
+        type: ContentfulContentModel
+    ) {
         if (model.arModel != null) {
             models.add(model)
             model.arModel!!.isVisible = false
@@ -302,15 +318,15 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         showStep(currentStep.value)
     }
 
-    private fun answerStepExerciseRecognition(step: ContentfulModelStep, answerCallback: (Boolean) -> Unit, finishCallback: () -> Unit) {
-        if(step == steps[currentStep.value]) {
-            answerCallback(true)
-            nextStep() { finishCallback() }
-        } else {
-            answerCallback(false)
-            falseAnswersRecognition.value = falseAnswersRecognition.value + 1
-        }
-    }
+//    private fun answerStepExerciseRecognition(step: ContentfulModelStep, answerCallback: (Boolean) -> Unit, finishCallback: () -> Unit) {
+//        if(step == steps[currentStep.value]) {
+//            answerCallback(true)
+//            nextStep() { finishCallback() }
+//        } else {
+//            answerCallback(false)
+//            falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+//        }
+//    }
 
     private fun startExerciseManual() {
 
@@ -321,7 +337,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
-        if(currentStep.value < steps.size - 1) {
+        Log.i("Iets", "next step")
+        if (currentStep.value < steps.size - 1) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else {
@@ -331,7 +348,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun showStep(currentIndex: Int) {
         steps.forEachIndexed { index, contentfulModelStep ->
-            if(index == currentIndex) {
+            if (index == currentIndex) {
                 contentfulModelStep.setVisibility(true)
             } else {
                 contentfulModelStep.setVisibility(false)
@@ -339,7 +356,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun createAndLoadModel(model: ContentfulModel, isSingular: Boolean, doneLoading: (ArModelNode) -> Unit) {
+    private fun createAndLoadModel(
+        model: ContentfulModel,
+        isSingular: Boolean,
+        doneLoading: (ArModelNode) -> Unit
+    ) {
         createModel(
             requireContext(),
             lifecycleScope,
@@ -360,10 +381,23 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
+            val exerciseType = this.requireArguments().getString("type")
+            val shuffledSteps = steps.toMutableList()
+            shuffledSteps.shuffle()
             drawerView.setContent {
-                PartDrawer(list = models) { modelNode ->
-                    selectModelVisibility(modelNode)
-                }
+                PartDrawer(
+                    list = models,
+                    type = exerciseType,
+                    steps = steps,
+                    shuffledSteps = shuffledSteps,
+                    currentStep = currentStep,
+                    callback = { modelNode ->
+                        selectModelVisibility(modelNode)
+                    },
+                    answerCallback = {
+                        if (it) nextStep() else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+                    }
+                )
             }
             callback()
         }

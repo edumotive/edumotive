@@ -37,7 +37,8 @@ fun ExerciseStep(exerciseStepName: String = "", stepIndex: Int = 0) {
 fun StepName(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.h5,
+        fontFamily = fonts,
+        fontSize = 18.sp,
         modifier = Modifier.padding(start = 8.dp, top = 12.dp, end = 8.dp, bottom = 8.dp)
     )
 }
