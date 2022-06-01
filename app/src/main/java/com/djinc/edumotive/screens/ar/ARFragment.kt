@@ -11,6 +11,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.modals.ExerciseCompleteModal
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.LoadHelper
