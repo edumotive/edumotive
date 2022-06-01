@@ -149,7 +149,7 @@ fun answerStepExerciseRecognition(
     type: String,
     answerCallback: (Boolean) -> Unit
 ) {
-    if(steps.size - 1 != currentStep!!.value) {
+    if(steps.size  - 1 != currentStep!!.value || ( type == ContentfulContentModel.EXERCISERECOGNITION.stringValue && steps.size != currentStep.value)) {
         when (type) {
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
                 if (step == steps[currentStep.value + 1]) {

@@ -352,7 +352,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
-        if (currentStep.value < steps.size - 1) {
+        if(currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
+            currentStep.value = currentStep.value + 1
+            showStep(currentStep.value)
+        } else if (currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue && currentStep.value < steps.size - 1) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else {
