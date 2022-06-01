@@ -53,7 +53,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var currentId: String
     private var drawerLoaded = mutableStateOf(false)
     private var currentStep = mutableStateOf(0)
-    private var falseAnswersRecognition = mutableStateOf(0)
+    private var hasAnswered = mutableStateOf(false)
+    private var falseAnswers = mutableStateOf(0)
 
 
     private var isLoading = true
@@ -199,7 +200,13 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     answerCallback = { answer ->
                         if (answer) nextStep() {
                             /// Show finish modal
-                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+                        } else {
+                            if(!hasAnswered.value) {
+                                hasAnswered.value = true
+                                falseAnswers.value = falseAnswers.value + 1
+                            }
+
+                        }
                     }
                 )
             }
@@ -352,6 +359,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
+        hasAnswered.value = false
         if(currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
