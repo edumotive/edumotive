@@ -51,6 +51,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     /// Exercises
     private lateinit var currentType: String
     private lateinit var currentId: String
+    private var drawerLoaded = mutableStateOf(false)
     private var currentStep = mutableStateOf(0)
     private var falseAnswersRecognition = mutableStateOf(0)
 
@@ -86,6 +87,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
+
+                    loadPartDrawer()
                 }
             }
             isGone = false
@@ -118,6 +121,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
+
+                    loadPartDrawer()
                 }
             }
 
@@ -171,6 +176,32 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                 // Scale card
                 val distance = calcDistance(cameraPosition, cardPosition).toFloat()
                 child.scale = Scale(distance / 3)
+            }
+        }
+    }
+
+    private fun loadPartDrawer() {
+        if(!drawerLoaded.value) {
+            drawerLoaded.value = true
+            val exerciseType = currentType
+            val shuffledSteps = steps.toMutableList()
+            shuffledSteps.shuffle()
+            drawerView.setContent {
+                PartDrawer(
+                    list = models,
+                    type = exerciseType,
+                    steps = steps,
+                    shuffledSteps = shuffledSteps,
+                    currentStep = currentStep,
+                    callback = { modelNode ->
+                        selectModelVisibility(modelNode)
+                    },
+                    answerCallback = { answer ->
+                        if (answer) nextStep() {
+                            /// Show finish modal
+                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+                    }
+                )
             }
         }
     }
@@ -371,26 +402,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
-            val exerciseType = this.requireArguments().getString("type")
-            val shuffledSteps = steps.toMutableList()
-            shuffledSteps.shuffle()
-            drawerView.setContent {
-                PartDrawer(
-                    list = models,
-                    type = exerciseType,
-                    steps = steps,
-                    shuffledSteps = shuffledSteps,
-                    currentStep = currentStep,
-                    callback = { modelNode ->
-                        selectModelVisibility(modelNode)
-                    },
-                    answerCallback = {
-                        if (it) nextStep() {
-                          /// Show finish modal
-                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
-                    }
-                )
-            }
             callback()
         }
     }
