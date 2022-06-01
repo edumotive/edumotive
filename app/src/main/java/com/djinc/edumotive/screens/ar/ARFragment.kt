@@ -2,7 +2,6 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +49,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var isModelSelected = mutableStateOf(false)
 
     /// Exercises
+    private lateinit var currentType: String
+    private lateinit var currentId: String
     private var currentStep = mutableStateOf(0)
     private var falseAnswersRecognition = mutableStateOf(0)
 
@@ -63,6 +64,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val params = this.arguments
+        if(params != null) {
+            currentType = params.getString("type")!!
+            currentId = params.getString("id")!!
+        }
 
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
@@ -133,9 +138,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             instructions.searchPlaneInfoNode.onViewLoaded = { _, viewScene ->
                 viewScene.setBackgroundResource(io.github.sceneview.R.color.mtrl_btn_transparent_bg_color)
 
-                if (params != null) {
-                    fetchContentful(params)
-                }
+                fetchContentful()
             }
         }
 
@@ -172,11 +175,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun fetchContentful(params: Bundle) {
-        when (params.getString("type")) {
+    private fun fetchContentful() {
+        when (currentType) {
             ContentfulContentModel.MODEL.stringValue -> {
                 Contentful().fetchModelByID(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { model: ContentfulModel ->
                     models.add(model)
@@ -185,7 +188,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.MODELGROUP.stringValue -> {
                 Contentful().fetchModelGroupById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { modelGroup: ContentfulModelGroup ->
                     models.addAll(modelGroup.models)
@@ -194,7 +197,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
                 Contentful().fetchExercisesManualById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exercisesManual: ContentfulExerciseManual ->
                     steps.addAll(exercisesManual.steps)
@@ -203,7 +206,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
                 Contentful().fetchExercisesAssembleById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exerciseAssemble: ContentfulExerciseAssemble ->
                     steps.addAll(exerciseAssemble.steps)
@@ -212,7 +215,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
                 Contentful().fetchExercisesRecognitionById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exerciseRecognition: ContentfulExerciseRecognition ->
                     steps.addAll(exerciseRecognition.steps)
@@ -247,7 +250,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
         steps.forEach { step ->
             if (step.hasModel()) {
-                val isSingular = step.models.size == 1
+                val isSingular = step.models.size == 1 && type != ContentfulContentModel.EXERCISEASSEMBLE
                 step.models.forEach { model ->
                     createExerciseModel(
                         model = model,
@@ -314,11 +317,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun startExerciseAssemble() {
-
+        showStep(currentStep.value)
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
-        Log.i("Iets", "next step")
         if (currentStep.value < steps.size - 1) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
@@ -328,11 +330,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun showStep(currentIndex: Int) {
-        steps.forEachIndexed { index, contentfulModelStep ->
-            if (index == currentIndex) {
-                contentfulModelStep.setVisibility(true)
-            } else {
-                contentfulModelStep.setVisibility(false)
+        when (currentType) {
+            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+                steps.forEachIndexed { index, contentfulModelStep ->
+                    if (index == currentIndex) {
+                        contentfulModelStep.setVisibility(true)
+                    } else {
+                        contentfulModelStep.setVisibility(false)
+                    }
+                }
+            }
+            ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+                steps[currentIndex].setVisibility(true)
             }
         }
     }
