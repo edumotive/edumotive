@@ -11,6 +11,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.modals.ExerciseCompleteModal
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.LoadHelper
@@ -38,6 +39,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var planeSelectorTextView: ComposeView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
+    private lateinit var exerciseCompleteModal: ComposeView
 
     /// Anchor Node
     private lateinit var cursorNode: CursorNode
@@ -65,13 +67,14 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val params = this.arguments
-        if(params != null) {
+        if (params != null) {
             currentType = params.getString("type")!!
             currentId = params.getString("id")!!
         }
 
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
+        exerciseCompleteModal = view.findViewById(R.id.exerciseCompleteModal)
         loadingView = view.findViewById(R.id.loadingView)
         planeSelectorTextView = view.findViewById<ComposeView>(R.id.planeSelectorTextView).apply {
             isGone = false
@@ -181,7 +184,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun loadPartDrawer() {
-        if(!drawerLoaded.value) {
+        if (!drawerLoaded.value) {
             drawerLoaded.value = true
             val exerciseType = currentType
             val shuffledSteps = steps.toMutableList()
@@ -198,7 +201,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     },
                     answerCallback = { answer ->
                         if (answer) nextStep() {
-                            /// Show finish modal
+                            exerciseCompleteModal.setContent {
+                                ExerciseCompleteModal()
+                            }
                         } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
                     }
                 )
@@ -281,7 +286,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
         steps.forEach { step ->
             if (step.hasModel()) {
-                val isSingular = step.models.size == 1 && type != ContentfulContentModel.EXERCISEASSEMBLE
+                val isSingular =
+                    step.models.size == 1 && type != ContentfulContentModel.EXERCISEASSEMBLE
                 step.models.forEach { model ->
                     createExerciseModel(
                         model = model,
