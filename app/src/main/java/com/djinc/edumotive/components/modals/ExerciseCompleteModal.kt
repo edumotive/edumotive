@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,8 +25,17 @@ import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
 
 @Composable
-fun ExerciseCompleteModal(backCallback: () -> Unit) {
+fun ExerciseCompleteModal(percentage: Int, backCallback: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
+    val title: String
+    val svg: Int
+    if (percentage > 59) {
+        title = stringResource(R.string.exercise_complete_success)
+        svg = R.drawable.ic_exercise_passed
+    } else {
+        title = stringResource(R.string.exercise_complete_failed)
+        svg = R.drawable.ic_exercise_failed
+    }
 
     Box(
         contentAlignment = Alignment.Center, modifier = Modifier
@@ -48,7 +58,7 @@ fun ExerciseCompleteModal(backCallback: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Goed gedaan!",
+                    text = title,
                     fontFamily = fonts,
                     fontWeight = FontWeight.Medium,
                     fontSize = 24.sp
@@ -61,20 +71,20 @@ fun ExerciseCompleteModal(backCallback: () -> Unit) {
                         .padding(bottom = 10.dp)
                 ) {
                     Image(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_exercise_passed),
+                        imageVector = ImageVector.vectorResource(svg),
                         contentDescription = "exercise completion svg",
                     )
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         val dpBetween = 10.dp
                         Text(
-                            "92%",
+                            text = "$percentage%",
                             fontFamily = fonts,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 38.sp,
+                            fontSize = if (percentage == 100) 35.sp else 38.sp,
                             modifier = Modifier.offset(y = dpBetween)
                         )
                         Text(
-                            "Correct",
+                            text = stringResource(R.string.exercise_correct),
                             fontFamily = fonts,
                             fontWeight = FontWeight.Medium,
                             fontSize = 20.sp,
@@ -94,7 +104,7 @@ fun ExerciseCompleteModal(backCallback: () -> Unit) {
                         .clickable { backCallback.invoke() }
                 ) {
                     Text(
-                        "Terug naar oefeningen",
+                        text = stringResource(R.string.exercise_back_to_exercises),
                         fontFamily = fonts,
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,

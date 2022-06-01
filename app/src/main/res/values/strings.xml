@@ -41,4 +41,8 @@
     <string name="exercise_disassemble_name">Disassemble</string>
     <string name="exercise_start_btn_with_ar">Start with AR</string>
     <string name="exercise_start_btn_without_ar">Start without AR</string>
+    <string name="exercise_complete_success">Great job!</string>
+    <string name="exercise_complete_failed">Keep on learning!</string>
+    <string name="exercise_correct">Correct</string>
+    <string name="exercise_back_to_exercises">Back to exercises</string>
 </resources>

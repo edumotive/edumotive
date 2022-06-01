@@ -40,4 +40,8 @@
     <string name="exercise_disassemble_name">Demonteren</string>
     <string name="exercise_start_btn_with_ar">Start met AR</string>
     <string name="exercise_start_btn_without_ar">Start zonder AR</string>
+    <string name="exercise_complete_success">Goed gedaan!</string>
+    <string name="exercise_complete_failed">Nog even doorleren!</string>
+    <string name="exercise_correct">Correct</string>
+    <string name="exercise_back_to_exercises">Terug naar oefeningen</string>
 </resources>

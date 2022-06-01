@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
+import kotlin.math.floor
 
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
@@ -203,12 +205,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     answerCallback = { answer ->
                         if (answer) nextStep() {
                             exerciseCompleteModal.setContent {
-                                ExerciseCompleteModal() {
+                                ExerciseCompleteModal(percentage = floor((1.0 - (falseAnswers.value.toDouble() / steps.size.toDouble())) * 100.0).toInt()) {
                                     activity?.finish()
                                 }
                             }
                         } else {
-                            if(!hasAnswered.value) {
+                            if (!hasAnswered.value) {
                                 hasAnswered.value = true
                                 falseAnswers.value = falseAnswers.value + 1
                             }
@@ -367,7 +369,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
         hasAnswered.value = false
-        if(currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
+        if (currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else if (currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue && currentStep.value < steps.size - 1) {
