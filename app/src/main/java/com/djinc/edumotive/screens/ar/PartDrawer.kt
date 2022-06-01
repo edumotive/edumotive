@@ -9,7 +9,6 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -91,7 +90,7 @@ fun PartDrawer(
                     item {
                         DrawerTitle(type = type!!, windowSize = windowSize)
                     }
-                    if (steps != null) {
+                    if (steps!!.isNotEmpty()) {
                         shuffledSteps!!.forEach { step ->
                             item {
                                 Box(modifier = Modifier.clickable {
@@ -138,7 +137,7 @@ fun answerStepExerciseRecognition(
     step: ContentfulModelStep,
     answerCallback: (Boolean) -> Unit
 ) {
-    if (step == steps!![currentStep!!.value]) {
+    if (step == steps[currentStep!!.value]) {
         answerCallback(true)
     } else {
         answerCallback(false)

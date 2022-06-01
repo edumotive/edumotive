@@ -114,15 +114,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         anchorOrMove(it)
                     }
                 }
-//                answerStepExerciseRecognition(steps[Random.nextInt(steps.size)],
-//                    answerCallback = { isAnsweredCorrectly ->
-//                        Log.i("TestAPI", isAnsweredCorrectly.toString())
-//                    },
-//                    finishCallback = {
-//                        Log.i("TestAPI", "Exercise finished with " +
-//                                falseAnswersRecognition.value + " mistakes")
-//                    }
-//                )
             }
 
             onArFrame = { arFrame ->
@@ -318,16 +309,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         showStep(currentStep.value)
     }
 
-//    private fun answerStepExerciseRecognition(step: ContentfulModelStep, answerCallback: (Boolean) -> Unit, finishCallback: () -> Unit) {
-//        if(step == steps[currentStep.value]) {
-//            answerCallback(true)
-//            nextStep() { finishCallback() }
-//        } else {
-//            answerCallback(false)
-//            falseAnswersRecognition.value = falseAnswersRecognition.value + 1
-//        }
-//    }
-
     private fun startExerciseManual() {
 
     }
@@ -395,7 +376,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         selectModelVisibility(modelNode)
                     },
                     answerCallback = {
-                        if (it) nextStep() else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+                        if (it) nextStep() {
+                          /// Show finish modal
+                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
                     }
                 )
             }
