@@ -202,7 +202,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     answerCallback = { answer ->
                         if (answer) nextStep() {
                             exerciseCompleteModal.setContent {
-                                ExerciseCompleteModal()
+                                ExerciseCompleteModal() {
+                                    activity?.finish()
+                                }
                             }
                         } else {
                             if(!hasAnswered.value) {
