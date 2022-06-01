@@ -84,9 +84,36 @@ data class ContentfulModelStep(
     val title: String = "",
     val modelGroup: ContentfulModelGroup? = null,
     val models: MutableList<ContentfulModel> = mutableListOf(),
-    val stepInfo: String = "",
-    val stepIndex: Int = 0
+    val stepInfo: String = ""
 ) {
+    fun getModelName() : String {
+        return if (this.hasModel()) this.models.first().title else this.modelGroup!!.title
+    }
+
+    fun getModelCount() : Int {
+        return if (this.hasModel()) this.models.size else this.modelGroup!!.models.size
+    }
+
+    fun hasModel() : Boolean {
+        return this.models.isNotEmpty()
+    }
+
+    fun hasModelGroup() : Boolean {
+        return this.modelGroup != null
+    }
+
+    fun setVisibility(visibility: Boolean) {
+        if(this.hasModel()) {
+            this.models.forEach {
+                it.arModel!!.isVisible = visibility
+            }
+        } else if (this.hasModelGroup()) {
+            this.modelGroup!!.models.forEach {
+                it.arModel!!.isVisible = visibility
+            }
+        }
+    }
+
     companion object
 }
 

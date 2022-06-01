@@ -13,10 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,20 +29,30 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
 import com.djinc.edumotive.models.ContentfulModel
+import com.djinc.edumotive.models.ContentfulModelStep
 import com.djinc.edumotive.screens.gridItems
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
 import io.github.sceneview.ar.node.ArModelNode
+import java.util.*
+import kotlin.concurrent.schedule
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PartDrawer(
     list: List<ContentfulModel>,
-    callback: (ArModelNode) -> Unit
+    type: String? = "parts",
+    steps: MutableList<ContentfulModelStep>? = mutableListOf(),
+    shuffledSteps: MutableList<ContentfulModelStep>? = mutableListOf(),
+    currentStep: MutableState<Int>? = mutableStateOf(0),
+    callback: (ArModelNode) -> Unit,
+    answerCallback: (Boolean) -> Unit
 ) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp + 1
@@ -53,7 +60,7 @@ fun PartDrawer(
         if (screenWidth < 600) WindowSize.Compact else if (screenWidth < 840) WindowSize.Medium else WindowSize.Expanded
     val allowedSpace =
         if (windowSize == WindowSize.Expanded) 0.35f else 0.5f
-    val isDrawerOpen = remember { mutableStateOf(false) }
+    val isDrawerOpen = remember { mutableStateOf(steps!!.isNotEmpty()) }
     val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
@@ -83,35 +90,67 @@ fun PartDrawer(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        Text(
-                            text = if (windowSize == WindowSize.Compact) stringResource(R.string.parts_drawer_short) else stringResource(
-                                R.string.parts_drawer_long
-                            ),
-                            fontFamily = fonts,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        DrawerTitle(type = type!!, windowSize = windowSize)
                     }
-                    gridItems(
-                        data = list,
-                        columnCount = if (windowSize == WindowSize.Compact) 1 else 2,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                    ) { item ->
-                        PartCard(
-                            partId = item.id,
-                            partType = item.type,
-                            partName = item.title,
-                            imageUrl = item.image,
-                            activePart = activePart.value
-                        ) { partId ->
-                            activePart.value = if (activePart.value != partId) partId else ""
-                            callback.invoke(item.arModel!!)
+                    if (steps!!.isNotEmpty()) {
+                        shuffledSteps!!.forEach { step ->
+                            item {
+                                val answerResult = remember { mutableStateOf("") }
+                                Box(modifier = Modifier.clickable {
+                                    answerStepExerciseRecognition(
+                                        steps = steps,
+                                        currentStep = currentStep,
+                                        step = step
+                                    ) {
+                                        answerResult.value = if (it) "correct" else "incorrect"
+                                        Timer().schedule(800) {
+                                            answerResult.value = ""
+                                        }
+                                        answerCallback.invoke(it)
+                                    }
+                                }) {
+                                    ExerciseStep(
+                                        exerciseStepName = step.getModelName(),
+                                        answer = answerResult.value
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        gridItems(
+                            data = list,
+                            columnCount = if (windowSize == WindowSize.Compact) 1 else 2,
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier
+                        ) { item ->
+                            PartCard(
+                                partId = item.id,
+                                partType = item.type,
+                                partName = item.title,
+                                imageUrl = item.image,
+                                activePart = activePart.value
+                            ) { partId ->
+                                activePart.value = if (activePart.value != partId) partId else ""
+                                callback.invoke(item.arModel!!)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+}
+
+fun answerStepExerciseRecognition(
+    steps: MutableList<ContentfulModelStep>,
+    currentStep: MutableState<Int>?,
+    step: ContentfulModelStep,
+    answerCallback: (Boolean) -> Unit,
+) {
+    if (step == steps[currentStep!!.value]) {
+        answerCallback(true)
+    } else {
+        answerCallback(false)
     }
 }
 
@@ -168,7 +207,7 @@ fun DrawerButton(buttonSize: Dp, drawerState: Boolean, callback: (Boolean) -> Un
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
                     change.consumeAllChanges()
-                    if(dragAmount.x < 0) callback(true) else callback(false)
+                    if (dragAmount.x < 0) callback(true) else callback(false)
                 }
             }
     ) {
@@ -219,4 +258,42 @@ fun DrawerButton(buttonSize: Dp, drawerState: Boolean, callback: (Boolean) -> Un
             }
         }
     }
+}
+
+@Composable
+fun DrawerTitle(type: String, windowSize: WindowSize) {
+    val text: String
+
+    when (type) {
+        ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Juist volgorde"
+            else
+                "Plaats in juiste volgorde"
+        }
+        ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Handleiding oefening"
+            else
+                "Handleiding oefening"
+        }
+        ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+            text = if (windowSize == WindowSize.Compact)
+                "Kies het juiste onderdeel"
+            else
+                "Kies het juiste onderdeel"
+        }
+        else -> {
+            text = if (windowSize == WindowSize.Compact)
+                stringResource(R.string.parts_drawer_short)
+            else
+                stringResource(R.string.parts_drawer_long)
+        }
+    }
+    Text(
+        text = text,
+        fontFamily = fonts,
+        fontSize = 22.sp,
+        fontWeight = FontWeight.Medium
+    )
 }

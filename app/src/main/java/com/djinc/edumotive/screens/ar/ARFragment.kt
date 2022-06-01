@@ -2,6 +2,7 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var steps = mutableListOf<ContentfulModelStep>()
     private var selectedModelIndex = mutableStateOf(0)
     private var isModelSelected = mutableStateOf(false)
+
+    /// Exercises
+    private var currentStep = mutableStateOf(0)
+    private var falseAnswersRecognition = mutableStateOf(0)
+
 
     private var isLoading = true
         set(value) {
@@ -192,7 +198,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exercisesManual: ContentfulExerciseManual ->
                     steps.addAll(exercisesManual.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISEMANUAL)
                 }
             }
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
@@ -201,7 +207,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exerciseAssemble: ContentfulExerciseAssemble ->
                     steps.addAll(exerciseAssemble.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISEASSEMBLE)
                 }
             }
             ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
@@ -210,7 +216,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     errorCallBack = ::errorCatch
                 ) { exerciseRecognition: ContentfulExerciseRecognition ->
                     steps.addAll(exerciseRecognition.steps)
-                    loadExerciseModels()
+                    loadExerciseModels(ContentfulContentModel.EXERCISERECOGNITION)
                 }
             }
         }
@@ -236,48 +242,106 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun loadExerciseModels() {
+    private fun loadExerciseModels(type: ContentfulContentModel) {
         val loadHelper = LoadHelper(amountNeeded = countModelsInSteps(steps))
 
         steps.forEach { step ->
-            if(step.models.isNotEmpty()) {
+            if (step.hasModel()) {
                 val isSingular = step.models.size == 1
                 step.models.forEach { model ->
-                    if (model.arModel != null) {
-                        models.add(model)
-                        loadedModel(loadHelper)
-                    } else {
-                        createAndLoadModel(
-                            model,
-                            isSingular
-                        ) {
-                            model.arModel = it
-                            models.add(model)
-                            loadedModel(loadHelper)
-                        }
-                    }
+                    createExerciseModel(
+                        model = model,
+                        isSingular = isSingular,
+                        loadHelper = loadHelper,
+                        type = type
+                    )
                 }
-            } else if (step.modelGroup != null) {
-                step.modelGroup.models.forEach { model ->
-                    if (model.arModel != null) {
-                        models.add(model)
-                        loadedModel(loadHelper)
-                    } else {
-                        createAndLoadModel(
-                            model,
-                            false
-                        ) {
-                            model.arModel = it
-                            models.add(model)
-                            loadedModel(loadHelper)
-                        }
-                    }
+            } else if (step.hasModelGroup()) {
+                step.modelGroup!!.models.forEach { model ->
+                    createExerciseModel(
+                        model = model,
+                        isSingular = false,
+                        loadHelper = loadHelper,
+                        type = type
+                    )
                 }
             }
         }
     }
 
-    private fun createAndLoadModel(model: ContentfulModel, isSingular: Boolean, doneLoading: (ArModelNode) -> Unit) {
+    private fun createExerciseModel(
+        model: ContentfulModel,
+        isSingular: Boolean,
+        loadHelper: LoadHelper,
+        type: ContentfulContentModel
+    ) {
+        if (model.arModel != null) {
+            models.add(model)
+            model.arModel!!.isVisible = false
+            loadedModel(loadHelper) { startExercise(type) }
+        } else {
+            createAndLoadModel(
+                model,
+                isSingular
+            ) {
+                model.arModel = it
+                models.add(model)
+                model.arModel!!.isVisible = false
+                loadedModel(loadHelper) { startExercise(type) }
+            }
+        }
+    }
+
+    private fun startExercise(type: ContentfulContentModel) {
+        when (type) {
+            ContentfulContentModel.EXERCISERECOGNITION ->
+                startExerciseRecognition()
+            ContentfulContentModel.EXERCISEMANUAL ->
+                startExerciseManual()
+            ContentfulContentModel.EXERCISEASSEMBLE ->
+                startExerciseAssemble()
+            else -> return
+        }
+    }
+
+    private fun startExerciseRecognition() {
+        steps.shuffle()
+        showStep(currentStep.value)
+    }
+
+    private fun startExerciseManual() {
+
+    }
+
+    private fun startExerciseAssemble() {
+
+    }
+
+    private fun nextStep(finishCallback: () -> Unit = {}) {
+        Log.i("Iets", "next step")
+        if (currentStep.value < steps.size - 1) {
+            currentStep.value = currentStep.value + 1
+            showStep(currentStep.value)
+        } else {
+            finishCallback()
+        }
+    }
+
+    private fun showStep(currentIndex: Int) {
+        steps.forEachIndexed { index, contentfulModelStep ->
+            if (index == currentIndex) {
+                contentfulModelStep.setVisibility(true)
+            } else {
+                contentfulModelStep.setVisibility(false)
+            }
+        }
+    }
+
+    private fun createAndLoadModel(
+        model: ContentfulModel,
+        isSingular: Boolean,
+        doneLoading: (ArModelNode) -> Unit
+    ) {
         createModel(
             requireContext(),
             lifecycleScope,
@@ -290,7 +354,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadedModel(loadHelper: LoadHelper) {
+    private fun loadedModel(loadHelper: LoadHelper, callback: () -> Unit = {}) {
         loadHelper.whenLoaded(updateLoading = { amount ->
             actionButton.text =
                 getString(R.string.loading_models) + " " + amount + "/" + loadHelper.maxAmount.value
@@ -298,11 +362,27 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
+            val exerciseType = this.requireArguments().getString("type")
+            val shuffledSteps = steps.toMutableList()
+            shuffledSteps.shuffle()
             drawerView.setContent {
-                PartDrawer(list = models) { modelNode ->
-                    selectModelVisibility(modelNode)
-                }
+                PartDrawer(
+                    list = models,
+                    type = exerciseType,
+                    steps = steps,
+                    shuffledSteps = shuffledSteps,
+                    currentStep = currentStep,
+                    callback = { modelNode ->
+                        selectModelVisibility(modelNode)
+                    },
+                    answerCallback = {
+                        if (it) nextStep() {
+                          /// Show finish modal
+                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
+                    }
+                )
             }
+            callback()
         }
     }
 

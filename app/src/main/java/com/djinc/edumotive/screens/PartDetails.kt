@@ -3,6 +3,7 @@ package com.djinc.edumotive.screens
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -37,6 +38,7 @@ import com.djinc.edumotive.ui.theme.PinkSecondary
 import com.djinc.edumotive.ui.theme.fonts
 import com.djinc.edumotive.utils.contentful.Contentful
 import com.djinc.edumotive.utils.contentful.errorCatch
+import java.lang.Exception
 
 @ExperimentalFoundationApi
 @Composable
@@ -56,14 +58,21 @@ fun PartDetails(
         LaunchedEffect(key1 = partId) {
             isLinkedModelGroupLoaded.value = false
             isActiveModelLoaded.value = false
-            Contentful().fetchLinkedModelGroupById(partId, errorCallBack = ::errorCatch) {
-                linkedModelGroup.value = it
-                isLinkedModelGroupLoaded.value = true
-                activeModel.value = it[0].models.find { model -> model.id == partId }!!
-                isActiveModelLoaded.value = true
+            try {
+                Contentful().fetchLinkedModelGroupById(partId, errorCallBack = ::errorCatch) {
+                    linkedModelGroup.value = it
+                    isLinkedModelGroupLoaded.value = true
+                    activeModel.value = it[0].models.find { model -> model.id == partId }!!
+                    isActiveModelLoaded.value = true
+                }
+            } catch (e: Exception) {
+                Contentful().fetchModelByID(partId, errorCallBack = ::errorCatch) {
+                    activeModel.value = it
+                    isActiveModelLoaded.value = true
+                }
             }
         }
-        if (isLinkedModelGroupLoaded.value && isActiveModelLoaded.value) Details(
+        if (isActiveModelLoaded.value) Details(
             model = activeModel.value,
             modelType = modelType,
             modelId = partId,
@@ -111,7 +120,8 @@ fun Details(
         title = model.title
         imageUrl = model.image
         description = model.description
-        models = linkedModelGroup.value[0].models.filterNot { lModel -> lModel.id == model.id}
+        models =
+            if (linkedModelGroup.value.isNotEmpty()) linkedModelGroup.value[0].models.filterNot { lModel -> lModel.id == model.id } else emptyList()
     } else {
         model as ContentfulModelGroup
         title = model.title
@@ -185,7 +195,7 @@ fun Details(
         OpenInArButton(modelId, modelType, context, windowSize)
     }
 
-    if (windowSize == WindowSize.Expanded) {
+    if (windowSize == WindowSize.Expanded && models.isNotEmpty()) {
         PartsSplitScreen(models, nav, windowSize)
     }
 }
@@ -222,7 +232,12 @@ fun <T> LazyListScope.gridItems(
 }
 
 @Composable
-fun OpenInArButton(modelId: String, modelType: ContentfulContentModel, context: Context, windowSize: WindowSize) {
+fun OpenInArButton(
+    modelId: String,
+    modelType: ContentfulContentModel,
+    context: Context,
+    windowSize: WindowSize
+) {
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier

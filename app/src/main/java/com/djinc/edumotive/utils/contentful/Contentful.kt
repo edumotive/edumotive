@@ -137,7 +137,7 @@ open class Contentful(
                         .fetch(CDAEntry::class.java)
                         .withContentType("exerciseManual")
                         .where("locale", locale)
-                        .include(2)
+                        .include(4)
                         .all()
                         .items()
                         .map {
@@ -172,7 +172,7 @@ open class Contentful(
                         .fetch(CDAEntry::class.java)
                         .withContentType("exerciseAssemble")
                         .where("locale", locale)
-                        .include(2)
+                        .include(4)
                         .all()
                         .items()
                         .map {
@@ -207,7 +207,7 @@ open class Contentful(
                         .fetch(CDAEntry::class.java)
                         .withContentType("exerciseRecognition")
                         .where("locale", locale)
-                        .include(2)
+                        .include(4)
                         .all()
                         .items()
                         .map {
