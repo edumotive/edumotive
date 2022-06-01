@@ -202,7 +202,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     answerCallback = { answer ->
                         if (answer) nextStep() {
                             exerciseCompleteModal.setContent {
-                                ExerciseCompleteModal()
+                                ExerciseCompleteModal() {
+                                    activity?.finish()
+                                }
                             }
                         } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
                     }
@@ -358,7 +360,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
-        if(currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
+        if (currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else if (currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue && currentStep.value < steps.size - 1) {
