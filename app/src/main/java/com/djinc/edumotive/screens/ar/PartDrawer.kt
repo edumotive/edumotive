@@ -40,6 +40,8 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
 import io.github.sceneview.ar.node.ArModelNode
+import java.util.*
+import kotlin.concurrent.schedule
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -58,7 +60,7 @@ fun PartDrawer(
         if (screenWidth < 600) WindowSize.Compact else if (screenWidth < 840) WindowSize.Medium else WindowSize.Expanded
     val allowedSpace =
         if (windowSize == WindowSize.Expanded) 0.35f else 0.5f
-    val isDrawerOpen = remember { mutableStateOf(false) }
+    val isDrawerOpen = remember { mutableStateOf(steps!!.isNotEmpty()) }
     val drawerSize: Dp by animateDpAsState(if (!isDrawerOpen.value) (screenWidth * allowedSpace).dp else 0.dp)
     val verticalLineWidth = 12.dp
     val drawerButtonSize = 50.dp
@@ -93,6 +95,7 @@ fun PartDrawer(
                     if (steps!!.isNotEmpty()) {
                         shuffledSteps!!.forEach { step ->
                             item {
+                                val answerResult = remember { mutableStateOf("") }
                                 Box(modifier = Modifier.clickable {
                                     answerStepExerciseRecognition(
                                         steps = steps,
@@ -100,10 +103,17 @@ fun PartDrawer(
                                         step = step,
                                         type = type!!
                                     ) {
+                                        answerResult.value = if (it) "correct" else "incorrect"
+                                        Timer().schedule(800) {
+                                            answerResult.value = ""
+                                        }
                                         answerCallback.invoke(it)
                                     }
                                 }) {
-                                    ExerciseStep(exerciseStepName = step.getModelName())
+                                    ExerciseStep(
+                                        exerciseStepName = step.getModelName(),
+                                        answer = answerResult.value
+                                    )
                                 }
                             }
                         }
