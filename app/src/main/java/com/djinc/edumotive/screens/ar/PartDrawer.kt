@@ -100,7 +100,8 @@ fun PartDrawer(
                                     answerStepExerciseRecognition(
                                         steps = steps,
                                         currentStep = currentStep,
-                                        step = step
+                                        step = step,
+                                        type = type!!
                                     ) {
                                         answerResult.value = if (it) "correct" else "incorrect"
                                         Timer().schedule(800) {
@@ -145,12 +146,29 @@ fun answerStepExerciseRecognition(
     steps: MutableList<ContentfulModelStep>,
     currentStep: MutableState<Int>?,
     step: ContentfulModelStep,
-    answerCallback: (Boolean) -> Unit,
+    type: String,
+    answerCallback: (Boolean) -> Unit
 ) {
-    if (step == steps[currentStep!!.value]) {
-        answerCallback(true)
-    } else {
-        answerCallback(false)
+    if (steps.size - 1 != currentStep!!.value || (type == ContentfulContentModel.EXERCISERECOGNITION.stringValue && steps.size != currentStep.value)) {
+        when (type) {
+            ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+                if (step == steps[currentStep.value + 1]) {
+                    answerCallback(true)
+                } else {
+                    answerCallback(false)
+                }
+            }
+            ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
+                //TODO
+            }
+            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+                if (step == steps[currentStep.value]) {
+                    answerCallback(true)
+                } else {
+                    answerCallback(false)
+                }
+            }
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.djinc.edumotive.R
+import com.djinc.edumotive.components.modals.ExerciseCompleteModal
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.models.*
 import com.djinc.edumotive.utils.LoadHelper
@@ -29,6 +30,7 @@ import io.github.sceneview.ar.node.CursorNode
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Scale
 import io.github.sceneview.utils.doOnApplyWindowInsets
+import kotlin.math.floor
 
 
 class ARFragment : Fragment(R.layout.fragment_ar) {
@@ -39,6 +41,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var planeSelectorTextView: ComposeView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
+    private lateinit var exerciseCompleteModal: ComposeView
 
     /// Anchor Node
     private lateinit var cursorNode: CursorNode
@@ -50,8 +53,12 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private var isModelSelected = mutableStateOf(false)
 
     /// Exercises
+    private lateinit var currentType: String
+    private lateinit var currentId: String
+    private var drawerLoaded = mutableStateOf(false)
     private var currentStep = mutableStateOf(0)
-    private var falseAnswersRecognition = mutableStateOf(0)
+    private var hasAnswered = mutableStateOf(false)
+    private var falseAnswers = mutableStateOf(0)
 
 
     private var isLoading = true
@@ -63,9 +70,14 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val params = this.arguments
+        if (params != null) {
+            currentType = params.getString("type")!!
+            currentId = params.getString("id")!!
+        }
 
         backButton = view.findViewById(R.id.backButton)
         drawerView = view.findViewById(R.id.partDrawer)
+        exerciseCompleteModal = view.findViewById(R.id.exerciseCompleteModal)
         loadingView = view.findViewById(R.id.loadingView)
         planeSelectorTextView = view.findViewById<ComposeView>(R.id.planeSelectorTextView).apply {
             isGone = false
@@ -81,6 +93,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
+
+                    loadPartDrawer()
                 }
             }
             isGone = false
@@ -113,6 +127,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
+
+                    loadPartDrawer()
                 }
             }
 
@@ -133,9 +149,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             instructions.searchPlaneInfoNode.onViewLoaded = { _, viewScene ->
                 viewScene.setBackgroundResource(io.github.sceneview.R.color.mtrl_btn_transparent_bg_color)
 
-                if (params != null) {
-                    fetchContentful(params)
-                }
+                fetchContentful()
             }
         }
 
@@ -172,11 +186,46 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
     }
 
-    private fun fetchContentful(params: Bundle) {
-        when (params.getString("type")) {
+    private fun loadPartDrawer() {
+        if (!drawerLoaded.value) {
+            drawerLoaded.value = true
+            val exerciseType = currentType
+            val shuffledSteps = steps.toMutableList()
+            shuffledSteps.shuffle()
+            drawerView.setContent {
+                PartDrawer(
+                    list = models,
+                    type = exerciseType,
+                    steps = steps,
+                    shuffledSteps = shuffledSteps,
+                    currentStep = currentStep,
+                    callback = { modelNode ->
+                        selectModelVisibility(modelNode)
+                    },
+                    answerCallback = { answer ->
+                        if (answer) nextStep() {
+                            exerciseCompleteModal.setContent {
+                                ExerciseCompleteModal(percentage = floor((1.0 - (falseAnswers.value.toDouble() / steps.size.toDouble())) * 100.0).toInt()) {
+                                    activity?.finish()
+                                }
+                            }
+                        } else {
+                            if (!hasAnswered.value) {
+                                hasAnswered.value = true
+                                falseAnswers.value = falseAnswers.value + 1
+                            }
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    private fun fetchContentful() {
+        when (currentType) {
             ContentfulContentModel.MODEL.stringValue -> {
                 Contentful().fetchModelByID(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { model: ContentfulModel ->
                     models.add(model)
@@ -185,7 +234,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.MODELGROUP.stringValue -> {
                 Contentful().fetchModelGroupById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { modelGroup: ContentfulModelGroup ->
                     models.addAll(modelGroup.models)
@@ -194,7 +243,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
                 Contentful().fetchExercisesManualById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exercisesManual: ContentfulExerciseManual ->
                     steps.addAll(exercisesManual.steps)
@@ -203,7 +252,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
                 Contentful().fetchExercisesAssembleById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exerciseAssemble: ContentfulExerciseAssemble ->
                     steps.addAll(exerciseAssemble.steps)
@@ -212,7 +261,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             }
             ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
                 Contentful().fetchExercisesRecognitionById(
-                    id = params.getString("id")!!,
+                    id = currentId,
                     errorCallBack = ::errorCatch
                 ) { exerciseRecognition: ContentfulExerciseRecognition ->
                     steps.addAll(exerciseRecognition.steps)
@@ -247,7 +296,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
         steps.forEach { step ->
             if (step.hasModel()) {
-                val isSingular = step.models.size == 1
+                val isSingular =
+                    step.models.size == 1 && type != ContentfulContentModel.EXERCISEASSEMBLE
                 step.models.forEach { model ->
                     createExerciseModel(
                         model = model,
@@ -314,12 +364,15 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun startExerciseAssemble() {
-
+        showStep(currentStep.value)
     }
 
     private fun nextStep(finishCallback: () -> Unit = {}) {
-        Log.i("Iets", "next step")
-        if (currentStep.value < steps.size - 1) {
+        hasAnswered.value = false
+        if (currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
+            currentStep.value = currentStep.value + 1
+            showStep(currentStep.value)
+        } else if (currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue && currentStep.value < steps.size - 1) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else {
@@ -328,11 +381,18 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun showStep(currentIndex: Int) {
-        steps.forEachIndexed { index, contentfulModelStep ->
-            if (index == currentIndex) {
-                contentfulModelStep.setVisibility(true)
-            } else {
-                contentfulModelStep.setVisibility(false)
+        when (currentType) {
+            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+                steps.forEachIndexed { index, contentfulModelStep ->
+                    if (index == currentIndex) {
+                        contentfulModelStep.setVisibility(true)
+                    } else {
+                        contentfulModelStep.setVisibility(false)
+                    }
+                }
+            }
+            ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
+                steps[currentIndex].setVisibility(true)
             }
         }
     }
@@ -362,26 +422,6 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             isLoading = false
             actionButton.text = getString(R.string.move_object)
             actionButton.setIconResource(R.drawable.ic_target)
-            val exerciseType = this.requireArguments().getString("type")
-            val shuffledSteps = steps.toMutableList()
-            shuffledSteps.shuffle()
-            drawerView.setContent {
-                PartDrawer(
-                    list = models,
-                    type = exerciseType,
-                    steps = steps,
-                    shuffledSteps = shuffledSteps,
-                    currentStep = currentStep,
-                    callback = { modelNode ->
-                        selectModelVisibility(modelNode)
-                    },
-                    answerCallback = {
-                        if (it) nextStep() {
-                          /// Show finish modal
-                        } else falseAnswersRecognition.value = falseAnswersRecognition.value + 1
-                    }
-                )
-            }
             callback()
         }
     }
