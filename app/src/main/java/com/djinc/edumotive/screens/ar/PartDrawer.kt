@@ -1,6 +1,5 @@
 package com.djinc.edumotive.screens.ar
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -11,11 +10,8 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -38,7 +34,6 @@ import com.djinc.edumotive.components.ExerciseStep
 import com.djinc.edumotive.components.cards.PartCard
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ContentfulExerciseAssemble
 import com.djinc.edumotive.models.ContentfulModel
 import com.djinc.edumotive.models.ContentfulModelStep
 import com.djinc.edumotive.screens.gridItems
@@ -46,7 +41,6 @@ import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
 import io.github.sceneview.ar.node.ArModelNode
-import okhttp3.internal.toImmutableList
 import java.util.*
 import kotlin.concurrent.schedule
 
