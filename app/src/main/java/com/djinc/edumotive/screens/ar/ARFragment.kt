@@ -2,7 +2,6 @@ package com.djinc.edumotive.screens.ar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +40,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var planeSelectorTextView: ComposeView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
+    private lateinit var nextButton: ComposeView
     private lateinit var exerciseCompleteModal: ComposeView
 
     /// Anchor Node
@@ -56,6 +56,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var currentType: String
     private lateinit var currentId: String
     private var drawerLoaded = mutableStateOf(false)
+    private var buttonLoaded = mutableStateOf(false)
     private var currentStep = mutableStateOf(0)
     private var hasAnswered = mutableStateOf(false)
     private var falseAnswers = mutableStateOf(0)
@@ -76,6 +77,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
 
         backButton = view.findViewById(R.id.backButton)
+        nextButton = view.findViewById(R.id.nextButton)
         drawerView = view.findViewById(R.id.partDrawer)
         exerciseCompleteModal = view.findViewById(R.id.exerciseCompleteModal)
         loadingView = view.findViewById(R.id.loadingView)
@@ -94,7 +96,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         anchorOrMove(it)
                     }
 
-                    loadPartDrawer()
+                    if (currentType != ContentfulContentModel.EXERCISEMANUAL.stringValue) loadPartDrawer() else loadNextButon()
                 }
             }
             isGone = false
@@ -127,8 +129,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
-
-                    loadPartDrawer()
+                    if (currentType != ContentfulContentModel.EXERCISEMANUAL.stringValue) loadPartDrawer() else loadNextButon()
                 }
             }
 
@@ -167,21 +168,36 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun transformCard() {
         if (isModelSelected.value) {
-            models[selectedModelIndex.value].arModel!!.children.forEach { child ->
-                val cameraPosition = sceneView.camera.worldPosition
-                val cardPosition = child.worldPosition
+            models.forEach { model ->
+                model.arModel!!.children.forEach { child ->
+                    val cameraPosition = sceneView.camera.worldPosition
+                    val cardPosition = child.worldPosition
 
-                // Rotate card
-                val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
-                child.rotation = Rotation(
-                    0.0f,
-                    -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y,
-                    0.0f
-                )
+                    // Rotate card
+                    val angle = calcRotationAngleInDegrees(cameraPosition, cardPosition).toFloat()
+                    child.rotation = Rotation(
+                        0.0f,
+                        -angle + models[selectedModelIndex.value].arModel!!.worldRotation.y,
+                        0.0f
+                    )
 
-                // Scale card
-                val distance = calcDistance(cameraPosition, cardPosition).toFloat()
-                child.scale = Scale(distance / 3)
+                    // Scale card
+                    val distance = calcDistance(cameraPosition, cardPosition).toFloat()
+                    child.scale = Scale(distance / 3)
+                }
+            }
+        }
+    }
+
+    private fun loadNextButon() {
+        if (!buttonLoaded.value) {
+            buttonLoaded.value = true
+            nextButton.setContent {
+                NextButton() {
+                    nextStep() {
+                        activity?.finish()
+                    }
+                }
             }
         }
     }
@@ -302,6 +318,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     createExerciseModel(
                         model = model,
                         isSingular = isSingular,
+                        title = step.title,
+                        description = step.stepInfo,
                         loadHelper = loadHelper,
                         type = type
                     )
@@ -311,6 +329,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     createExerciseModel(
                         model = model,
                         isSingular = false,
+                        title = step.title,
+                        description = step.stepInfo,
                         loadHelper = loadHelper,
                         type = type
                     )
@@ -322,6 +342,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun createExerciseModel(
         model: ContentfulModel,
         isSingular: Boolean,
+        title: String,
+        description: String,
         loadHelper: LoadHelper,
         type: ContentfulContentModel
     ) {
@@ -332,7 +354,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         } else {
             createAndLoadModel(
                 model,
-                isSingular
+                isSingular,
+                title,
+                description
             ) {
                 model.arModel = it
                 models.add(model)
@@ -360,7 +384,11 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     }
 
     private fun startExerciseManual() {
-
+        isModelSelected.value = true
+        models.forEach { model ->
+            model.arModel!!.children.forEach { child -> child.isVisible = true}
+        }
+        showStep(currentStep.value)
     }
 
     private fun startExerciseAssemble() {
@@ -372,7 +400,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         if (currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
-        } else if (currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue && currentStep.value < steps.size - 1) {
+        } else if (currentStep.value < steps.size - 1) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else {
@@ -382,7 +410,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
 
     private fun showStep(currentIndex: Int) {
         when (currentType) {
-            ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
+            ContentfulContentModel.EXERCISERECOGNITION.stringValue,
+            ContentfulContentModel.EXERCISEMANUAL.stringValue-> {
                 steps.forEachIndexed { index, contentfulModelStep ->
                     if (index == currentIndex) {
                         contentfulModelStep.setVisibility(true)
@@ -400,6 +429,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun createAndLoadModel(
         model: ContentfulModel,
         isSingular: Boolean,
+        title: String = "",
+        description: String = "",
         doneLoading: (ArModelNode) -> Unit
     ) {
         createModel(
@@ -407,7 +438,9 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
             lifecycleScope,
             model.modelUrl,
             model.title,
-            isSingular
+            isSingular,
+            title,
+            description,
         ) {
             doneLoading(it)
         }
