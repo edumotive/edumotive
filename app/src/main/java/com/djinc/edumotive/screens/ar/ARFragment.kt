@@ -40,6 +40,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var planeSelectorTextView: ComposeView
     private lateinit var drawerView: ComposeView
     private lateinit var backButton: ComposeView
+    private lateinit var nextButton: ComposeView
     private lateinit var exerciseCompleteModal: ComposeView
 
     /// Anchor Node
@@ -55,6 +56,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private lateinit var currentType: String
     private lateinit var currentId: String
     private var drawerLoaded = mutableStateOf(false)
+    private var buttonLoaded = mutableStateOf(false)
     private var currentStep = mutableStateOf(0)
     private var hasAnswered = mutableStateOf(false)
     private var falseAnswers = mutableStateOf(0)
@@ -75,6 +77,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         }
 
         backButton = view.findViewById(R.id.backButton)
+        nextButton = view.findViewById(R.id.nextButton)
         drawerView = view.findViewById(R.id.partDrawer)
         exerciseCompleteModal = view.findViewById(R.id.exerciseCompleteModal)
         loadingView = view.findViewById(R.id.loadingView)
@@ -92,7 +95,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
-                    loadPartDrawer()
+
+                    if (currentType != ContentfulContentModel.EXERCISEMANUAL.stringValue) loadPartDrawer() else loadNextButon()
                 }
             }
             isGone = false
@@ -125,7 +129,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     if (params != null) {
                         anchorOrMove(it)
                     }
-                    loadPartDrawer()
+                    if (currentType != ContentfulContentModel.EXERCISEMANUAL.stringValue) loadPartDrawer() else loadNextButon()
                 }
             }
 
@@ -180,6 +184,19 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                     // Scale card
                     val distance = calcDistance(cameraPosition, cardPosition).toFloat()
                     child.scale = Scale(distance / 3)
+                }
+            }
+        }
+    }
+
+    private fun loadNextButon() {
+        if (!buttonLoaded.value) {
+            buttonLoaded.value = true
+            nextButton.setContent {
+                NextButton() {
+                    nextStep() {
+                        activity?.finish()
+                    }
                 }
             }
         }
