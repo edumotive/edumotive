@@ -44,4 +44,5 @@
     <string name="exercise_complete_failed">Nog even doorleren!</string>
     <string name="exercise_correct">Correct</string>
     <string name="exercise_back_to_exercises">Terug naar oefeningen</string>
+    <string name="next">Volgende</string>
 </resources>

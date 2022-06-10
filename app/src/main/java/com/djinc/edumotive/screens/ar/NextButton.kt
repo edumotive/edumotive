@@ -8,9 +8,11 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.djinc.edumotive.R
 import com.djinc.edumotive.ui.theme.Background
 import com.djinc.edumotive.ui.theme.PinkPrimary
 import com.djinc.edumotive.ui.theme.fonts
@@ -27,7 +29,7 @@ fun NextButton(callback: () -> Unit) {
             shape = RoundedCornerShape(4.dp)
         ) {
             Text(
-                "Volgende",
+                stringResource(R.string.next),
                 fontFamily = fonts,
                 color = Background,
                 fontSize = 16.sp,
