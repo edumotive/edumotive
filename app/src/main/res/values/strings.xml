@@ -46,4 +46,8 @@
     <string name="exercise_correct">Correct</string>
     <string name="exercise_back_to_exercises">Back to exercises</string>
     <string name="next">Next</string>
+    <string name="correct_order">Correct order</string>
+    <string name="place_in_correct_order">Place in the correct order</string>
+    <string name="manual_exercises">Manual exercises</string>
+    <string name="choose_correct_part">Choose the correct part</string>
 </resources>

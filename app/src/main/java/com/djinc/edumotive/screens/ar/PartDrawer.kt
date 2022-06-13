@@ -302,21 +302,21 @@ fun DrawerTitle(type: String, windowSize: WindowSize) {
     when (type) {
         ContentfulContentModel.EXERCISEASSEMBLE.stringValue -> {
             text = if (windowSize == WindowSize.Compact)
-                "Juist volgorde"
+                stringResource(R.string.correct_order)
             else
-                "Plaats in juiste volgorde"
+                stringResource(R.string.place_in_correct_order)
         }
         ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
             text = if (windowSize == WindowSize.Compact)
-                "Handleiding oefening"
+                stringResource(R.string.manual_exercises)
             else
-                "Handleiding oefening"
+                stringResource(R.string.manual_exercises)
         }
         ContentfulContentModel.EXERCISERECOGNITION.stringValue -> {
             text = if (windowSize == WindowSize.Compact)
-                "Kies het juiste onderdeel"
+                stringResource(R.string.choose_correct_part)
             else
-                "Kies het juiste onderdeel"
+                stringResource(R.string.choose_correct_part)
         }
         else -> {
             text = if (windowSize == WindowSize.Compact)

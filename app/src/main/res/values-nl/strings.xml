@@ -45,4 +45,8 @@
     <string name="exercise_correct">Correct</string>
     <string name="exercise_back_to_exercises">Terug naar oefeningen</string>
     <string name="next">Volgende</string>
+    <string name="correct_order">Juist volgorde</string>
+    <string name="place_in_correct_order">Plaats in juiste volgorde</string>
+    <string name="manual_exercises">Handleiding oefening</string>
+    <string name="choose_correct_part">Kies het juiste onderdeel</string>
 </resources>
