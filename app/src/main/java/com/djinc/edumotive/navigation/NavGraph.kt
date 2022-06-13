@@ -7,16 +7,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.screens.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModels: ViewModels) {
+fun NavGraph(navController: NavHostController, windowSize: WindowSize) {
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
 
@@ -26,15 +26,17 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 state = swipeRefreshState,
                 onRefresh = { isRefreshing = true },
             ) {
-                Dashboard(nav = navController, windowSize = windowSize, viewModels = viewModels)
+                Dashboard(nav = navController, windowSize = windowSize)
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(
+                    MainEdumotive.refresh(
                         listOf(
                             ContentfulContentModel.MODELGROUP,
                             ContentfulContentModel.MODEL,
-                            ContentfulContentModel.EXERCISE
+                            ContentfulContentModel.EXERCISEASSEMBLE,
+                            ContentfulContentModel.EXERCISEMANUAL,
+                            ContentfulContentModel.EXERCISERECOGNITION
                         )
                     ) {
                         isRefreshing = !it
@@ -47,11 +49,16 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 state = swipeRefreshState,
                 onRefresh = { isRefreshing = true },
             ) {
-                Parts(nav = navController, windowSize = windowSize, viewModels = viewModels)
+                Parts(nav = navController, windowSize = windowSize)
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(listOf(ContentfulContentModel.MODELGROUP, ContentfulContentModel.MODEL)) {
+                    MainEdumotive.refresh(
+                        listOf(
+                            ContentfulContentModel.MODELGROUP,
+                            ContentfulContentModel.MODEL
+                        )
+                    ) {
                         isRefreshing = !it
                     }
                 }
@@ -70,8 +77,7 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 partId = partId!!,
                 modelType = ContentfulContentModel.valueOf(modelType!!),
                 nav = navController,
-                windowSize = windowSize,
-                viewModels = viewModels
+                windowSize = windowSize
             )
         }
         composable(route = Screen.Exercises.route) {
@@ -79,11 +85,17 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
                 state = swipeRefreshState,
                 onRefresh = { isRefreshing = true },
             ) {
-                Exercises(nav = navController, windowSize = windowSize, viewModels = viewModels)
+                Exercises(nav = navController, windowSize = windowSize)
             }
             LaunchedEffect(isRefreshing) {
                 if (isRefreshing) {
-                    viewModels.refresh(listOf(ContentfulContentModel.EXERCISE)) {
+                    MainEdumotive.refresh(
+                        listOf(
+                            ContentfulContentModel.EXERCISEASSEMBLE,
+                            ContentfulContentModel.EXERCISEMANUAL,
+                            ContentfulContentModel.EXERCISERECOGNITION
+                        )
+                    ) {
                         isRefreshing = !it
                     }
                 }
@@ -91,16 +103,19 @@ fun NavGraph(navController: NavHostController, windowSize: WindowSize, viewModel
         }
         composable(
             route = Screen.Exercise.route,
-            arguments = listOf(navArgument("exerciseId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("exerciseId") { type = NavType.StringType },
+                navArgument("exerciseType") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getString("exerciseId")?.let {
-                ExerciseDetails(
-                    exerciseId = it,
-                    nav = navController,
-                    windowSize = windowSize,
-                    viewModels = viewModels
-                )
-            }
+            val exerciseId = backStackEntry.arguments?.getString("exerciseId")
+            val exerciseType = backStackEntry.arguments?.getString("exerciseType")
+            ExerciseDetails(
+                exerciseId = exerciseId!!,
+                exerciseType = ContentfulContentModel.valueOf(exerciseType!!),
+                nav = navController,
+                windowSize = windowSize
+            )
         }
     }
 }

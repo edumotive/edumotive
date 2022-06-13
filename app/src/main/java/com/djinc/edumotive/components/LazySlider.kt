@@ -14,15 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.components.cards.ExerciseCard
 import com.djinc.edumotive.components.cards.PartCard
+import com.djinc.edumotive.constants.ContentfulContentModel
 import com.djinc.edumotive.constants.SliderComponent
 import com.djinc.edumotive.constants.SliderDirection
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ContentfulExercise
-import com.djinc.edumotive.models.ContentfulModel
-import com.djinc.edumotive.models.ContentfulModelGroup
-import com.djinc.edumotive.models.ViewModels
+import com.djinc.edumotive.models.*
 
 @ExperimentalFoundationApi
 @Composable
@@ -32,10 +31,10 @@ fun <T> LazySlider(
     direction: SliderDirection,
     list: List<T>,
     list2: List<T> = emptyList(),
+    list3: List<T> = emptyList(),
     component: SliderComponent,
     nav: NavController,
-    windowSize: WindowSize,
-    viewModels: ViewModels
+    windowSize: WindowSize
 ) {
     if (title.isNotEmpty()) {
         Text(
@@ -45,7 +44,7 @@ fun <T> LazySlider(
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
-    if (viewModels.isInitialLoaded) {
+    if (MainEdumotive.isInitialLoaded) {
         when (direction) {
             SliderDirection.Horizontal -> {
                 when (component) {
@@ -71,12 +70,34 @@ fun <T> LazySlider(
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                             contentPadding = PaddingValues(horizontal = if (windowSize == WindowSize.Compact) 20.dp else 40.dp),
                         ) {
-                            itemsIndexed(list.filterIsInstance<ContentfulExercise>()) { _, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulExerciseAssemble>()) { _, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
                                     exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISEASSEMBLE,
                                     imageUrl = item.image,
-                                    description = item.description,
+                                    fullWidth = false,
+                                    nav = nav,
+                                    windowSize = windowSize
+                                )
+                            }
+                            itemsIndexed(list2.filterIsInstance<ContentfulExerciseManual>()) { _, item ->
+                                ExerciseCard(
+                                    exerciseId = item.id,
+                                    exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISEMANUAL,
+                                    imageUrl = item.image,
+                                    fullWidth = false,
+                                    nav = nav,
+                                    windowSize = windowSize
+                                )
+                            }
+                            itemsIndexed(list3.filterIsInstance<ContentfulExerciseRecognition>()) { _, item ->
+                                ExerciseCard(
+                                    exerciseId = item.id,
+                                    exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISERECOGNITION,
+                                    imageUrl = item.image,
                                     fullWidth = false,
                                     nav = nav,
                                     windowSize = windowSize
@@ -136,13 +157,35 @@ fun <T> LazySlider(
                             modifier = Modifier
                                 .fillMaxWidth(1f)
                         ) {
-                            itemsIndexed(list.filterIsInstance<ContentfulExercise>()) { _, item ->
+                            itemsIndexed(list.filterIsInstance<ContentfulExerciseAssemble>()) { _, item ->
                                 ExerciseCard(
                                     exerciseId = item.id,
                                     exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISEASSEMBLE,
                                     imageUrl = item.image,
-                                    description = item.description,
-                                    fullWidth = true,
+                                    fullWidth = false,
+                                    nav = nav,
+                                    windowSize = windowSize
+                                )
+                            }
+                            itemsIndexed(list2.filterIsInstance<ContentfulExerciseManual>()) { _, item ->
+                                ExerciseCard(
+                                    exerciseId = item.id,
+                                    exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISEMANUAL,
+                                    imageUrl = item.image,
+                                    fullWidth = false,
+                                    nav = nav,
+                                    windowSize = windowSize
+                                )
+                            }
+                            itemsIndexed(list3.filterIsInstance<ContentfulExerciseRecognition>()) { _, item ->
+                                ExerciseCard(
+                                    exerciseId = item.id,
+                                    exerciseName = item.title,
+                                    exerciseType = ContentfulContentModel.EXERCISERECOGNITION,
+                                    imageUrl = item.image,
+                                    fullWidth = false,
                                     nav = nav,
                                     windowSize = windowSize
                                 )

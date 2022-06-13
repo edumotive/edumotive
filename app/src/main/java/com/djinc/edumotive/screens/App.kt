@@ -7,15 +7,15 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.djinc.edumotive.MainEdumotive
 import com.djinc.edumotive.components.menus.BottomBar
 import com.djinc.edumotive.components.menus.SideBar
 import com.djinc.edumotive.components.modals.LanguageModal
 import com.djinc.edumotive.constants.WindowSize
-import com.djinc.edumotive.models.ViewModels
 import com.djinc.edumotive.navigation.NavGraph
 
 @Composable
-fun App(windowSize: WindowSize, viewModels: ViewModels) {
+fun App(windowSize: WindowSize) {
     val navController = rememberNavController()
     if (windowSize == WindowSize.Compact) {
         Scaffold(
@@ -25,12 +25,11 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
         ) {
             NavGraph(
                 navController = navController,
-                windowSize = windowSize,
-                viewModels = viewModels
+                windowSize = windowSize
             )
         }
-        if (viewModels.isLanguageModalOpen) {
-            LanguageModal(windowSize = windowSize, viewModels = viewModels)
+        if (MainEdumotive.isLanguageModalOpen) {
+            LanguageModal(windowSize = windowSize)
         }
     } else {
         Row {
@@ -41,13 +40,12 @@ fun App(windowSize: WindowSize, viewModels: ViewModels) {
             ) {
                 NavGraph(
                     navController = navController,
-                    windowSize = windowSize,
-                    viewModels = viewModels
+                    windowSize = windowSize
                 )
             }
         }
-        if (viewModels.isLanguageModalOpen) {
-            LanguageModal(windowSize = windowSize, viewModels = viewModels)
+        if (MainEdumotive.isLanguageModalOpen) {
+            LanguageModal(windowSize = windowSize)
         }
     }
 }

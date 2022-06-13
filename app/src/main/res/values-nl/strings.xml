@@ -27,5 +27,22 @@
     <string name="search_placeholder">Motorblok, bougie...</string>
     <string name="search_no_results">Sorry, we konden niet vinden waar u naar op zoek was</string>
     <string name="cannot_find_plane">Beweeg om een vlak te vinden</string>
-    <string name="exercise_type">Montage</string>
+    <string name="exercise_type_assemble">Montage</string>
+    <string name="exercise_type_assemble_info">Bij dit type oefening ga je aan de slag met het monteren en demonteren van een onderdeel. Het is hierbij de bedoeling om de gegeven lijst met onderdelen in de goede volgorde te zetten zodat het op de correcte manier gemonteerd wordt.</string>
+    <string name="exercise_type_manual">Handleiding</string>
+    <string name="exercise_type_manual_info">Bij dit type oefening wordt uitgelegd hoe een onderdeel werkt. Dit gebeurt op een stap voor stap basis waardoor je zelf een tempo kan bepalen.</string>
+    <string name="exercise_type_recognition">Herkenning</string>
+    <string name="exercise_type_recognition_info">Bij dit type oefening ga je zoals de naam al aangeeft, proberen te herkennen hoe een onderdeel eruit ziet. Je zult een model of afbeelding te zien krijgen en dient hierbij de juiste naamgeving te geven.</string>
+    <string name="exercise_start_title">De oefening starten</string>
+    <string name="exercise_start_only_ar">Deze oefening kan alleen met Augmented Reality worden uitgevoerd.</string>
+    <string name="exercise_start_both">Deze oefening kan uitgevoerd worden met of zonder het gebruik van Augmented Reality.</string>
+    <string name="exercise_assemble_name">Monteren</string>
+    <string name="exercise_disassemble_name">Demonteren</string>
+    <string name="exercise_start_btn_with_ar">Start met AR</string>
+    <string name="exercise_start_btn_without_ar">Start zonder AR</string>
+    <string name="exercise_complete_success">Goed gedaan!</string>
+    <string name="exercise_complete_failed">Nog even doorleren!</string>
+    <string name="exercise_correct">Correct</string>
+    <string name="exercise_back_to_exercises">Terug naar oefeningen</string>
+    <string name="next">Volgende</string>
 </resources>
