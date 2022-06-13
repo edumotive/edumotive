@@ -160,7 +160,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         isLoading = true
 
         backButton.setContent {
-            BackButton() {
+            BackButton {
                 activity?.finish()
             }
         }
@@ -193,8 +193,8 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         if (!buttonLoaded.value) {
             buttonLoaded.value = true
             nextButton.setContent {
-                NextButton() {
-                    nextStep() {
+                NextButton {
+                    nextStep {
                         activity?.finish()
                     }
                 }
@@ -219,7 +219,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
                         selectModelVisibility(modelNode)
                     },
                     answerCallback = { answer ->
-                        if (answer) nextStep() {
+                        if (answer) nextStep {
                             exerciseCompleteModal.setContent {
                                 ExerciseCompleteModal(percentage = floor((1.0 - (falseAnswers.value.toDouble() / steps.size.toDouble())) * 100.0).toInt()) {
                                     activity?.finish()
@@ -386,7 +386,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun startExerciseManual() {
         isModelSelected.value = true
         models.forEach { model ->
-            model.arModel!!.children.forEach { child -> child.isVisible = true}
+            model.arModel!!.children.forEach { child -> child.isVisible = true }
         }
         showStep(currentStep.value)
     }
@@ -400,7 +400,10 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
         if (currentType == ContentfulContentModel.EXERCISEASSEMBLE.stringValue && currentStep.value < steps.size - 2) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
-        } else if (currentStep.value < steps.size - 1) {
+        } else if (currentStep.value < steps.size - 1
+            && (currentType == ContentfulContentModel.EXERCISEMANUAL.stringValue
+                    || currentType == ContentfulContentModel.EXERCISERECOGNITION.stringValue)
+        ) {
             currentStep.value = currentStep.value + 1
             showStep(currentStep.value)
         } else {
@@ -411,7 +414,7 @@ class ARFragment : Fragment(R.layout.fragment_ar) {
     private fun showStep(currentIndex: Int) {
         when (currentType) {
             ContentfulContentModel.EXERCISERECOGNITION.stringValue,
-            ContentfulContentModel.EXERCISEMANUAL.stringValue-> {
+            ContentfulContentModel.EXERCISEMANUAL.stringValue -> {
                 steps.forEachIndexed { index, contentfulModelStep ->
                     if (index == currentIndex) {
                         contentfulModelStep.setVisibility(true)
