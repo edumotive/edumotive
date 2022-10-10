@@ -47,6 +47,7 @@ android {
             buildConfigField("String", "CONTENTFUL_DELIVERY_TOKEN", properties.getProperty('contentful_delivery_token', "\"abc\""))
             buildConfigField("String", "CONTENTFUL_PREVIEW_TOKEN", properties.getProperty('contentful_preview_token', "\"abc\""))
             buildConfigField("String", "CONTENTFUL_SPACE_ID", properties.getProperty('contentful_space_id', "\"abc\""))
+            buildConfigField("String", "CONTENTFUL_STUDY_TAG", properties.getProperty('contentful_study_tag', "\"abc\""))
         }
     }
     compileOptions {

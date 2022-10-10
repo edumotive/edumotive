@@ -6,7 +6,8 @@ data class ContentfulParams(
     var spaceId: String = "",
     var previewToken: String = "",
     var deliveryToken: String = "",
-    var host: String = ""
+    var host: String = "",
+    var studyTag: String = "",
 )
 
 fun parameterFromBuildConfig(): ContentfulParams =
@@ -15,4 +16,5 @@ fun parameterFromBuildConfig(): ContentfulParams =
         deliveryToken = BuildConfig.CONTENTFUL_DELIVERY_TOKEN,
         previewToken = BuildConfig.CONTENTFUL_PREVIEW_TOKEN,
         host = BuildConfig.CONTENTFUL_HOST,
+        studyTag = BuildConfig.CONTENTFUL_STUDY_TAG,
     )
