@@ -83,6 +83,7 @@ To get a local copy up and running follow these simple example steps.
 
 * ARCore supported device
   See all supported devices [here](https://developers.google.com/ar/devices)
+* Contentful access
 
 
 
@@ -94,15 +95,6 @@ To get a local copy up and running follow these simple example steps.
 3. Run the application
 
 You can also download the APK from the [Releases](https://github.com/edumotive/edumotive/releases)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-TODO
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
